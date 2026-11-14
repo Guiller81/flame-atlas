@@ -124,7 +124,8 @@ function pointItem(p, owner) {
   const li = el("li", "point");
   if (p.heading) li.append(el("strong", "point-heading", p.heading + ". "));
   li.append(el("span", "point-text", p.text));
-  const links = (p.sources || []).map(sourceLink).filter(Boolean);
+  const seen = new Set();                              // the same page cited twice shows once
+  const links = (p.sources || []).map(sourceLink).filter((a) => a && !seen.has(a.textContent) && seen.add(a.textContent));
   const ids = [...new Set((p.test_ids || []).filter((id) => testById.has(id)))];   // unknown test IDs are dropped
   if (links.length || ids.length) {
     const wrap = el("span", "srcs");
