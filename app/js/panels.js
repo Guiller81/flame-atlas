@@ -445,7 +445,9 @@ function tableView(tests) {
       h("td", null, srcLink(t)))))))];
 }
 
+let noteOpenFor = null;   // the test whose reading note you opened; it stays open while that record is shown
 function recordView(t) {
+  if (noteOpenFor !== t.id) noteOpenFor = null;   // another record: its note starts closed
   const e = expById.get(t.exp) || {};
   const m = matById.get(t.mat) || { name: t.mat };
   const item = (label, ...value) => h("div", { class: "rec" }, h("span", { class: "fact-label" }, label), h("span", { class: "rec-value" }, ...value));
@@ -467,7 +469,8 @@ function recordView(t) {
       item("Printed as", dash(t.printed)), t.mat_basis ? item("Material from", t.mat_basis) : null, item("Airflow as printed", dash(t.flow_printed)),
       item("Source", srcLink(t)),
       t.also ? item("Also in", ...t.also.map((id) => link(sourceLabel(id), sourceUrl(id), (data.sources[id] || {}).title))) : null),
-    t.note ? h("p", { class: "muted" }, t.note) : null)];
+    t.note ? h("details", { class: "rec-note", open: noteOpenFor === t.id, ontoggle: (ev) => { noteOpenFor = ev.target.open ? t.id : noteOpenFor === t.id ? null : noteOpenFor; } },
+      h("summary", null, "How this row was read from the source"), h("p", { class: "muted" }, t.note)) : null)];
 }
 
 function renderDetails() {
