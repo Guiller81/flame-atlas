@@ -81,6 +81,7 @@ function build(chart) {
   }
   for (const v of xs.ticks) {
     grid.append(el("line", { x1: X(v), x2: X(v), y1: y0, y2: y0 + 4, class: "tickmark" }));
+    if (hasMissing && X(v) - bandX < 36) continue;        // too close to the "no data" label
     if (yourX == null || Math.abs(X(v) - X(yourX)) > 22) grid.append(el("text", { x: X(v), y: y0 + 16, "text-anchor": "middle", class: "tick" }, num(v)));
   }
   grid.append(el("line", { x1: M.l, x2: x1, y1: y0, y2: y0, class: "axis" }));
@@ -128,11 +129,15 @@ function build(chart) {
 
   /* marks: tests merged by point and outcome */
   const groups = new Map();
+  // Oxygen is drawn to one decimal (21.17 and 21.18 share the dot at 21.2), so tests that are
+  // practically at one point merge into one counted mark. Details keep each value as measured.
+  const r1 = (v) => Math.round(v * 10) / 10;
   for (const t of data.tests) {
     if (t.o2 == null) continue;
-    const key = `${t[xk]}|${t.o2}|${t.out}`;
+    const o2 = r1(t.o2);
+    const key = `${t[xk]}|${o2}|${t.out}`;
     let g = groups.get(key);
-    if (!g) { g = { xv: t[xk], o2: t.o2, out: t.out, tests: [] }; groups.set(key, g); }
+    if (!g) { g = { xv: t[xk], o2, out: t.out, tests: [] }; groups.set(key, g); }
     g.tests.push(t);
   }
   const byPoint = new Map();

@@ -709,3 +709,13 @@ table.tests td { padding: 2px 10px 2px 0; border-top: 1px solid #f0f1f3; }
 
 .filtered-tag { margin-bottom: 4px; color: var(--ink-soft); font-size: 12px; }
 .filtered-tag .tag { padding: 1px 6px; border-radius: 4px; background: #eceef1; color: var(--ink); }
+
+/* ---------- Large windows: the charts keep a sensible height; the list and Details take the rest ---------- */
+@media (min-width: 1100px) {
+  .panel.select { display: flex; flex: 1 1 262px; flex-direction: column; min-height: 262px; }
+  .select-body { flex: 1; height: auto; min-height: 0; }
+  .panel.results { flex: 0 0 auto; }
+  .charts { flex: none; height: clamp(250px, 38vh, 400px); }
+  .panel.details { flex: 1 1 156px; height: auto; min-height: 156px; max-height: 300px; }
+}
+.results-row + .results-row { margin-top: 8px; }
