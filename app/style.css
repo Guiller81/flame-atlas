@@ -719,3 +719,11 @@ table.tests td { padding: 2px 10px 2px 0; border-top: 1px solid #f0f1f3; }
   .panel.details { flex: 1 1 156px; height: auto; min-height: 156px; max-height: 300px; }
 }
 .results-row + .results-row { margin-top: 8px; }
+
+/* Compact condition boxes: no spinner arrows, just the number */
+.cond input { width: 44px; padding: 1px 4px; -moz-appearance: textfield; appearance: textfield; }
+.cond input::-webkit-outer-spin-button, .cond input::-webkit-inner-spin-button { margin: 0; -webkit-appearance: none; }
+.cond input.win { width: 30px; margin-left: 1px; }
+.conds { gap: 8px; }
+.cond { gap: 3px; }
+@media (max-width: 899px) { .cond input { width: 60px; } .cond input.win { width: 44px; } }
