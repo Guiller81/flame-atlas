@@ -273,6 +273,13 @@ function earthCard(matId) {
     lines.push(h("p", null, `${m.earth.label}${basis}: ${m.earth.kind === "MOC" ? "passes up to" : "limit at"} ${pct(m.earth.o2)} O2 · `,
       link(sourceLabel(m.earth.src, m.earth.page, m.earth.loc), sourceUrl(m.earth.src, m.earth.page))));
   } else if (!m.earth) lines.push(h("p", { class: "muted" }, "No Earth rating or limit for this material in the data."));
+  // A comparison the source's authors make for one form of this material (PMMA rods) is stated on the card whenever the
+  // material is selected with no shape filter, always labelled with that form: it does not hold for the other forms.
+  if (m.lead && !f.lead && state.chips.shape.size === 0) {
+    lines.push(h("p", null, h("strong", null, `For ${m.lead.shape}s only: `), m.lead.text + " ",
+      link(sourceLabel(m.lead.space.src, m.lead.space.page), sourceUrl(m.lead.space.src, m.lead.space.page)), " · ",
+      link(sourceLabel(m.lead.earth.src, m.lead.earth.page), sourceUrl(m.lead.earth.src, m.lead.earth.page))));
+  }
   const ratingWords = m.earth ? `at or below ${pct(m.earth.o2)}` : "";
   if (f.earth.length || m.earth) {
     lines.push(h("p", null, `Earth tests: ${f.earth.length}` + (m.earth && f.earth.length ? ` · ${f.earthBurnedBelow.length} burned ${ratingWords} ` : " "),
