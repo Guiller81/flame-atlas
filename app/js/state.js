@@ -12,9 +12,11 @@ export const expById = new Map();
 export const testById = new Map();
 const testsPerExp = new Map();        // an experiment without test rows only opens its card: it filters nothing
 
-export const GRAVITIES = [["micro", "Micro-g"], ["lunar", "Lunar-g"], ["earth", "Earth"]];
-export const GRAVITY_NAME = { micro: "micro-g", lunar: "lunar-g", earth: "Earth gravity" };
-export const OUTCOMES = [["burned", "Burned"], ["went-out", "Went out"], ["no-ignition", "No ignition"]];
+// "Partial-g" holds lunar, Martian and other partial-gravity tests; each test's record says which.
+export const GRAVITIES = [["micro", "Micro-g"], ["partial", "Partial-g"], ["earth", "Earth"]];
+export const GRAVITY_NAME = { micro: "micro-g", partial: "partial gravity (lunar, Martian)", earth: "Earth gravity" };
+// A "reported limit" is a flammability limit a document states (for example the lowest oxygen that still burned), not one test.
+export const OUTCOMES = [["burned", "Burned"], ["went-out", "Went out"], ["no-ignition", "No ignition"], ["limit", "Reported limit"]];
 export const OUTCOME_NAME = Object.fromEntries(OUTCOMES);
 export const GROUPS = [
   { id: "solid", name: "Solid materials and emulators", ranked: true },
@@ -128,6 +130,11 @@ export function missingWords(tests) {
   const miss = condKeysSet().filter((k) => tests.some((t) => t[k] == null));
   return miss.map((k) => COND_WORD[k]).join(" or ");
 }
+// the conditions those tests do report (and match)
+export function reportedWords(tests) {
+  const have = condKeysSet().filter((k) => tests.every((t) => t[k] != null));
+  return have.map((k) => COND_WORD[k]).join(" and ");
+}
 
 /* ---------- selection ---------- */
 export const chipsOn = () => CHIP_GROUPS.some((c) => state.chips[c.key].size > 0);
@@ -223,19 +230,40 @@ function derive() {
 
 /* ---------- the Earth rating card's numbers ---------- */
 export function materialFacts(matId) {
-  const m = matById.get(matId);
-  const tests = D.chipTests.filter((t) => t.mat === matId);
+  const mat = matById.get(matId);
+  const rows = D.chipTests.filter((t) => t.mat === matId);
+  const tests = rows.filter((t) => t.out !== "limit");
+  const limits = rows.filter((t) => t.out === "limit" && t.o2 != null);
   const earth = tests.filter((t) => t.g === "earth");
   const space = tests.filter((t) => t.g !== "earth");
-  const rating = m && m.earth ? m.earth.o2 : null;
+  const earthLimits = limits.filter((t) => t.g === "earth");
+  const spaceLimits = limits.filter((t) => t.g !== "earth");
+
+  // The Earth reference is a reported 1-g limit. MOC (the highest oxygen at which the material still passes the
+  // Earth test) is an "Earth rating"; any other kind is an "Earth limit". When a document gives it at several
+  // pressures, the one nearest your pressure is used (101.3 kPa when you set none); ties go to the lower oxygen.
+  const wantP = state.cond.p ?? 101.3;
+  const nearest = (list) => list.slice().sort((a, b) => Math.abs((a.p ?? 1e6) - wantP) - Math.abs((b.p ?? 1e6) - wantP) || a.o2 - b.o2)[0];
+  const ref = nearest(earthLimits.filter((t) => t.kind === "MOC")) || nearest(earthLimits.filter((t) => t.kind === "ULOI")) || nearest(earthLimits) || null;
+  const earthRef = ref ? {
+    id: ref.id, o2: ref.o2, label: ref.kind === "MOC" ? "Earth rating" : "Earth limit",
+    basis: (ref.kind && ref.kind !== "limit" ? ref.kind : "1-g limit") + (ref.p != null ? " at " + num(ref.p) + " kPa" : ""),
+    src: ref.src, page: ref.page, loc: ref.loc,
+  } : null;
+  const rating = earthRef ? earthRef.o2 : null;
+
   const burned = (list) => list.filter((t) => t.out === "burned");
   const atOrBelow = (list) => (rating == null ? [] : burned(list).filter((t) => t.o2 != null && t.o2 <= rating + 1e-9));
-  const spaceBurnO2 = burned(space).map((t) => t.o2).filter((v) => v != null);
+  const burnO2 = burned(space).map((t) => t.o2).filter((v) => v != null);
+  const lowestBurn = burnO2.length ? Math.min(...burnO2) : null;
+  const lowestLimit = spaceLimits.length ? Math.min(...spaceLimits.map((t) => t.o2)) : null;
+  const lowestSpaceBurn = lowestBurn == null ? lowestLimit : lowestLimit == null ? lowestBurn : Math.min(lowestBurn, lowestLimit);
   return {
-    m, rating, earth, space,
+    m: { ...mat, earth: earthRef }, rating, earth, space, earthLimits, spaceLimits,
     earthBurnedBelow: atOrBelow(earth),
     spaceBurnedBelow: atOrBelow(space),
-    lowestSpaceBurn: spaceBurnO2.length ? Math.min(...spaceBurnO2) : null,
+    lowestSpaceBurn, lowestLimit,
+    lowestFromLimit: lowestSpaceBurn != null && lowestSpaceBurn === lowestLimit && lowestLimit !== lowestBurn,
     spaceGravities: [...new Set(space.map((t) => t.g))],
   };
 }
@@ -365,7 +393,8 @@ export function viewFor(about) {
   const exp = expById.has(about.experiment) ? about.experiment : null;
   const mat = matById.has(about.material) ? about.material : null;
   const cls = !mat && data.materials.some((m) => m.cls === about.material_class) ? about.material_class : null;
-  const g = GRAVITIES.some((x) => x[0] === about.gravity) ? about.gravity : null;
+  const aboutG = about.gravity === "lunar" || about.gravity === "martian" ? "partial" : about.gravity;
+  const g = GRAVITIES.some((x) => x[0] === aboutG) ? aboutG : null;
   if (exp || mat || cls || g) Object.assign(s, { view: exp ? "experiment" : "material", exp, mat, cls: exp ? null : cls, g });
   const chipField = { shape: about.shape, dir: about.flow_direction, enc: about.enclosure };
   for (const c of CHIP_GROUPS) {
@@ -385,7 +414,7 @@ export function aboutWords(about) {
   else if (matById.has(about.material)) parts.push(matById.get(about.material).name);
   else if (about.named) parts.push(`${about.named} (not in the tests)`);
   if (about.material_class && !matById.has(about.material)) parts.push(about.material_class);
-  const g = GRAVITIES.find((x) => x[0] === about.gravity);
+  const g = GRAVITIES.find((x) => x[0] === (about.gravity === "lunar" || about.gravity === "martian" ? "partial" : about.gravity));
   if (g) parts.push(g[1]);
   for (const k of ["shape", "flow_direction", "enclosure"]) if (about[k]) parts.push(about[k]);
   if (typeof about.o2_pct === "number") parts.push(pct(about.o2_pct) + " O2");

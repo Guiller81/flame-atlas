@@ -22,7 +22,7 @@ const CHARTS = [
   { id: "chart-flow", x: "flow", label: "Airflow (cm/s)", missing: "no airflow reported" },
   { id: "chart-p", x: "p", label: "Pressure (kPa)", missing: "no pressure reported" },
 ];
-const OUT_ORDER = ["burned", "went-out", "no-ignition"];
+const OUT_ORDER = ["burned", "went-out", "no-ignition", "limit"];
 const M = { l: 38, r: 14, t: 18, b: 34 };
 const BAND = 34;                       // width of the "no data" band
 
@@ -42,8 +42,21 @@ const views = new Map();               // chart id -> {box, tip, geometry, marks
 
 /* ---------- zoom: the wheel zooms in and out around the pointer; oxygen is shared by both charts ---------- */
 const zoom = { o2: null, flow: null, p: null };          // [lo, hi] per axis, or null = the whole range
+const home = { o2: null, flow: null, p: null };          // the view the page opens with, and Reset returns to
 const MIN_SPAN = { o2: 1, flow: 2, p: 2 };
-const zoomed = () => !!(zoom.o2 || zoom.flow || zoom.p);
+const sameRange = (a, b) => (!a && !b) || (!!a && !!b && Math.abs(a[0] - b[0]) < 1e-9 && Math.abs(a[1] - b[1]) < 1e-9);
+const zoomed = () => !["o2", "flow", "p"].every((k) => sameRange(zoom[k], home[k]));
+// A few reported limits sit far above any cabin (some materials only burn above 50% oxygen). The opening view
+// stops at 40% oxygen and at the 98th percentile of airflow; zooming out shows the rest.
+function setHome() {
+  const o2 = baseDomain("o2");
+  home.o2 = o2.hi > 45 ? [Math.max(o2.lo, Math.floor((D.ranges.o2[0] - 1) / 5) * 5), 40] : null;
+  const flows = data.tests.map((t) => t.flow).filter((v) => v != null).sort((a, b) => a - b);
+  const f = baseDomain("flow");
+  const p98 = flows.length ? flows[Math.floor(flows.length * 0.98)] : 0;
+  home.flow = flows.length && f.hi > p98 * 1.6 ? [0, niceScale(0, p98 * 1.1, 7).hi] : null;
+  for (const k of ["o2", "flow", "p"]) zoom[k] = home[k] && home[k].slice();
+}
 function zoomAxis(key, at, factor) {
   const base = baseDomain(key);
   const cur = zoom[key] || [base.lo, base.hi];
@@ -55,7 +68,7 @@ function zoomAxis(key, at, factor) {
   zoom[key] = hi - lo >= base.hi - base.lo - 1e-9 ? null : [lo, hi];
 }
 export function resetZoom() {
-  zoom.o2 = null; zoom.flow = null; zoom.p = null;
+  for (const k of ["o2", "flow", "p"]) zoom[k] = home[k] && home[k].slice();
   renderCharts();
 }
 function domainFor(key) {
@@ -141,7 +154,7 @@ function build(chart) {
     const f = materialFacts(state.mat);
     const lines = [];
     if (f.rating != null) lines.push({ v: f.rating, cls: "ref-earth", text: `${f.m.earth.label} ${pct(f.rating)}` });
-    if (f.lowestSpaceBurn != null) lines.push({ v: f.lowestSpaceBurn, cls: "ref-space", text: `Burned in space from ${pct(f.lowestSpaceBurn)}` });
+    if (f.lowestSpaceBurn != null) lines.push({ v: f.lowestSpaceBurn, cls: "ref-space", text: `${f.lowestFromLimit ? "Lowest space limit" : "Burned in space from"} ${pct(f.lowestSpaceBurn)}` });
     lines.sort((a, b) => b.v - a.v);
     lines.forEach((ln, i) => {
       if (ln.v < ys.lo || ln.v > ys.hi) return;
@@ -208,8 +221,14 @@ function build(chart) {
   for (const m of marks) {
     const cls = ["mark", "out-" + m.g.out, m.bright ? "bright" : "faded", m.match.length ? "match" : ""].join(" ");
     const node = el("g", { class: cls, transform: `translate(${m.px.toFixed(1)},${m.py.toFixed(1)})` });
-    node.append(el("circle", { r: m.r + 1, class: "halo" }));
-    node.append(el("circle", { r: m.r, class: "dot" }));
+    if (m.g.out === "limit") {                           // a reported limit is a diamond, not a dot
+      const d = m.r * 0.92;
+      node.append(el("rect", { x: -d - 1, y: -d - 1, width: 2 * d + 2, height: 2 * d + 2, transform: "rotate(45)", class: "halo" }));
+      node.append(el("rect", { x: -d, y: -d, width: 2 * d, height: 2 * d, transform: "rotate(45)", class: "dot" }));
+    } else {
+      node.append(el("circle", { r: m.r + 1, class: "halo" }));
+      node.append(el("circle", { r: m.r, class: "dot" }));
+    }
     if (m.shown > 1 && m.bright) node.append(el("text", { y: 3.2, "text-anchor": "middle", class: "count" }, m.shown));
     if (m.lit) node.append(el("circle", { r: m.r + 3.5, class: "ring-highlight" }));
     if (m.tapped) node.append(el("circle", { r: m.r + (m.lit ? 6 : 3.5), class: "ring-tapped" }));
@@ -290,7 +309,6 @@ function attach(chart) {
   const view = views.get(chart.id);
   const box = view.box;
   const tip = view.tip;
-  let dragging = false;
   let frame = 0;
 
   const local = (e) => { const r = box.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
@@ -308,30 +326,52 @@ function attach(chart) {
     frame = requestAnimationFrame(() => setConds(next));
   };
 
-  const press = (x, y) => {
-    const g = view.geo;
-    if (!g || y > g.y0 + 2 || y < g.y1 - 6 || x < M.l) return false;
+  const inPlot = (x, y) => { const g = view.geo; return !!g && y <= g.y0 + 2 && y >= g.y1 - 6 && x >= M.l; };
+  const tapMark = (x, y) => {
     const m = markAt(view, x, y);
-    if (m) { tapTests((m.sel.length ? m.sel : m.g.tests).map((t) => t.id), m.g.tests.map((t) => t.id)); return false; }
-    setFromPointer(x, y);
-    return true;
+    if (m) tapTests((m.sel.length ? m.sel : m.g.tests).map((t) => t.id), m.g.tests.map((t) => t.id));
+    return !!m;
   };
+
+  // Mouse: grab the "+" to move it (that sets your conditions); drag anywhere else to move a zoomed view;
+  // a plain click places the "+" there. Tapping a mark opens its tests.
+  let mode = null;                   // "target" (moving the +), "press" (not moved yet), "pan" (moving the view)
+  let start = null;
   let touchStart = null;
+  const pan = (dx, dy) => {
+    const g = start.geo;
+    const shift = (key, from, delta) => {
+      if (!from) return;                                 // only a zoomed axis can move
+      const base = baseDomain(key);
+      const span = from[1] - from[0];
+      const lo = Math.min(base.hi - span, Math.max(base.lo, from[0] + delta * span));
+      zoom[key] = [lo, lo + span];
+    };
+    shift("o2", start.o2, dy / (g.y0 - g.y1));
+    shift(g.xk, start.xz, -dx / (g.x1 - g.x0));
+    cancelAnimationFrame(frame);
+    frame = requestAnimationFrame(renderCharts);
+  };
   box.addEventListener("pointerdown", (e) => {
     if (e.button !== 0) return;
     const [x, y] = local(e);
     // Touch: act on a tap only (on release), so scrolling the page over a chart changes nothing.
     if (e.pointerType === "touch") { touchStart = { x, y, cx: e.clientX, cy: e.clientY }; return; }
-    if (!press(x, y)) return;
-    dragging = true;
-    box.classList.add("dragging");
+    if (!inPlot(x, y) || tapMark(x, y)) return;
+    const g = view.geo;
+    mode = Math.hypot(x - g.tx, y - g.ty) < 14 ? "target" : "press";
+    start = { x, y, geo: g, o2: zoom.o2 && zoom.o2.slice(), xz: zoom[g.xk] && zoom[g.xk].slice() };
+    if (mode === "target") box.classList.add("dragging");
     box.setPointerCapture(e.pointerId);
     tip.hidden = true;
     e.preventDefault();
   });
   box.addEventListener("pointermove", (e) => {
     const [x, y] = local(e);
-    if (dragging) { setFromPointer(x, y); return; }
+    if (mode === "target") { setFromPointer(x, y); return; }
+    if (mode === "press" && Math.hypot(x - start.x, y - start.y) > 4) { mode = "pan"; box.classList.add("dragging"); }
+    if (mode === "pan") { pan(x - start.x, y - start.y); return; }
+    if (mode) return;
     const m = markAt(view, x, y);
     box.classList.toggle("over-mark", !!m);
     // a hand over the "+" target shows it can be dragged
@@ -346,15 +386,23 @@ function attach(chart) {
     tip.style.top = (above < 0 ? m.py + m.r + 10 : above) + "px";
   });
   box.addEventListener("pointerup", (e) => {
-    if (e.pointerType !== "touch" || !touchStart) return;
-    const moved = Math.hypot(e.clientX - touchStart.cx, e.clientY - touchStart.cy);
-    if (moved < 10) press(touchStart.x, touchStart.y);
-    touchStart = null;
+    if (e.pointerType === "touch") {
+      if (touchStart && Math.hypot(e.clientX - touchStart.cx, e.clientY - touchStart.cy) < 10 && inPlot(touchStart.x, touchStart.y)
+          && !tapMark(touchStart.x, touchStart.y)) setFromPointer(touchStart.x, touchStart.y);
+      touchStart = null;
+      return;
+    }
+    if (mode === "press") setFromPointer(start.x, start.y);     // a click, not a drag: the "+" goes there
   });
-  const end = (e) => { if (dragging) { dragging = false; box.classList.remove("dragging"); try { box.releasePointerCapture(e.pointerId); } catch { /* already released */ } } };
+  const end = (e) => {
+    if (!mode) return;
+    mode = null;
+    box.classList.remove("dragging");
+    try { box.releasePointerCapture(e.pointerId); } catch { /* already released */ }
+  };
   box.addEventListener("pointerup", end);
   box.addEventListener("pointercancel", end);
-  box.addEventListener("pointerleave", () => { if (!dragging) tip.hidden = true; });
+  box.addEventListener("pointerleave", () => { if (!mode) tip.hidden = true; });
 
   // Wheel or trackpad pinch: zooms the oxygen axis around the pointer (both charts together).
   // With Shift held it zooms this chart's horizontal axis instead. One axis at a time reads calmer
@@ -380,6 +428,7 @@ function attach(chart) {
 }
 
 export function initCharts() {
+  setHome();
   document.getElementById("zoom-reset")?.addEventListener("click", resetZoom);
   for (const chart of CHARTS) {
     const box = document.getElementById(chart.id);

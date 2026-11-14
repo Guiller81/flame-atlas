@@ -8,7 +8,7 @@ import {
   data, state, D, GROUPS, GRAVITIES, GRAVITY_NAME, OUTCOMES, OUTCOME_NAME, CONDS, CHIP_GROUPS, CABINS,
   matById, expById, testById, num, pct, plural, sourceUrl, sourceLabel, hasSelection, condKeysSet,
   materialFacts, setView, select, toggleChip, setCond, setWin, tapCabin, activeCabin, tapTests,
-  setHighlight, clearHighlight, clearAll, changed, selectionWords, conditionWords, highlightUseful, missingWords,
+  setHighlight, clearHighlight, clearAll, changed, selectionWords, conditionWords, highlightUseful, missingWords, reportedWords,
 } from "./state.js";
 
 export const hooks = { ask: () => {} };     // set by the chat
@@ -277,6 +277,10 @@ function earthCard(matId) {
   if (f.space.length && m.earth) space += ` · ${f.spaceBurnedBelow.length} burned ${ratingWords}` + (f.lowestSpaceBurn != null ? ` (lowest ${pct(f.lowestSpaceBurn)})` : "");
   else if (f.space.length && f.lowestSpaceBurn != null) space += ` · lowest burn ${pct(f.lowestSpaceBurn)}`;
   lines.push(h("p", null, space + " ", highlightButton((m.earth ? f.spaceBurnedBelow : []).map((t) => t.id), "card-space")));
+  if (f.spaceLimits.length) {
+    lines.push(h("p", null, `Space limits reported: ${f.spaceLimits.length} (lowest ${pct(f.lowestLimit)}) `,
+      highlightButton(f.spaceLimits.map((t) => t.id), "card-limits")));
+  }
   out.push(h("div", { class: "card-lines" }, lines));
   const cw = conditionWords();
   out.push(h("div", { class: "card-actions" },
@@ -317,7 +321,7 @@ function renderCard() {
 /* ====================== test results header ====================== */
 function renderLegend() {
   const present = new Set(data.tests.map((t) => t.out));
-  const items = OUTCOMES.filter(([k]) => k !== "no-ignition" || present.has(k)).map(([k, label]) =>
+  const items = OUTCOMES.filter(([k]) => (k !== "no-ignition" && k !== "limit") || present.has(k)).map(([k, label]) =>
     h("span", { class: "legend-item" }, h("span", { class: "swatch out-" + k }), label));
   if (state.highlight.size) {
     items.push(h("span", { class: "legend-item hl" }, h("span", { class: "swatch ring" }), `${state.highlight.size} highlighted `,
@@ -358,13 +362,20 @@ function renderStatus() {
   const k = D.matchingSelected.length;
   const part = D.partSelected.length;
   const word = sel ? "selected " : "";
-  // tests that fit on what they report but do not print one of your conditions are counted apart
-  const partWords = part ? `${part} ${k ? "more " : ""}fit on what they report but print no ${missingWords(D.partSelected)}` : "";
+  // Tests that match on what they report, but whose source gives no value for one of your conditions,
+  // are counted apart: they are possible matches, never confirmed ones.
+  const one = part === 1;
+  const have = reportedWords(D.partSelected);
+  const miss = missingWords(D.partSelected);
   if (k) {
-    p.replaceChildren(`${k} of ${n} ${word}tests ${k === 1 ? "matches" : "match"} your conditions (larger dots)` + (part ? `; ${partWords}.` : "."));
+    const more = part ? ` ${part} more ${one ? "matches" : "match"} ${have ? "your " + have : "on what " + (one ? "it reports" : "they report")}, but ${one ? "its" : "their"} ${miss} was not recorded.` : "";
+    p.replaceChildren(`${k} of ${n} ${word}tests ${k === 1 ? "matches" : "match"} your conditions (larger dots).` + more);
     return;
   }
-  if (part) { p.replaceChildren(`No ${word}test reports all your conditions. ${partWords}.`); return; }
+  if (part) {
+    p.replaceChildren(`${part} of ${n} ${word}tests ${one ? "matches" : "match"} ${have ? "your " + have : "on what " + (one ? "it reports" : "they report")}. ${one ? "Its" : "Their"} ${miss} was not recorded, so ${one ? "it is not" : "none is"} a confirmed match.`);
+    return;
+  }
   const kids = [`No ${word}test at your conditions.`];
   if (D.closest) {
     kids.push(" Closest: ", h("button", { class: "link-btn test-link", type: "button", onclick: () => tapTests([D.closest.id]) }, D.closest.id));
@@ -380,7 +391,8 @@ function renderCabins() {
 }
 
 /* ====================== details ====================== */
-const outName = (t) => t.out_label || OUTCOME_NAME[t.out] || t.out;     // e.g. "Burned until suppressed"
+// e.g. "Burned until suppressed", "Reported limit · MOC"
+const outName = (t) => t.out_label || (t.out === "limit" && t.kind && t.kind !== "limit" ? "Reported limit · " + t.kind : OUTCOME_NAME[t.out] || t.out);
 const dash = (v, unit = "") => (v == null || v === "" ? "not reported" : (typeof v === "number" ? num(v, 2) : v) + unit);
 
 function summaryView() {
@@ -388,7 +400,7 @@ function summaryView() {
   if (!tests.length) return [h("p", { class: "muted" }, "No tests in this selection.")];
   const mats = new Set(tests.map((t) => t.mat));
   const exps = [...new Set(tests.map((t) => t.exp))].map((id) => expById.get(id)).filter(Boolean);
-  const byOut = OUTCOMES.map(([k, label]) => [label.toLowerCase(), tests.filter((t) => t.out === k).length]).filter((x) => x[1]);
+  const byOut = OUTCOMES.map(([k, label]) => [k === "limit" ? "reported limits" : label.toLowerCase(), tests.filter((t) => t.out === k).length]).filter((x) => x[1]);
   const srcs = new Map();
   for (const t of tests) if (!srcs.has(t.src)) srcs.set(t.src, t);
   const srcList = [...srcs.keys()];
@@ -421,17 +433,22 @@ function recordView(t) {
   const m = matById.get(t.mat) || { name: t.mat };
   const item = (label, ...value) => h("div", { class: "rec" }, h("span", { class: "fact-label" }, label), h("span", { class: "rec-value" }, ...value));
   const verb = t.out === "burned" ? "burned" : t.out === "went-out" ? "went out" : "did not ignite";
+  const isLimit = t.out === "limit";
+  const askText = isLimit
+    ? `What does the reported limit ${t.id} (${m.name}, ${pct(t.o2)} O2) mean, and how was it measured?`
+    : `Why did test ${t.id} (${m.name}, ${pct(t.o2)} O2) ${t.out === "burned" ? "burn" : t.out === "went-out" ? "go out" : "not ignite"}?`;
   return [h("div", { class: "record" },
     h("div", { class: "rec-head" }, h("strong", null, t.id), h("span", { class: "swatch out-" + t.out }), outName(t),
-      h("button", { class: "ai-btn small", type: "button", onclick: () => hooks.ask(`Why did test ${t.id} (${m.name}, ${pct(t.o2)} O2) ${t.out === "burned" ? "burn" : t.out === "went-out" ? "go out" : "not ignite"}?`, "why_test", { test_id: t.id }) }, `Ask why it ${verb}`)),
+      h("button", { class: "ai-btn small", type: "button", onclick: () => hooks.ask(askText, "why_test", { test_id: t.id }) }, isLimit ? "Ask about this limit" : `Ask why it ${verb}`)),
     h("div", { class: "rec-grid" },
       item("Experiment", e.name || t.exp), item("Platform", dash(t.platform)), item("Burn time", dash(e.burn_time)),
       item("Material", h("button", { class: "link-btn", type: "button", title: "Show this material's Earth rating card", onclick: () => { if (state.view === "experiment" && state.exp === t.exp) select({ exp: t.exp, mat: t.mat }); else { setView("material"); select({ mat: t.mat }); } } }, m.name)),
-      item("Class", dash(m.cls)), item("Gravity", GRAVITY_NAME[t.g] || t.g), item("Shape", dash(t.shape)), item("Thickness", dash(t.thick_mm, " mm")),
-      item("O2", dash(t.o2, "%")), item("Pressure", dash(t.p, " kPa")), item("Airflow", dash(t.flow, " cm/s")), item("Direction", dash(t.dir)), item("Enclosure", dash(t.enc)),
+      item("Class", dash(m.cls)), item("Gravity", t.g_detail || GRAVITY_NAME[t.g] || t.g), item("Shape", dash(t.shape)), item("Thickness", dash(t.thick_mm, " mm")),
+      item("O2", (t.o2_approx && t.o2 != null ? "about " : "") + dash(t.o2, "%")), item("Pressure", dash(t.p, " kPa")), item("Airflow", dash(t.flow, " cm/s")), item("Direction", dash(t.dir)), item("Enclosure", dash(t.enc)),
       item("Spread rate", dash(t.spread, " mm/s")), item("Flame length", dash(t.burn_len, " mm")),
       item("Printed as", dash(t.printed)), t.mat_basis ? item("Material from", t.mat_basis) : null, item("Airflow as printed", dash(t.flow_printed)),
-      item("Source", srcLink(t))),
+      item("Source", srcLink(t)),
+      t.also ? item("Also in", ...t.also.map((id) => link(sourceLabel(id), sourceUrl(id), (data.sources[id] || {}).title))) : null),
     t.note ? h("p", { class: "muted" }, t.note) : null)];
 }
 
