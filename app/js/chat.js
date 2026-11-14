@@ -8,7 +8,7 @@
 import {
   data, state, D, CONDS, CHIP_GROUPS, matById, expById, testById, GRAVITY_NAME, OUTCOME_NAME, num, pct, plural,
   hasSelection, isEmptyPage, materialFacts, selectionWords, conditionWords, snapshot, restore, sameView, viewFor,
-  aboutWords, highlightUseful, setHighlight, clearHighlight, onChange,
+  aboutWords, highlightUseful, setHighlight, clearHighlight, onChange, missingWords,
 } from "./state.js";
 
 const CHAT_URL = "https://guillec81.app.n8n.cloud/webhook/fif/chat";
@@ -61,6 +61,7 @@ function screenText() {
     if (conds.length) {
       const ids = D.matchingSelected.map((t) => t.id);
       lines.push(`Tests matching the conditions: ${ids.length}` + (ids.length ? ` (${ids.slice(0, 50).join(", ")}${ids.length > 50 ? ", ..." : ""})` : ""));
+      if (D.partSelected.length) lines.push(`Tests that fit on the conditions they report but do not print ${missingWords(D.partSelected)}: ${D.partSelected.length}`);
       if (!ids.length && D.closest) lines.push(`Closest test: ${D.closest.id}`);
     }
   }

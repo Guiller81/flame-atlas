@@ -7,7 +7,7 @@
 */
 import {
   data, state, D, CONDS, CABINS, matById, OUTCOME_NAME, num, pct, plural,
-  hasSelection, condKeysSet, materialFacts, setConds, tapTests,
+  hasSelection, condKeysSet, materialFacts, setConds, tapTests, missingWords,
 } from "./state.js";
 
 const NS = "http://www.w3.org/2000/svg";
@@ -154,6 +154,7 @@ function build(chart) {
     sibs.forEach((g, i) => {
       const sel = g.tests.filter((t) => D.selectedIds.has(t.id));
       const match = sel.filter((t) => D.matchIds.has(t.id));
+      const part = sel.filter((t) => D.partIds.has(t.id));      // fit on what they report, silent on one condition
       const shown = sel.length || g.tests.length;
       // inside the shaded window on this chart?
       const inX = cx == null ? null : g.xv != null && Math.abs(g.xv - cx) <= wx + 1e-9;
@@ -163,11 +164,11 @@ function build(chart) {
       const lit = g.tests.filter((t) => state.highlight.has(t.id)).length;
       // bright: in your selection, and not an "inside the window but off on another condition" case.
       // A tapped or highlighted mark is always brought back to full colour.
-      const bright = (sel.length > 0 && !(condOn && inside && match.length === 0)) || tapped > 0 || lit > 0;
+      const bright = (sel.length > 0 && !(condOn && inside && match.length === 0 && part.length === 0)) || tapped > 0 || lit > 0;
       const r = !sel.length && !tapped && !lit ? 3.5 : (shown > 9 ? 8.5 : shown > 1 ? 7 : 4.5) + (match.length ? 1.5 : 0);
       const px = g.xv == null ? bandX : X(g.xv);
       const py = Y(g.o2);
-      marks.push({ g, sel, match, shown, bright, inside, r, px, py, tapped, lit, sibs });
+      marks.push({ g, sel, match, part, shown, bright, inside, r, px, py, tapped, lit, sibs });
     });
     // different outcomes at one point sit side by side, centred on the real value
     const row = marks.slice(-sibs.length);
@@ -241,11 +242,12 @@ function tipText(chart, m) {
   parts.push(`${pct(m.g.o2)} O2, ${m.g.xv == null ? chart.missing : num(m.g.xv) + " " + unit}`);
   parts.push(OUTCOME_NAME[m.g.out] || m.g.out);
   if (m.match.length) parts.push(m.match.length === m.shown ? "matches your conditions" : `${m.match.length} match your conditions`);
+  else if (m.part.length) parts.push(`fits your conditions on what it reports; ${missingWords(m.part)} not printed`);
   if (m.tapped) parts.push(`includes ${m.tapped} you tapped`);
   const names = [...new Set(m.g.tests.map((t) => (matById.get(t.mat) || {}).name || t.mat))];
   parts.push(names.slice(0, 3).join(", ") + (names.length > 3 ? ` +${names.length - 3} more` : ""));
   // why a dot inside your window is faded: it is off on a condition this chart does not show
-  if (m.inside && !m.match.length && m.sel.length) {
+  if (m.inside && !m.match.length && !m.part.length && m.sel.length) {
     const t = m.sel[0];
     for (const c of CONDS) {
       const want = state.cond[c.key];

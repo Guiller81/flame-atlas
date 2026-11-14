@@ -115,6 +115,20 @@ export function matches(t) {
   return keys.every((k) => t[k] != null && Math.abs(t[k] - state.cond[k]) <= state.win[k] + 1e-9);
 }
 
+// Fits your window on every condition it reports, but does not print at least one condition you set.
+// Such a test is neither a match nor a miss: it stays bright and is counted separately.
+export function fitsPartly(t) {
+  const keys = condKeysSet();
+  const reported = keys.filter((k) => t[k] != null);
+  if (!reported.length || reported.length === keys.length) return false;
+  return reported.every((k) => Math.abs(t[k] - state.cond[k]) <= state.win[k] + 1e-9);
+}
+const COND_WORD = { o2: "oxygen", p: "pressure", flow: "airflow" };
+export function missingWords(tests) {
+  const miss = condKeysSet().filter((k) => tests.some((t) => t[k] == null));
+  return miss.map((k) => COND_WORD[k]).join(" or ");
+}
+
 /* ---------- selection ---------- */
 export const chipsOn = () => CHIP_GROUPS.some((c) => state.chips[c.key].size > 0);
 const expFilter = () => (state.exp && testsPerExp.get(state.exp) ? state.exp : null);
@@ -134,7 +148,7 @@ function passesGrid(t) {
 
 /* ---------- derived values, recomputed on every change ---------- */
 export const D = {
-  selected: [], selectedIds: new Set(), matchIds: new Set(), matchingSelected: [],
+  selected: [], selectedIds: new Set(), matchIds: new Set(), matchingSelected: [], partIds: new Set(), partSelected: [],
   closest: null, chipTests: [], expStats: new Map(), chipCounts: {}, ranges: {},
 };
 
@@ -145,10 +159,12 @@ function derive() {
   D.selectedIds = new Set(D.selected.map((t) => t.id));
   D.matchIds = new Set(T.filter(matches).map((t) => t.id));
   D.matchingSelected = D.selected.filter((t) => D.matchIds.has(t.id));
+  D.partIds = new Set(T.filter(fitsPartly).map((t) => t.id));
+  D.partSelected = D.selected.filter((t) => D.partIds.has(t.id));
 
   // closest selected test, for the status line when nothing matches
   D.closest = null;
-  if (condKeysSet().length && !D.matchingSelected.length) {
+  if (condKeysSet().length && !D.matchingSelected.length && !D.partSelected.length) {
     let best = Infinity;
     for (const t of D.selected) {
       const { d, complete } = distance(t);
@@ -169,7 +185,7 @@ function derive() {
 
   // per experiment: test counts and the ranking for your conditions
   D.expStats = new Map();
-  for (const e of data.experiments) D.expStats.set(e.id, { n: 0, byG: {}, tests: [], best: null, bestTest: null, near: 0, complete: false, rank: null });
+  for (const e of data.experiments) D.expStats.set(e.id, { n: 0, byG: {}, tests: [], best: null, bestTest: null, near: 0, part: 0, complete: false, rank: null });
   for (const t of D.chipTests) {
     const s = D.expStats.get(t.exp);
     if (!s) continue;
@@ -185,6 +201,7 @@ function derive() {
       const better = s.best == null || (complete && !s.complete) || (complete === s.complete && d < s.best);
       if (better) { s.best = d; s.bestTest = t; s.complete = complete; }
       if (complete && d <= 1) s.near += 1;
+      else if (!complete && fitsPartly(t)) s.part += 1;
     }
   }
   for (const g of GROUPS.filter((x) => x.ranked)) {

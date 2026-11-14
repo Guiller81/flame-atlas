@@ -8,7 +8,7 @@ import {
   data, state, D, GROUPS, GRAVITIES, GRAVITY_NAME, OUTCOMES, OUTCOME_NAME, CONDS, CHIP_GROUPS, CABINS,
   matById, expById, testById, num, pct, plural, sourceUrl, sourceLabel, hasSelection, condKeysSet,
   materialFacts, setView, select, toggleChip, setCond, setWin, tapCabin, activeCabin, tapTests,
-  setHighlight, clearHighlight, clearAll, changed, selectionWords, conditionWords, highlightUseful,
+  setHighlight, clearHighlight, clearAll, changed, selectionWords, conditionWords, highlightUseful, missingWords,
 } from "./state.js";
 
 export const hooks = { ask: () => {} };     // set by the chat
@@ -202,7 +202,7 @@ function experimentCard(e) {
   else {
     const t = s.bestTest;
     const closest = [t.o2 != null ? pct(t.o2) + " O2" : null, t.p != null ? num(t.p) + " kPa" : null, state.cond.flow != null && t.flow != null ? num(t.flow) + " cm/s" : null].filter(Boolean).join(", ");
-    key = `#${s.rank} in ${group.name.toLowerCase()} for your conditions. Closest test: ${closest} · ${s.near ? plural(s.near, "test") + " near your conditions" : "none near your conditions"}.`;
+    key = `#${s.rank} in ${group.name.toLowerCase()} for your conditions. Closest test: ${closest} · ${s.near ? plural(s.near, "test") + " near your conditions" : s.part ? `none reports all your conditions; ${plural(s.part, "test")} fit on what they report` : "none near your conditions"}.`;
   }
 
   fact("Objective", e.objective ? h("span", { class: "clamp", title: e.objective }, e.objective) : null);
@@ -356,8 +356,16 @@ function renderStatus() {
   if (sel && !n) { p.replaceChildren(`No test matches ${selectionWords()}. That combination was never tested.`); return; }
   if (!condKeysSet().length) { p.replaceChildren("Drag the target or type your conditions to see which tests match."); return; }
   const k = D.matchingSelected.length;
-  if (k) { p.replaceChildren(`${k} of ${n} ${sel ? "selected " : ""}tests ${k === 1 ? "matches" : "match"} your conditions (larger dots).`); return; }
-  const kids = [`No ${sel ? "selected " : ""}test at your conditions.`];
+  const part = D.partSelected.length;
+  const word = sel ? "selected " : "";
+  // tests that fit on what they report but do not print one of your conditions are counted apart
+  const partWords = part ? `${part} ${k ? "more " : ""}fit on what they report but print no ${missingWords(D.partSelected)}` : "";
+  if (k) {
+    p.replaceChildren(`${k} of ${n} ${word}tests ${k === 1 ? "matches" : "match"} your conditions (larger dots)` + (part ? `; ${partWords}.` : "."));
+    return;
+  }
+  if (part) { p.replaceChildren(`No ${word}test reports all your conditions. ${partWords}.`); return; }
+  const kids = [`No ${word}test at your conditions.`];
   if (D.closest) {
     kids.push(" Closest: ", h("button", { class: "link-btn test-link", type: "button", onclick: () => tapTests([D.closest.id]) }, D.closest.id));
   }
