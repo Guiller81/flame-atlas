@@ -1,0 +1,141 @@
+/*
+  Flame Atlas dashboard styles. Team Flame Atlas, NASA Space Apps Challenge 2026.
+  Licence: Apache-2.0. Written with an AI coding assistant (Claude Code), directed by the team.
+  Light theme only, by design: the page stays white when the device is in dark mode.
+*/
+
+:root {
+  color-scheme: light only;
+
+  --ink: #1b1d21;
+  --ink-soft: #5b616b;
+  --ink-faint: #8a909a;
+  --line: #e1e4e8;
+  --surface: #ffffff;
+  --surface-soft: #f6f7f9;
+
+  /* Meaning colours (spec section 4) */
+  --burned: #e8590c;      /* burned: the flame spread */
+  --went-out: #1c7ed6;    /* went out, and no ignition (hollow) */
+  --you: #6741d9;         /* you and the chat: conditions, highlights, chat buttons */
+  --you-soft: #f1ecfd;
+
+  --gutter: 16px;
+  --chat-width: 380px;
+  --radius: 8px;
+  --font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  background: var(--surface);
+  color: var(--ink);
+  font: 14px/1.45 var(--font);
+  overflow-wrap: anywhere;
+}
+
+h1, h2, p { margin: 0; }
+
+.page {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--chat-width);
+  min-height: 100vh;
+}
+
+/* Left side: header and the three panels */
+.explore {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.masthead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 14px;
+  padding: 12px var(--gutter);
+  border-bottom: 1px solid var(--line);
+}
+
+.masthead h1 {
+  font-size: 18px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+.tagline {
+  color: var(--ink-soft);
+  font-size: 13px;
+}
+
+.panel {
+  padding: 12px var(--gutter) 14px;
+  border-bottom: 1px solid var(--line);
+}
+
+.panel:last-child { border-bottom: 0; }
+
+.panel h2,
+.chat-head h2 {
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.pending {
+  margin-top: 6px;
+  color: var(--ink-faint);
+  font-size: 13px;
+}
+
+/* Right side: the chat column, pinned */
+.chat {
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  border-left: 1px solid var(--line);
+  background: var(--surface-soft);
+}
+
+.chat-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 14px var(--gutter) 10px;
+}
+
+.chat-head h2 { color: var(--you); }
+
+.chat-log {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 0 var(--gutter) 12px;
+}
+
+.ai-note {
+  padding: 8px var(--gutter) 10px;
+  border-top: 1px solid var(--line);
+  color: var(--ink-faint);
+  font-size: 11px;
+}
+
+/* Phone and narrow windows: one column (tabs come later) */
+@media (max-width: 899px) {
+  .page { grid-template-columns: minmax(0, 1fr); }
+  .chat {
+    position: static;
+    height: auto;
+    min-height: 240px;
+    border-left: 0;
+    border-top: 1px solid var(--line);
+  }
+}
