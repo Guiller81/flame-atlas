@@ -43,11 +43,12 @@ export const CABINS = [
   { id: "base", name: "Moon base", o2: 34, p: 56.5, tip: "Surface habitat and rover: 34% O2 at 56.5 kPa (8.2 psia), materials certified to 37%; also the long-term goal for landers (NESC TM-20260003925, pp.10–11, 33)" },
 ];
 
+const OPENING_CABIN = "base";
+
 export const state = {
   view: "experiment",                 // which side of the selector is showing
   exp: null, mat: null, cls: null, g: null,
   chips: { shape: new Set(), dir: new Set(), enc: new Set() },
-  openingChip: null,                  // the shape filter the opening view switched on; it goes when you change side
   cond: { o2: null, p: null, flow: null },
   win: { o2: 3, p: 10, flow: 5 },
   cabinUndo: null,                    // conditions before the lit cabin button was tapped
@@ -75,9 +76,10 @@ export async function loadData() {
   data.materials.forEach((m) => matById.set(m.id, m));
   data.experiments.forEach((e) => expById.set(e.id, e));
   data.tests.forEach((t) => { testById.set(t.id, t); testsPerExp.set(t.exp, (testsPerExp.get(t.exp) || 0) + 1); });
-  // Opening view: the Material side on the material whose card leads with a comparison the source's own authors make.
-  const first = data.materials.find((m) => m.lead && data.tests.some((t) => t.mat === m.id && t.shape === m.lead.shape));
-  if (first) { state.view = "material"; state.mat = first.id; state.chips.shape.add(first.lead.shape); state.openingChip = first.lead.shape; }
+  // Opening view: the Experiment side, ranked for the Moon base cabin (the statement asks to rank investigations
+  // for crew habitats). Tapping the lit cabin button clears the conditions.
+  const cabin = CABINS.find((c) => c.id === OPENING_CABIN);
+  if (cabin) { state.cond.o2 = cabin.o2; state.cond.p = cabin.p; state.cabinUndo = { o2: null, p: null }; }
   derive();
 }
 
@@ -161,17 +163,12 @@ function passesGrid(t) {
 /* ---------- derived values, recomputed on every change ---------- */
 export const D = {
   selected: [], selectedIds: new Set(), matchIds: new Set(), matchingSelected: [], partIds: new Set(), partSelected: [],
-  closest: null, chipTests: [], gridTests: [], expStats: new Map(), chipCounts: {}, ranges: {},
+  closest: null, chipTests: [], expStats: new Map(), chipCounts: {}, ranges: {},
 };
 
 function derive() {
   const T = data.tests;
   D.chipTests = T.filter((t) => passesChips(t));
-  // The opening view's shape filter goes as soon as you pick another material, class or gravity. So the grid counts
-  // those rows without it: the number in a cell is the number of tests you get by clicking it.
-  D.gridTests = state.openingChip
-    ? T.filter((t) => CHIP_GROUPS.every((c) => { const on = [...state.chips[c.key]].filter((v) => !(c.key === "shape" && v === state.openingChip)); return !on.length || on.includes(t[c.key]); }))
-    : D.chipTests;
   D.selected = D.chipTests.filter(passesGrid);
   D.selectedIds = new Set(D.selected.map((t) => t.id));
   D.matchIds = new Set(T.filter(matches).map((t) => t.id));
@@ -304,12 +301,7 @@ export function setView(view) {
   state.view = view;
   state.exp = null; state.mat = null; state.cls = null; state.g = null;
   state.search = "";
-  dropOpeningChip();
   changed();
-}
-// The opening view switches a shape filter on for its material. It goes as soon as you leave that material.
-function dropOpeningChip() {
-  if (state.openingChip) { state.chips.shape.delete(state.openingChip); state.openingChip = null; }
 }
 // From a test record: select the test's material and keep the record open.
 // A filter that would hide this test is cleared, so the test and its material always light up.
@@ -318,7 +310,7 @@ export function openMaterial(t) {
   const materialChanged = state.mat !== t.mat;
   if (!inExp) { state.view = "material"; state.search = ""; }
   Object.assign(state, { exp: inExp ? t.exp : null, mat: t.mat, cls: null, g: null });
-  if (materialChanged) { clearHighlight(false); dropOpeningChip(); }
+  if (materialChanged) clearHighlight(false);
   for (const c of CHIP_GROUPS) { const set = state.chips[c.key]; if (set.size && !set.has(t[c.key])) set.clear(); }
   state.tapped = new Set([t.id]);
   state.tappedPoint = [];
@@ -331,13 +323,12 @@ export function select(next) {
   const same = Object.keys(cur).every((k) => cur[k] === norm[k]);
   const materialChanged = cur.mat !== (same ? null : norm.mat);
   Object.assign(state, same ? { exp: null, mat: null, cls: null, g: null } : norm);
-  if (materialChanged) { clearHighlight(false); dropOpeningChip(); }
+  if (materialChanged) clearHighlight(false);
   state.tapped.clear();
   changed();
 }
 export function toggleChip(group, value) {
   const set = state.chips[group];
-  if (group === "shape" && value === state.openingChip) state.openingChip = null;   // from now on it is your own filter
   if (set.has(value)) set.delete(value); else set.add(value);
   changed();
 }
@@ -389,7 +380,6 @@ export function clearHighlight(notify = true) {
 export function clearAll() {
   Object.assign(state, { exp: null, mat: null, cls: null, g: null, cabinUndo: null, search: "" });
   CHIP_GROUPS.forEach((c) => state.chips[c.key].clear());
-  state.openingChip = null;
   state.cond = { o2: null, p: null, flow: null };
   state.tapped.clear();
   clearHighlight(false);

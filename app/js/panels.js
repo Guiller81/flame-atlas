@@ -111,7 +111,7 @@ function materialList() {
     if (state.search.trim()) mats = mats.filter((m) => matchSearch(m.name + " " + m.cls));
     if (!mats.length) continue;
     const open = !state.closedClasses.has(cls) || !!state.search.trim() || mats.some((m) => m.id === state.mat);
-    const clsTests = D.gridTests.filter((t) => (matById.get(t.mat) || {}).cls === cls);
+    const clsTests = D.chipTests.filter((t) => (matById.get(t.mat) || {}).cls === cls);
     const clsOn = state.cls === cls;
     rows.push(h("div", { class: "row group cls" + (clsOn ? " on" : ""), role: "button", tabindex: "0", onclick: () => select({ cls }) },
       h("button", { class: "caret-btn", type: "button", "aria-expanded": String(open), "aria-label": (open ? "Close " : "Open ") + cls,
@@ -121,7 +121,7 @@ function materialList() {
     if (!open) continue;
     for (const m of mats) {
       const on = state.mat === m.id;
-      const tests = (on ? D.chipTests : D.gridTests).filter((t) => t.mat === m.id);   // the selected row counts with your filters
+      const tests = D.chipTests.filter((t) => t.mat === m.id);
       rows.push(h("div", { class: "row mat" + (on ? " on" : ""), role: "button", tabindex: "0", "data-mat": m.id, onclick: () => select({ mat: m.id }) },
         h("span", { class: "rank" }), h("span", { class: "name", title: m.name.length > 30 ? m.name : null }, m.name),
         cells(countsBy(tests), (g) => select({ mat: m.id, g }), on ? state.g : null)));
