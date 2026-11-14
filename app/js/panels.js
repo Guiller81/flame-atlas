@@ -262,11 +262,16 @@ function earthCard(matId) {
   const head = earthHeadline(f);
   if (head) out.push(head);
   const lines = [];
-  if (m.earth) {
+  if (f.lead) {
+    lines.push(h("p", { class: "lead" }, f.lead.text + " ",
+      link(sourceLabel(f.lead.space.src, f.lead.space.page), sourceUrl(f.lead.space.src, f.lead.space.page)), " · ",
+      link(sourceLabel(f.lead.earth.src, f.lead.earth.page), sourceUrl(f.lead.earth.src, f.lead.earth.page))));
+  }
+  if (m.earth && !f.lead) {                                           // the lead already states its Earth limit, with its page
     const basis = m.earth.basis ? ` (${m.earth.basis})` : "";
-    lines.push(h("p", null, `${m.earth.label}${basis}: ${m.earth.label === "Earth rating" ? "passes up to" : "burns from"} ${pct(m.earth.o2)} O2 · `,
+    lines.push(h("p", null, `${m.earth.label}${basis}: ${m.earth.kind === "MOC" ? "passes up to" : "limit at"} ${pct(m.earth.o2)} O2 · `,
       link(sourceLabel(m.earth.src, m.earth.page, m.earth.loc), sourceUrl(m.earth.src, m.earth.page))));
-  } else lines.push(h("p", { class: "muted" }, "No Earth rating or limit for this material in the data."));
+  } else if (!m.earth) lines.push(h("p", { class: "muted" }, "No Earth rating or limit for this material in the data."));
   const ratingWords = m.earth ? `at or below ${pct(m.earth.o2)}` : "";
   if (f.earth.length || m.earth) {
     lines.push(h("p", null, `Earth tests: ${f.earth.length}` + (m.earth && f.earth.length ? ` · ${f.earthBurnedBelow.length} burned ${ratingWords} ` : " "),
@@ -274,7 +279,7 @@ function earthCard(matId) {
   }
   const gNames = f.spaceGravities.map((g) => GRAVITY_NAME[g]);
   let space = `Space tests: ${f.space.length}` + (f.space.length && gNames.length === 1 ? `, all ${gNames[0]}` : "");
-  if (f.space.length && m.earth) space += ` · ${f.spaceBurnedBelow.length} burned ${ratingWords}` + (f.lowestSpaceBurn != null ? ` (lowest ${pct(f.lowestSpaceBurn)})` : "");
+  if (f.space.length && m.earth) space += ` · ${f.spaceBurnedBelow.length} burned ${ratingWords}` + (f.lowestSpaceBurn != null ? (f.lead ? ` (a flame lasted down to ${pct(f.lowestSpaceBurn)})` : ` (lowest ${pct(f.lowestSpaceBurn)})`) : "");
   else if (f.space.length && f.lowestSpaceBurn != null) space += ` · lowest burn ${pct(f.lowestSpaceBurn)}`;
   lines.push(h("p", null, space + " ", highlightButton((m.earth ? f.spaceBurnedBelow : []).map((t) => t.id), "card-space")));
   if (f.spaceLimits.length) {
@@ -282,6 +287,16 @@ function earthCard(matId) {
       highlightButton(f.spaceLimits.map((t) => t.id), "card-limits")));
   }
   out.push(h("div", { class: "card-lines" }, lines));
+  if (f.sizes.length) {
+    const range = (s) => (s.earthLo === s.earthHi ? pct(s.earthLo) : num(s.earthLo) + "–" + pct(s.earthHi));
+    out.push(h("div", { class: "sizes" },
+      h("p", { class: "muted" }, "By rod diameter, one size at a time (sizes are not comparable):"),
+      f.sizes.map((s) => h("p", null, h("strong", null, num(s.d, 2) + " mm"), " · ",
+        s.earthN ? `Earth limits ${range(s)} (${s.earthN}, by set-up)` : "no Earth limit in the data", " · ",
+        s.spaceLow != null ? `space: flames down to ${pct(s.spaceLow)}` : s.spaceN ? "space: no flame lasted" : "no space tests", " ",
+        highlightButton(s.ids, "card-size-" + s.d, "Highlight"))),
+      f.unsized ? h("p", { class: "muted" }, `${f.unsized} more rod rows print no diameter.`) : null));
+  }
   const cw = conditionWords();
   out.push(h("div", { class: "card-actions" },
     h("button", { class: "ai-btn", type: "button", onclick: () => hooks.ask(`What do the papers add for ${m.name}${cw ? " at " + cw : ""}?`, "brief") }, "What do the papers add?"),
@@ -443,8 +458,9 @@ function recordView(t) {
     h("div", { class: "rec-grid" },
       item("Experiment", e.name || t.exp), item("Platform", dash(t.platform)), item("Burn time", dash(e.burn_time)),
       item("Material", h("button", { class: "link-btn", type: "button", title: "Show this material's Earth rating card", onclick: () => { if (state.view === "experiment" && state.exp === t.exp) select({ exp: t.exp, mat: t.mat }); else { setView("material"); select({ mat: t.mat }); } } }, m.name)),
-      item("Class", dash(m.cls)), item("Gravity", t.g_detail || GRAVITY_NAME[t.g] || t.g), item("Shape", dash(t.shape)), item("Thickness", dash(t.thick_mm, " mm")),
-      item("O2", (t.o2_approx && t.o2 != null ? "about " : "") + dash(t.o2, "%")), item("Pressure", dash(t.p, " kPa")), item("Airflow", dash(t.flow, " cm/s")), item("Direction", dash(t.dir)), item("Enclosure", dash(t.enc)),
+      item("Class", dash(m.cls)), item("Gravity", t.g_detail || GRAVITY_NAME[t.g] || t.g), item("Shape", dash(t.shape)), t.dia_mm != null ? item("Diameter", num(t.dia_mm, 2) + " mm") : item("Thickness", dash(t.thick_mm, " mm")),
+      item("O2", (t.o2_approx && t.o2 != null ? "about " : "") + dash(t.o2, "%")), t.o2_start != null ? item("O2 at start", num(t.o2_start) + "% (the dot is the last reading)") : null,
+      item("Pressure", dash(t.p, " kPa") + (t.p_disputed ? " (disputed in the source)" : "")), item("Airflow", dash(t.flow, " cm/s")), item("Direction", dash(t.dir)), item("Enclosure", dash(t.enc)),
       item("Spread rate", dash(t.spread, " mm/s")), item("Flame length", dash(t.burn_len, " mm")),
       item("Printed as", dash(t.printed)), t.mat_basis ? item("Material from", t.mat_basis) : null, item("Airflow as printed", dash(t.flow_printed)),
       item("Source", srcLink(t)),
@@ -470,8 +486,8 @@ function renderDetails() {
 }
 
 function downloadCsv() {
-  const cols = [["id", "test"], ["exp", "experiment"], ["mat", "material"], ["g", "gravity"], ["platform", "platform"], ["shape", "shape"], ["thick_mm", "thickness_mm"],
-    ["o2", "o2_pct"], ["p", "pressure_kpa"], ["flow", "airflow_cm_s"], ["dir", "airflow_direction"], ["enc", "enclosure"], ["out", "result"],
+  const cols = [["id", "test"], ["exp", "experiment"], ["mat", "material"], ["g", "gravity"], ["platform", "platform"], ["shape", "shape"], ["thick_mm", "thickness_mm"], ["dia_mm", "rod_diameter_mm"],
+    ["o2", "o2_pct"], ["o2_start", "o2_start_pct"], ["p", "pressure_kpa"], ["flow", "airflow_cm_s"], ["dir", "airflow_direction"], ["enc", "enclosure"], ["out", "result"],
     ["spread", "spread_rate_mm_s"], ["burn_len", "flame_length_mm"], ["src", "source"], ["page", "page"], ["loc", "locator"]];
   const esc = (v) => (v == null ? "" : /[",\n]/.test(String(v)) ? '"' + String(v).replace(/"/g, '""') + '"' : String(v));
   const lines = [cols.map((c) => c[1]).concat("experiment_name", "material_name", "source_url").join(",")];

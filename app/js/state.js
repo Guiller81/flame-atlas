@@ -16,7 +16,7 @@ const testsPerExp = new Map();        // an experiment without test rows only op
 export const GRAVITIES = [["micro", "Micro-g"], ["partial", "Partial-g"], ["earth", "Earth"]];
 export const GRAVITY_NAME = { micro: "micro-g", partial: "partial gravity (lunar, Martian)", earth: "Earth gravity" };
 // A "reported limit" is a flammability limit a document states (for example the lowest oxygen that still burned), not one test.
-export const OUTCOMES = [["burned", "Burned"], ["went-out", "Went out"], ["no-ignition", "No ignition"], ["limit", "Reported limit"]];
+export const OUTCOMES = [["burned", "Burned"], ["went-out", "Went out"], ["no-ignition", "No sustained ignition"], ["limit", "Reported limit"]];
 export const OUTCOME_NAME = Object.fromEntries(OUTCOMES);
 export const GROUPS = [
   { id: "solid", name: "Solid materials and emulators", ranked: true },
@@ -74,6 +74,9 @@ export async function loadData() {
   data.materials.forEach((m) => matById.set(m.id, m));
   data.experiments.forEach((e) => expById.set(e.id, e));
   data.tests.forEach((t) => { testById.set(t.id, t); testsPerExp.set(t.exp, (testsPerExp.get(t.exp) || 0) + 1); });
+  // Opening view: the Material side on the material whose card leads with a comparison the source's own authors make.
+  const first = data.materials.find((m) => m.lead && data.tests.some((t) => t.mat === m.id && t.shape === m.lead.shape));
+  if (first) { state.view = "material"; state.mat = first.id; state.chips.shape.add(first.lead.shape); }
   derive();
 }
 
@@ -239,31 +242,51 @@ export function materialFacts(matId) {
   const earthLimits = limits.filter((t) => t.g === "earth");
   const spaceLimits = limits.filter((t) => t.g !== "earth");
 
-  // The Earth reference is a reported 1-g limit. MOC (the highest oxygen at which the material still passes the
-  // Earth test) is an "Earth rating"; any other kind is an "Earth limit". When a document gives it at several
-  // pressures, the one nearest your pressure is used (101.3 kPa when you set none); ties go to the lower oxygen.
+  // The Earth reference is a reported 1-g limit. Only a limit from the standard Earth test (NASA-STD-6001 Test 1,
+  // chemical igniter) is an "Earth rating"; any other 1-g limit is an "Earth limit". When a document gives it at
+  // several pressures, the one nearest your pressure is used (101.3 kPa when you set none); ties go to the lower oxygen.
   const wantP = state.cond.p ?? 101.3;
   const nearest = (list) => list.slice().sort((a, b) => Math.abs((a.p ?? 1e6) - wantP) - Math.abs((b.p ?? 1e6) - wantP) || a.o2 - b.o2)[0];
-  const ref = nearest(earthLimits.filter((t) => t.kind === "MOC")) || nearest(earthLimits.filter((t) => t.kind === "ULOI")) || nearest(earthLimits) || null;
-  const earthRef = ref ? {
-    id: ref.id, o2: ref.o2, label: ref.kind === "MOC" ? "Earth rating" : "Earth limit",
-    basis: (ref.kind && ref.kind !== "limit" ? ref.kind : "1-g limit") + (ref.p != null ? " at " + num(ref.p) + " kPa" : ""),
-    src: ref.src, page: ref.page, loc: ref.loc,
-  } : null;
+  const isRating = (t) => /chemical ign/i.test(t.ign || "");
+  const kind = (k, list = earthLimits) => list.filter((t) => t.kind === k);
+  const ref = nearest(kind("MOC", earthLimits.filter(isRating))) || nearest(earthLimits.filter(isRating))
+    || nearest(kind("MOC")) || nearest(kind("ULOI")) || nearest(earthLimits) || null;
+  // A comparison the source's own authors make, for exactly this material and shape, comes first.
+  const lead = mat.lead && state.chips.shape.size === 1 && state.chips.shape.has(mat.lead.shape) ? mat.lead : null;
+  const earthRef = lead ? { id: null, o2: lead.earth.o2, label: lead.earth.label, kind: "limit", basis: lead.earth.basis, src: lead.earth.src, page: lead.earth.page, loc: null }
+    : ref ? {
+      id: ref.id, o2: ref.o2, label: isRating(ref) ? "Earth rating" : "Earth limit", kind: ref.kind,
+      basis: (ref.kind && ref.kind !== "limit" ? ref.kind : "1-g limit") + (ref.p != null ? " at " + num(ref.p) + " kPa" : ""),
+      src: ref.src, page: ref.page, loc: ref.loc,
+    } : null;
   const rating = earthRef ? earthRef.o2 : null;
+
+  // Rods: one diameter at a time (a thicker rod burns differently, so sizes are never mixed in one comparison).
+  const sized = rows.filter((t) => t.dia_mm != null);
+  const dias = [...new Set(sized.map((t) => t.dia_mm))].sort((a, b) => a - b);
+  const sizes = dias.length < 2 ? [] : dias.map((d) => {
+    const r = sized.filter((t) => t.dia_mm === d);
+    const eo = r.filter((t) => t.g === "earth" && t.out === "limit").map((t) => t.o2);
+    const sp = r.filter((t) => t.g !== "earth");
+    // lowest oxygen with a flame in space: a test that burned, a reported limit, or the last reading of a flame that then went out
+    const low = sp.filter((t) => t.o2 != null && (t.out === "burned" || t.out === "limit" || (t.out === "went-out" && t.o2_start != null))).map((t) => t.o2);
+    return { d, ids: r.map((t) => t.id), earthN: eo.length, earthLo: eo.length ? Math.min(...eo) : null, earthHi: eo.length ? Math.max(...eo) : null,
+      spaceN: sp.length, spaceLow: low.length ? Math.min(...low) : null };
+  });
 
   const burned = (list) => list.filter((t) => t.out === "burned");
   const atOrBelow = (list) => (rating == null ? [] : burned(list).filter((t) => t.o2 != null && t.o2 <= rating + 1e-9));
   const burnO2 = burned(space).map((t) => t.o2).filter((v) => v != null);
   const lowestBurn = burnO2.length ? Math.min(...burnO2) : null;
   const lowestLimit = spaceLimits.length ? Math.min(...spaceLimits.map((t) => t.o2)) : null;
-  const lowestSpaceBurn = lowestBurn == null ? lowestLimit : lowestLimit == null ? lowestBurn : Math.min(lowestBurn, lowestLimit);
+  const lowestSpaceBurn = lead ? lead.space.o2 : lowestBurn == null ? lowestLimit : lowestLimit == null ? lowestBurn : Math.min(lowestBurn, lowestLimit);
   return {
-    m: { ...mat, earth: earthRef }, rating, earth, space, earthLimits, spaceLimits,
+    m: { ...mat, earth: earthRef }, rating, earth, space, earthLimits, spaceLimits, lead, sizes,
+    unsized: sizes.length ? rows.filter((t) => t.shape === "rod" && t.dia_mm == null).length : 0,
     earthBurnedBelow: atOrBelow(earth),
     spaceBurnedBelow: atOrBelow(space),
     lowestSpaceBurn, lowestLimit,
-    lowestFromLimit: lowestSpaceBurn != null && lowestSpaceBurn === lowestLimit && lowestLimit !== lowestBurn,
+    lowestFromLimit: !lead && lowestSpaceBurn != null && lowestSpaceBurn === lowestLimit && lowestLimit !== lowestBurn,
     spaceGravities: [...new Set(space.map((t) => t.g))],
   };
 }

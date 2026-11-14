@@ -161,7 +161,7 @@ function build(chart) {
     const f = materialFacts(state.mat);
     const lines = [];
     if (f.rating != null) lines.push({ v: f.rating, cls: "ref-earth", text: `${f.m.earth.label} ${pct(f.rating)}` });
-    if (f.lowestSpaceBurn != null) lines.push({ v: f.lowestSpaceBurn, cls: "ref-space", text: `${f.lowestFromLimit ? "Lowest space limit" : "Burned in space from"} ${pct(f.lowestSpaceBurn)}` });
+    if (f.lowestSpaceBurn != null) lines.push({ v: f.lowestSpaceBurn, cls: "ref-space", text: `${f.lead ? f.lead.space.words : f.lowestFromLimit ? "Lowest space limit" : "Burned in space from"} ${pct(f.lowestSpaceBurn)}` });
     lines.sort((a, b) => b.v - a.v);
     lines.forEach((ln, i) => {
       if (ln.v < ys.lo || ln.v > ys.hi) return;
@@ -294,6 +294,7 @@ function tipText(chart, m) {
   else parts.push(plural(total, "test") + " here, outside your selection");
   parts.push(`${pct(m.g.o2)} O2, ${m.g.xv == null ? chart.missing : num(m.g.xv) + " " + unit}`);
   parts.push(OUTCOME_NAME[m.g.out] || m.g.out);
+  if (xk === "p" && m.g.tests.some((t) => t.p_disputed)) parts.push("pressure disputed in the source");
   if (m.match.length) parts.push(m.match.length === m.shown ? "matches your conditions" : `${m.match.length} match your conditions`);
   else if (m.part.length) parts.push(`fits your conditions on what it reports; ${missingWords(m.part)} not printed`);
   if (m.tapped) parts.push(`includes ${m.tapped} you tapped`);

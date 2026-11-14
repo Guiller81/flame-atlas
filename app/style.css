@@ -472,6 +472,10 @@ a.src:hover { color: var(--ink); }
 }
 .headline.warn { border-left-color: var(--burned); background: #fff4ec; }
 .card-lines p + p { margin-top: 3px; }
+.card-lines .lead { font-weight: 600; margin-bottom: 4px; }
+.card-lines .lead a { font-weight: 400; }
+.sizes { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--line, #e3e3e3); font-size: 0.92em; }
+.sizes p + p { margin-top: 2px; }
 .facts { display: grid; gap: 2px; }
 .fact { display: grid; grid-template-columns: 66px minmax(0, 1fr); gap: 8px; }
 .facts.wide .fact { grid-template-columns: 92px minmax(0, 1fr); }
