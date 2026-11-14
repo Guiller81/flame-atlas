@@ -112,7 +112,7 @@ function build(chart) {
   grid.append(el("line", { x1: M.l, x2: x1, y1: y0, y2: y0, class: "axis" }));
   grid.append(el("text", { x: M.l - 30, y: 10, class: "axis-label" }, "O2 (%)"));
   grid.append(el("text", { x: x1, y: H - 4, "text-anchor": "end", class: "axis-label" }, chart.label));
-  if (!zoomed()) grid.append(el("text", { x: x1, y: 10, "text-anchor": "end", class: "zoom-hint" }, "scroll to zoom"));
+  if (!zoomed()) grid.append(el("text", { x: x1, y: 10, "text-anchor": "end", class: "zoom-hint" }, `scroll: zoom O2 · Shift + scroll: zoom ${xk === "p" ? "pressure" : "airflow"}`));
   if (hasMissing) {
     grid.append(el("rect", { x: M.l, y: y1, width: BAND, height: y0 - y1, class: "nodata" }));
     grid.append(el("text", { x: bandX, y: y0 + 16, "text-anchor": "middle", class: "tick" }, "no data"));
@@ -356,19 +356,23 @@ function attach(chart) {
   box.addEventListener("pointercancel", end);
   box.addEventListener("pointerleave", () => { if (!dragging) tip.hidden = true; });
 
-  // Wheel or trackpad pinch: zoom around the pointer. Only where the page itself does not scroll (laptop width).
+  // Wheel or trackpad pinch: zooms the oxygen axis around the pointer (both charts together).
+  // With Shift held it zooms this chart's horizontal axis instead. One axis at a time reads calmer
+  // than both at once. Only where the page itself does not scroll (laptop width).
   box.addEventListener("wheel", (e) => {
     const g = view.geo;
     if (!g || !window.matchMedia("(min-width: 1100px)").matches) return;
     e.preventDefault();
     const [x, y] = local(e);
-    const step = Math.max(-60, Math.min(60, e.deltaY * (e.ctrlKey ? 4 : 1)));
+    const delta = e.deltaY || e.deltaX;                 // Shift turns the wheel sideways on a Mac
+    const step = Math.max(-60, Math.min(60, delta * (e.ctrlKey ? 4 : 1)));
     const factor = Math.exp(step * 0.004);              // one mouse notch = about a quarter in or out
-    const yy = Math.min(g.y0, Math.max(g.y1, y));
-    zoomAxis("o2", g.ys.lo + ((g.y0 - yy) / (g.y0 - g.y1)) * (g.ys.hi - g.ys.lo), factor);
-    if (x >= g.x0) {                                     // over the "no data" band only oxygen zooms
-      const xx = Math.min(g.x1, x);
+    if (e.shiftKey) {
+      const xx = Math.min(g.x1, Math.max(g.x0, x));
       zoomAxis(g.xk, g.xs.lo + ((xx - g.x0) / (g.x1 - g.x0)) * (g.xs.hi - g.xs.lo), factor);
+    } else {
+      const yy = Math.min(g.y0, Math.max(g.y1, y));
+      zoomAxis("o2", g.ys.lo + ((g.y0 - yy) / (g.y0 - g.y1)) * (g.ys.hi - g.ys.lo), factor);
     }
     tip.hidden = true;
     renderCharts();

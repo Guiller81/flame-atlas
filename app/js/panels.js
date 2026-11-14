@@ -374,7 +374,7 @@ function renderStatus() {
 
 function renderCabins() {
   const lit = activeCabin();
-  $("cabins").replaceChildren(h("span", { class: "cabins-title" }, "Cabin"), ...CABINS.map((c) =>
+  $("cabins").replaceChildren(h("span", { class: "cabins-title" }, "Cabin conditions"), ...CABINS.map((c) =>
     h("button", { class: "cabin" + (lit && lit.id === c.id ? " on" : ""), type: "button", title: c.tip, "aria-pressed": String(!!lit && lit.id === c.id),
       onclick: () => tapCabin(c.id) }, c.name)));
 }
