@@ -123,7 +123,7 @@ function materialList() {
       const tests = D.chipTests.filter((t) => t.mat === m.id);
       const on = state.mat === m.id;
       rows.push(h("div", { class: "row mat" + (on ? " on" : ""), role: "button", tabindex: "0", "data-mat": m.id, onclick: () => select({ mat: m.id }) },
-        h("span", { class: "rank" }), h("span", { class: "name" }, m.name),
+        h("span", { class: "rank" }), h("span", { class: "name", title: m.name.length > 30 ? m.name : null }, m.name),
         cells(countsBy(tests), (g) => select({ mat: m.id, g }), on ? state.g : null)));
     }
   }
@@ -339,7 +339,7 @@ const LIMIT_TIP = "The oxygen level a paper gives as the border for one material
 function renderLegend() {
   const present = new Set(data.tests.map((t) => t.out));
   const items = OUTCOMES.filter(([k]) => (k !== "no-ignition" && k !== "limit") || present.has(k)).map(([k, label]) =>
-    h("span", { class: "legend-item", title: k === "limit" ? LIMIT_TIP : null }, h("span", { class: "swatch out-" + k }), k === "limit" ? label + " (oxygen where burning starts)" : label));
+    h("span", { class: "legend-item", title: k === "limit" ? LIMIT_TIP : null }, h("span", { class: "swatch out-" + k }), k === "limit" ? label + " (from many tests)" : label));
   if (state.highlight.size) {
     items.push(h("span", { class: "legend-item hl" }, h("span", { class: "swatch ring" }), `${state.highlight.size} highlighted `,
       h("button", { class: "x-btn", type: "button", "aria-label": "Clear highlight", onclick: () => clearHighlight() }, "✕")));
@@ -408,8 +408,10 @@ function renderCabins() {
 }
 
 /* ====================== details ====================== */
-// e.g. "Burned until suppressed", "Burn limit · MOC"
-const outName = (t) => t.out_label || (t.out === "limit" && t.kind && t.kind !== "limit" ? "Burn limit · " + t.kind : OUTCOME_NAME[t.out] || t.out);
+// e.g. "Burned until suppressed", "Burn limit · MOC (maximum oxygen concentration)"
+const KIND_NAME = { MOC: "MOC (maximum oxygen concentration)", ULOI: "ULOI (upward limiting oxygen index)", LOI: "LOI (limiting oxygen index)",
+  OI: "OI (oxygen index)", HOI: "HOI (high gas velocity oxygen index)" };
+const outName = (t, spelled = false) => t.out_label || (t.out === "limit" && t.kind && t.kind !== "limit" ? "Burn limit · " + ((spelled && KIND_NAME[t.kind]) || t.kind) : OUTCOME_NAME[t.out] || t.out);
 const dash = (v, unit = "") => (v == null || v === "" ? "not reported" : (typeof v === "number" ? num(v, 2) : v) + unit);
 
 function summaryView() {
@@ -455,7 +457,7 @@ function recordView(t) {
     ? `What does the burn limit ${t.id} (${m.name}, ${pct(t.o2)} O2) mean, and how was it measured?`
     : `Why did test ${t.id} (${m.name}, ${pct(t.o2)} O2) ${t.out === "burned" ? "burn" : t.out === "went-out" ? "go out" : "not ignite"}?`;
   return [h("div", { class: "record" },
-    h("div", { class: "rec-head" }, h("strong", null, t.id), h("span", { class: "swatch out-" + t.out }), outName(t),
+    h("div", { class: "rec-head" }, h("strong", null, t.id), h("span", { class: "swatch out-" + t.out }), outName(t, true),
       h("button", { class: "ai-btn small", type: "button", onclick: () => hooks.ask(askText, "why_test", { test_id: t.id }) }, isLimit ? "Ask about this limit" : `Ask why it ${verb}`)),
     h("div", { class: "rec-grid" },
       item("Experiment", e.name || t.exp), item("Platform", dash(t.platform)), item("Burn time", dash(e.burn_time)),
