@@ -45,7 +45,7 @@ const userId = store.get("fa.user") || (() => { const id = newId("u"); store.set
 let conversationId = store.get("fa.conv") || (() => { const id = newId("c"); store.set("fa.conv", id); return id; })();
 
 /* ---------- screen context sent with every question ---------- */
-function screenText() {
+export function screenText() {
   const lines = [];
   lines.push("Selector side: " + (state.view === "experiment" ? "Experiment" : "Material"));
   const sel = [];

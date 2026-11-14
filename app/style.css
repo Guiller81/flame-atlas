@@ -626,6 +626,11 @@ a.src:hover { color: var(--ink); }
 #details { flex: 1; min-height: 0; overflow: auto; font-size: 12.5px; }
 .table-wrap { min-width: 0; }
 .match-head { margin: 0 0 4px; }
+/* Fit column of the list of tests at your conditions */
+.fit { display: inline-block; padding: 0 6px; border-radius: 4px; font-size: 11.5px; white-space: nowrap; }
+.fit.all { background: var(--you-soft); color: var(--you); font-weight: 600; }
+.fit.part { background: var(--surface-soft); color: var(--ink-soft); }
+.not-recorded { color: var(--ink-faint); }
 table.tests { width: 100%; border-collapse: collapse; font-size: 12px; }
 table.tests th {
   position: sticky;

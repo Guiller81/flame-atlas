@@ -434,15 +434,19 @@ function summaryView() {
     data.note ? row("Data status", h("span", { class: "muted" }, data.note)) : null)];
 }
 
-function tableView(tests) {
-  const head = ["Test", "Material", "Gravity", "O2 %", "kPa", "cm/s", "Result", "Source"];
+// fitOf (optional): adds a first column saying how a test fits your conditions, and writes "not recorded"
+// in the cell of a condition you set that the source does not give.
+function tableView(tests, fitOf) {
+  const head = [fitOf ? "Fit" : null, "Test", "Material", "Gravity", "O2 %", "kPa", "cm/s", "Result", "Source"].filter(Boolean);
+  const value = (t, k) => (fitOf && t[k] == null && state.cond[k] != null ? h("span", { class: "not-recorded" }, "not recorded") : num(t[k]));
   return [h("div", { class: "table-wrap" }, h("table", { class: "tests" },
     h("thead", null, h("tr", null, head.map((x) => h("th", null, x)))),
     h("tbody", null, tests.map((t) => h("tr", null,
+      fitOf ? h("td", null, h("span", { class: "fit " + (fitOf(t) ? "part" : "all") }, fitOf(t) || "All your conditions")) : null,
       h("td", null, h("button", { class: "link-btn test-link", type: "button", onclick: () => tapTests([t.id]) }, t.id)),
       h("td", null, (matById.get(t.mat) || {}).name || t.mat),
       h("td", null, GRAVITY_NAME[t.g] || t.g),
-      h("td", { class: "numcol" }, num(t.o2)), h("td", { class: "numcol" }, num(t.p)), h("td", { class: "numcol" }, num(t.flow)),
+      h("td", { class: "numcol" }, value(t, "o2")), h("td", { class: "numcol" }, value(t, "p")), h("td", { class: "numcol" }, value(t, "flow")),
       h("td", null, h("span", { class: "swatch out-" + t.out }), " ", outName(t)),
       h("td", null, srcLink(t)))))))];
 }
@@ -471,32 +475,34 @@ function recordView(t) {
       t.also ? item("Also in", ...t.also.map((id) => link(sourceLabel(id), sourceUrl(id), (data.sources[id] || {}).title))) : null))];
 }
 
-// With conditions set and nothing tapped, Details lists the tests that match them (the larger dots), closest first.
-// When none matches every condition, it lists the tests that fit on what they report (possible matches, never confirmed).
+// With conditions set and nothing tapped, Details lists the tests at your conditions in one table, closest first:
+// the tests that match every condition you set (the larger dots), then the possible matches, which fit on what they
+// report but whose source does not give one of your conditions. The Fit column says which is which.
 function matchView() {
   const byDistance = (a, b) => distance(a).d - distance(b).d;
-  if (!D.matchingSelected.length) {
-    const part = D.partSelected.slice().sort(byDistance);
-    const one = part.length === 1;
-    return [h("p", { class: "match-head" },
-      h("strong", null, `No test matches all your conditions`), ` (${conditionWords()}). `,
-      `${part.length} ${one ? "fits" : "fit"} on what ${one ? "it reports" : "they report"}, but ${one ? "its" : "their"} ${missingWords(part)} was not recorded: `,
-      `${one ? "a possible match" : "possible matches"}, not confirmed. Closest first.`),
-      ...tableView(part)];
-  }
   const tests = D.matchingSelected.slice().sort(byDistance);
+  const part = D.partSelected.slice().sort(byDistance);
   const n = tests.length;
-  const mats = new Set(tests.map((t) => t.mat));
-  const exps = new Set(tests.map((t) => t.exp));
-  const byOut = OUTCOMES.map(([k, label]) => [k === "limit" ? "burn limit" : label.toLowerCase(), tests.filter((t) => t.out === k).length]).filter((x) => x[1]);
-  const part = D.partSelected;
-  return [h("p", { class: "match-head" },
-    h("strong", null, `${plural(n, "test")} ${n === 1 ? "matches" : "match"} your conditions`), ` (${conditionWords()}): `,
-    byOut.map(([label, k]) => `${k} ${label}${label === "burn limit" && k > 1 ? "s" : ""}`).join(", "),
-    `, from ${plural(mats.size, "material")} in ${plural(exps.size, "experiment")}. Closest first.`,
-    part.length ? [` ${part.length} more ${part.length === 1 ? "fits" : "fit"} on what ${part.length === 1 ? "it reports" : "they report"} (${missingWords(part)} not recorded). `,
-      h("button", { class: "link-btn", type: "button", onclick: () => tapTests(part.map((t) => t.id)) }, "Show")] : null),
-    ...tableView(tests)];
+  const possible = (k) => `${k} ${k === 1 ? "is a possible match" : "are possible matches"}`;
+  let lead;
+  if (n) {
+    const mats = new Set(tests.map((t) => t.mat));
+    const exps = new Set(tests.map((t) => t.exp));
+    const byOut = OUTCOMES.map(([k, label]) => [k === "limit" ? "burn limit" : label.toLowerCase(), tests.filter((t) => t.out === k).length]).filter((x) => x[1]);
+    lead = [h("strong", null, `${plural(n, "test")} ${n === 1 ? "matches" : "match"} your conditions`), ` (${conditionWords()}): `,
+      byOut.map(([label, k]) => `${k} ${label}${label === "burn limit" && k > 1 ? "s" : ""}`).join(", "),
+      `, from ${plural(mats.size, "material")} in ${plural(exps.size, "experiment")}.`, part.length ? ` ${part.length} more ${part.length === 1 ? "is a possible match" : "are possible matches"}.` : ""];
+  } else {
+    lead = [h("strong", null, "No test matches all your conditions"), ` (${conditionWords()}). ${possible(part.length)}.`];
+  }
+  const NAMES = { o2: "oxygen", p: "pressure", flow: "airflow" };
+  const fitOf = (t) => {                                  // "" = matches every condition you set
+    const miss = condKeysSet().filter((k) => t[k] == null).map((k) => NAMES[k]);
+    if (!miss.length) return "";
+    const words = miss.join(" and ");
+    return words[0].toUpperCase() + words.slice(1) + " not recorded";
+  };
+  return [h("p", { class: "match-head" }, ...lead, " Closest first."), ...tableView([...tests, ...part], fitOf)];
 }
 
 function renderDetails() {
@@ -517,7 +523,7 @@ function renderDetails() {
   }
   const atPoint = tapped.length > 1 && state.tappedPoint.length > 0;      // a tapped mark; otherwise a list opened from a link
   $("details-title").textContent = tapped.length ? (tapped.length === 1 ? "Details · test record" : `Details · ${tapped.length} tests${atPoint ? " at this point" : ""}`)
-    : listing ? (D.matchingSelected.length ? "Details · tests at your conditions" : "Details · possible matches") : "Details";
+    : listing ? "Details · tests at your conditions" : "Details";
   $("details-back").hidden = !tapped.length;
   $("details-back").textContent = haveList ? "Back to the list" : "Back to the summary";
 }
