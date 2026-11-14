@@ -727,3 +727,8 @@ table.tests td { padding: 2px 10px 2px 0; border-top: 1px solid #f0f1f3; }
 .conds { gap: 8px; }
 .cond { gap: 3px; }
 @media (max-width: 899px) { .cond input { width: 60px; } .cond input.win { width: 44px; } }
+
+/* ---------- Chart zoom ---------- */
+.chart .zoom-hint { display: none; fill: var(--ink-faint); font-size: 10px; }
+@media (min-width: 1100px) { .chart .zoom-hint { display: inline; } }
+#zoom-reset { font-weight: 600; white-space: nowrap; }

@@ -40,7 +40,32 @@ function niceScale(lo, hi, target) {
 
 const views = new Map();               // chart id -> {box, tip, geometry, marks}
 
+/* ---------- zoom: the wheel zooms in and out around the pointer; oxygen is shared by both charts ---------- */
+const zoom = { o2: null, flow: null, p: null };          // [lo, hi] per axis, or null = the whole range
+const MIN_SPAN = { o2: 1, flow: 2, p: 2 };
+const zoomed = () => !!(zoom.o2 || zoom.flow || zoom.p);
+function zoomAxis(key, at, factor) {
+  const base = baseDomain(key);
+  const cur = zoom[key] || [base.lo, base.hi];
+  let lo = at - (at - cur[0]) * factor;
+  let hi = at + (cur[1] - at) * factor;
+  if (hi - lo < MIN_SPAN[key]) return;                    // close enough
+  lo = Math.max(lo, base.lo);
+  hi = Math.min(hi, base.hi);
+  zoom[key] = hi - lo >= base.hi - base.lo - 1e-9 ? null : [lo, hi];
+}
+export function resetZoom() {
+  zoom.o2 = null; zoom.flow = null; zoom.p = null;
+  renderCharts();
+}
 function domainFor(key) {
+  const z = zoom[key];
+  if (!z) return baseDomain(key);
+  const nice = niceScale(z[0], z[1], key === "o2" ? 6 : 7);
+  return { lo: z[0], hi: z[1], ticks: nice.ticks.filter((v) => v >= z[0] - 1e-9 && v <= z[1] + 1e-9) };
+}
+
+function baseDomain(key) {
   let [lo, hi] = D.ranges[key];
   if (key === "o2") { lo = Math.min(lo, ...CABINS.map((c) => c.o2)) - 1; hi = Math.max(hi, ...CABINS.map((c) => c.o2)) + 1; }
   if (key === "p") { lo = Math.min(lo, ...CABINS.map((c) => c.p)) - 4; hi = Math.max(hi, ...CABINS.map((c) => c.p)) + 4; }
@@ -87,6 +112,7 @@ function build(chart) {
   grid.append(el("line", { x1: M.l, x2: x1, y1: y0, y2: y0, class: "axis" }));
   grid.append(el("text", { x: M.l - 30, y: 10, class: "axis-label" }, "O2 (%)"));
   grid.append(el("text", { x: x1, y: H - 4, "text-anchor": "end", class: "axis-label" }, chart.label));
+  if (!zoomed()) grid.append(el("text", { x: x1, y: 10, "text-anchor": "end", class: "zoom-hint" }, "scroll to zoom"));
   if (hasMissing) {
     grid.append(el("rect", { x: M.l, y: y1, width: BAND, height: y0 - y1, class: "nodata" }));
     grid.append(el("text", { x: bandX, y: y0 + 16, "text-anchor": "middle", class: "tick" }, "no data"));
@@ -168,10 +194,11 @@ function build(chart) {
       const r = !sel.length && !tapped && !lit ? 3.5 : (shown > 9 ? 8.5 : shown > 1 ? 7 : 4.5) + (match.length ? 1.5 : 0);
       const px = g.xv == null ? bandX : X(g.xv);
       const py = Y(g.o2);
+      if (py < y1 - 1 || py > y0 + 1 || (g.xv != null && (px < x0 - 1 || px > x1 + 1))) return;   // outside the zoomed view
       marks.push({ g, sel, match, part, shown, bright, inside, r, px, py, tapped, lit, sibs });
     });
     // different outcomes at one point sit side by side, centred on the real value
-    const row = marks.slice(-sibs.length);
+    const row = marks.filter((m) => m.sibs === sibs);
     const width = row.reduce((w, m) => w + 2 * m.r, 0) + (row.length - 1);
     let left = -width / 2;
     for (const m of row) { m.px += left + m.r; left += 2 * m.r + 1; }
@@ -328,9 +355,28 @@ function attach(chart) {
   box.addEventListener("pointerup", end);
   box.addEventListener("pointercancel", end);
   box.addEventListener("pointerleave", () => { if (!dragging) tip.hidden = true; });
+
+  // Wheel or trackpad pinch: zoom around the pointer. Only where the page itself does not scroll (laptop width).
+  box.addEventListener("wheel", (e) => {
+    const g = view.geo;
+    if (!g || !window.matchMedia("(min-width: 1100px)").matches) return;
+    e.preventDefault();
+    const [x, y] = local(e);
+    const step = Math.max(-60, Math.min(60, e.deltaY * (e.ctrlKey ? 4 : 1)));
+    const factor = Math.exp(step * 0.004);              // one mouse notch = about a quarter in or out
+    const yy = Math.min(g.y0, Math.max(g.y1, y));
+    zoomAxis("o2", g.ys.lo + ((g.y0 - yy) / (g.y0 - g.y1)) * (g.ys.hi - g.ys.lo), factor);
+    if (x >= g.x0) {                                     // over the "no data" band only oxygen zooms
+      const xx = Math.min(g.x1, x);
+      zoomAxis(g.xk, g.xs.lo + ((xx - g.x0) / (g.x1 - g.x0)) * (g.xs.hi - g.xs.lo), factor);
+    }
+    tip.hidden = true;
+    renderCharts();
+  }, { passive: false });
 }
 
 export function initCharts() {
+  document.getElementById("zoom-reset")?.addEventListener("click", resetZoom);
   for (const chart of CHARTS) {
     const box = document.getElementById(chart.id);
     const tip = document.createElement("div");
@@ -344,4 +390,6 @@ export function initCharts() {
 }
 export function renderCharts() {
   for (const chart of CHARTS) build(chart);
+  const reset = document.getElementById("zoom-reset");
+  if (reset) reset.hidden = !zoomed();
 }
