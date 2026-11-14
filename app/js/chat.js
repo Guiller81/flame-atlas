@@ -1,7 +1,9 @@
 /*
   Flame Atlas: the chat column. One request per question to the n8n backend; the answer comes back
-  as data points and inferred points, each with source IDs, pages and test IDs. The page builds the
-  links and the chart highlights from its own copy of the data file and drops any ID it does not know.
+  as data points and inferred points, each with source IDs, pages and test IDs, plus a short view:
+  a one-sentence lead, the points to show first and a "Not covered" line. "More detail" opens the
+  rest of the same answer. The page builds the links and the chart highlights from its own copy of
+  the data file and drops any ID it does not know.
   Team Flame Atlas, NASA Space Apps Challenge 2026. Licence: Apache-2.0.
   Written with an AI coding assistant (Claude Code), directed by the team.
 */
@@ -121,10 +123,8 @@ function sourceLink(src) {
   return a;
 }
 
-function pointItem(p, owner) {
-  const li = el("li", "point");
-  if (p.heading) li.append(el("strong", "point-heading", p.heading + ". "));
-  li.append(el("span", "point-text", p.text));
+// The source links and the Highlight button of one piece of text (a point or the lead), or null.
+function citations(p, owner) {
   const seen = new Set();                              // the same page cited twice shows once
   const links = (p.sources || []).map(sourceLink).filter((a) => a && !seen.has(a.textContent) && seen.add(a.textContent));
   const ids = [...new Set((p.test_ids || []).filter((id) => testById.has(id)))];   // unknown test IDs are dropped
@@ -145,9 +145,33 @@ function pointItem(p, owner) {
       update();
       wrap.append(btn);
     }
-    li.append(wrap);
+    return wrap;
   }
+  return null;
+}
+
+function pointItem(p, owner) {
+  const li = el("li", "point");
+  if (p.heading) li.append(el("strong", "point-heading", p.heading + ". "));
+  li.append(el("span", "point-text", p.text));
+  const cites = citations(p, owner);
+  if (cites) li.append(cites);
   return li;
+}
+
+/* ---------- the short view: lead, the points picked for it, "Not covered" ---------- */
+const LEAD_LABEL = { documents: "from the documents", ours: "our reading", not_found: "not in the documents" };
+
+// Indexes into answer.data of the points shown first. Positions the answer gives are 1-based;
+// anything out of range is dropped. The point with evidence the other way is always shown.
+function shortPoints(a) {
+  const n = (a.data || []).length;
+  const ok = (i) => Number.isInteger(i) && i >= 1 && i <= n;
+  const pos = [...new Set((a.top || []).filter(ok))];
+  const other = a.other_side ? a.other_side.position : null;
+  if (ok(other) && !pos.includes(other)) pos.push(other);
+  if (!pos.length && a.lead.basis !== "not_found") for (let i = 1; i <= Math.min(3, n); i += 1) pos.push(i);
+  return pos.map((i) => i - 1);
 }
 
 function aboutLine(m) {
@@ -204,17 +228,53 @@ function answerNode(m) {
     const about = aboutLine(m);
     if (about) box.append(about);
   }
-  if (a.data && a.data.length) {
+  const short = !isBrief && a.lead && a.lead.text ? shortPoints(a) : null;   // null: an answer without a short view
+  if (short) {
+    const lead = el("p", "lead");
+    lead.append(el("span", "lead-label", "In short · " + (LEAD_LABEL[a.lead.basis] || LEAD_LABEL.ours) + " "),
+      el("span", "lead-text", a.lead.text));
+    const cites = citations(a.lead, `chat:${m.id}:lead`);
+    if (cites) lead.append(cites);
+    box.append(lead);
+    if (!m.more && short.length) {
+      const ul = el("ul", "points");
+      short.forEach((i) => ul.append(pointItem(a.data[i], `chat:${m.id}:d${i}`)));
+      box.append(ul);
+    }
+    if (a.not_covered) {
+      const nc = el("p", "not-covered");
+      nc.append(el("span", "about-label", "Not covered: "), a.not_covered);
+      box.append(nc);
+    }
+  }
+  const full = !short || m.more;
+  if (full && a.data && a.data.length) {
     box.append(el("h3", "part-h", isBrief ? "From the papers" : "Data shows"));
     const ul = el("ul", "points");
     a.data.forEach((p, i) => ul.append(pointItem(p, `chat:${m.id}:d${i}`)));
     box.append(ul);
   }
-  if (a.inferred && a.inferred.length) {
+  if (full && a.inferred && a.inferred.length) {
     box.append(el("h3", "part-h inferred-h", "Inferred"));
     const ul = el("ul", "points inferred");
     a.inferred.forEach((p, i) => ul.append(pointItem(p, `chat:${m.id}:i${i}`)));
     box.append(ul);
+  }
+  if (short) {
+    const rest = (a.data || []).length - short.length + (a.inferred || []).length;
+    if (rest > 0 || m.more) {                           // the rest of the same answer, no new request
+      const btn = el("button", "link-btn more-btn", m.more ? "Less detail" : "More detail (" + plural(rest, "more point") + ")");
+      btn.type = "button";
+      btn.setAttribute("aria-expanded", String(!!m.more));
+      btn.addEventListener("click", () => {
+        const y = log.scrollTop;                        // the reader stays where they are
+        m.more = !m.more;
+        saveMessages();
+        render();
+        log.scrollTop = y;
+      });
+      box.append(btn);
+    }
   }
   if (isBrief) box.append(el("p", "not-covered", "Not covered: quantity, placement, ignition sources, qualification rules."));
   if (a.turn > HISTORY_LIMIT) {
@@ -298,6 +358,8 @@ function waitingNode() {
   box.append(el("span", "flame"));
   const word = el("span", "wait-word");
   box.append(word);
+  const n = (data.tests || []).length;
+  box.append(el("span", "wait-note", (n ? "Reading " + n + " tests and the NASA reports. " : "Reading the NASA reports. ") + "This can take up to half a minute."));
   const order = WAIT_WORDS.slice();
   for (let i = order.length - 1; i > 0; i -= 1) {       // shuffled per question
     const j = Math.floor(Math.random() * (i + 1));

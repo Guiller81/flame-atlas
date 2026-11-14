@@ -199,6 +199,23 @@ a.src:hover { color: var(--ink); }
 
 .history-note { margin-top: 10px; color: var(--ink-faint); font-size: 12px; }
 
+/* Short view of an answer: one lead sentence, the points picked for it, the gap, then "More detail" */
+.lead { margin: 0 0 8px; font-weight: 550; }
+.lead-label {
+  display: block;
+  margin-bottom: 2px;
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--you);
+}
+.lead .srcs { font-weight: 400; }
+.not-covered { margin: 8px 0 0; color: var(--ink-soft); font-size: 13px; }
+.more-btn { display: block; margin-top: 8px; }
+.msg.answer .lead + .not-covered { margin-top: 0; }
+.msg.answer .not-covered + .part-h, .msg.answer .lead + .part-h { margin-top: 12px; }
+
 .msg.error {
   display: flex;
   gap: 10px;
@@ -211,10 +228,12 @@ a.src:hover { color: var(--ink); }
 
 .msg.waiting {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 8px;
   color: var(--you);
 }
+.wait-note { flex-basis: 100%; color: var(--ink-faint); font-size: 12px; }
 
 /* A flame in microgravity is a ball: it pulses, it does not flicker */
 .flame {
