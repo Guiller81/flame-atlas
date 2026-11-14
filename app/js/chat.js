@@ -123,6 +123,10 @@ function sourceLink(src) {
   return a;
 }
 
+// The model writes exponents with a caret ("s^-1", "10^3"); the page shows them raised (s⁻¹, 10³).
+const SUP = { 0: "⁰", 1: "¹", 2: "²", 3: "³", 4: "⁴", 5: "⁵", 6: "⁶", 7: "⁷", 8: "⁸", 9: "⁹", "-": "⁻", "−": "⁻", "+": "⁺" };
+const tidy = (t) => String(t == null ? "" : t).replace(/\^[({]?([+\-−]?\d+)[)}]?/g, (_, e) => [...e].map((c) => SUP[c]).join(""));
+
 // The source links and the Highlight button of one piece of text (a point or the lead), or null.
 function citations(p, owner) {
   const seen = new Set();                              // the same page cited twice shows once
@@ -153,7 +157,7 @@ function citations(p, owner) {
 function pointItem(p, owner) {
   const li = el("li", "point");
   if (p.heading) li.append(el("strong", "point-heading", p.heading + ". "));
-  li.append(el("span", "point-text", p.text));
+  li.append(el("span", "point-text", tidy(p.text)));
   const cites = citations(p, owner);
   if (cites) li.append(cites);
   return li;
@@ -232,7 +236,7 @@ function answerNode(m) {
   if (short) {
     const lead = el("p", "lead");
     lead.append(el("span", "lead-label", "In short · " + (LEAD_LABEL[a.lead.basis] || LEAD_LABEL.ours) + " "),
-      el("span", "lead-text", a.lead.text));
+      el("span", "lead-text", tidy(a.lead.text)));
     const cites = citations(a.lead, `chat:${m.id}:lead`);
     if (cites) lead.append(cites);
     box.append(lead);
@@ -243,7 +247,7 @@ function answerNode(m) {
     }
     if (a.not_covered) {
       const nc = el("p", "not-covered");
-      nc.append(el("span", "about-label", "Not covered: "), a.not_covered);
+      nc.append(el("span", "about-label", "Not covered: "), tidy(a.not_covered));
       box.append(nc);
     }
   }
