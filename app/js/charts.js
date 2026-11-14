@@ -40,41 +40,48 @@ function niceScale(lo, hi, target) {
 
 const views = new Map();               // chart id -> {box, tip, geometry, marks}
 
-/* ---------- zoom: the wheel zooms in and out around the pointer; oxygen is shared by both charts ---------- */
-const zoom = { o2: null, flow: null, p: null };          // [lo, hi] per axis, or null = the whole range
-const home = { o2: null, flow: null, p: null };          // the view the page opens with, and Reset returns to
+/* ---------- zoom: the wheel zooms a chart in and out around the pointer, on both axes, like a picture ---------- */
+// Each chart zooms by itself. Axis keys: "flow", "p", and the oxygen axis of each chart ("o2:flow", "o2:p").
+const AXES = ["flow", "p", "o2:flow", "o2:p"];
+const zoom = {};                                          // [lo, hi] per axis, or null = the whole range
+const home = {};                                          // the view the page opens with, and Reset returns to
+AXES.forEach((k) => { zoom[k] = null; home[k] = null; });
 const MIN_SPAN = { o2: 1, flow: 2, p: 2 };
+const baseKey = (k) => k.split(":")[0];
 const sameRange = (a, b) => (!a && !b) || (!!a && !!b && Math.abs(a[0] - b[0]) < 1e-9 && Math.abs(a[1] - b[1]) < 1e-9);
-const zoomed = () => !["o2", "flow", "p"].every((k) => sameRange(zoom[k], home[k]));
+const zoomed = () => !AXES.every((k) => sameRange(zoom[k], home[k]));
 // A few reported limits sit far above any cabin (some materials only burn above 50% oxygen). The opening view
 // stops at 40% oxygen and at the 98th percentile of airflow; zooming out shows the rest.
 function setHome() {
   const o2 = baseDomain("o2");
-  home.o2 = o2.hi > 45 ? [Math.max(o2.lo, Math.floor((D.ranges.o2[0] - 1) / 5) * 5), 40] : null;
+  const o2Home = o2.hi > 45 ? [Math.max(o2.lo, Math.floor((D.ranges.o2[0] - 1) / 5) * 5), 40] : null;
+  home["o2:flow"] = o2Home;
+  home["o2:p"] = o2Home && o2Home.slice();
   const flows = data.tests.map((t) => t.flow).filter((v) => v != null).sort((a, b) => a - b);
   const f = baseDomain("flow");
   const p98 = flows.length ? flows[Math.floor(flows.length * 0.98)] : 0;
   home.flow = flows.length && f.hi > p98 * 1.6 ? [0, niceScale(0, p98 * 1.1, 7).hi] : null;
-  for (const k of ["o2", "flow", "p"]) zoom[k] = home[k] && home[k].slice();
+  AXES.forEach((k) => { zoom[k] = home[k] && home[k].slice(); });
 }
 function zoomAxis(key, at, factor) {
-  const base = baseDomain(key);
+  const base = baseDomain(baseKey(key));
   const cur = zoom[key] || [base.lo, base.hi];
   let lo = at - (at - cur[0]) * factor;
   let hi = at + (cur[1] - at) * factor;
-  if (hi - lo < MIN_SPAN[key]) return;                    // close enough
+  if (hi - lo < MIN_SPAN[baseKey(key)]) return;           // close enough
   lo = Math.max(lo, base.lo);
   hi = Math.min(hi, base.hi);
   zoom[key] = hi - lo >= base.hi - base.lo - 1e-9 ? null : [lo, hi];
 }
 export function resetZoom() {
-  for (const k of ["o2", "flow", "p"]) zoom[k] = home[k] && home[k].slice();
+  AXES.forEach((k) => { zoom[k] = home[k] && home[k].slice(); });
   renderCharts();
 }
 function domainFor(key) {
   const z = zoom[key];
-  if (!z) return baseDomain(key);
-  const nice = niceScale(z[0], z[1], key === "o2" ? 6 : 7);
+  const b = baseKey(key);
+  if (!z) return baseDomain(b);
+  const nice = niceScale(z[0], z[1], b === "o2" ? 6 : 7);
   return { lo: z[0], hi: z[1], ticks: nice.ticks.filter((v) => v >= z[0] - 1e-9 && v <= z[1] + 1e-9) };
 }
 
@@ -99,7 +106,7 @@ function build(chart) {
   const y0 = H - M.b;
   const y1 = M.t;
   const xs = domainFor(xk);
-  const ys = domainFor("o2");
+  const ys = domainFor("o2:" + xk);
   const X = (v) => x0 + ((v - xs.lo) / (xs.hi - xs.lo)) * (x1 - x0);
   const Y = (v) => y0 - ((v - ys.lo) / (ys.hi - ys.lo)) * (y0 - y1);
   const bandX = M.l + BAND / 2;
@@ -125,7 +132,7 @@ function build(chart) {
   grid.append(el("line", { x1: M.l, x2: x1, y1: y0, y2: y0, class: "axis" }));
   grid.append(el("text", { x: M.l - 30, y: 10, class: "axis-label" }, "O2 (%)"));
   grid.append(el("text", { x: x1, y: H - 4, "text-anchor": "end", class: "axis-label" }, chart.label));
-  if (!zoomed()) grid.append(el("text", { x: x1, y: 10, "text-anchor": "end", class: "zoom-hint" }, `scroll: zoom O2 · Shift + scroll: zoom ${xk === "p" ? "pressure" : "airflow"}`));
+  if (!zoomed()) grid.append(el("text", { x: x1, y: 10, "text-anchor": "end", class: "zoom-hint" }, "scroll to zoom · drag to move"));
   if (hasMissing) {
     grid.append(el("rect", { x: M.l, y: y1, width: BAND, height: y0 - y1, class: "nodata" }));
     grid.append(el("text", { x: bandX, y: y0 + 16, "text-anchor": "middle", class: "tick" }, "no data"));
@@ -342,12 +349,12 @@ function attach(chart) {
     const g = start.geo;
     const shift = (key, from, delta) => {
       if (!from) return;                                 // only a zoomed axis can move
-      const base = baseDomain(key);
+      const base = baseDomain(baseKey(key));
       const span = from[1] - from[0];
       const lo = Math.min(base.hi - span, Math.max(base.lo, from[0] + delta * span));
       zoom[key] = [lo, lo + span];
     };
-    shift("o2", start.o2, dy / (g.y0 - g.y1));
+    shift("o2:" + g.xk, start.o2, dy / (g.y0 - g.y1));
     shift(g.xk, start.xz, -dx / (g.x1 - g.x0));
     cancelAnimationFrame(frame);
     frame = requestAnimationFrame(renderCharts);
@@ -360,7 +367,7 @@ function attach(chart) {
     if (!inPlot(x, y) || tapMark(x, y)) return;
     const g = view.geo;
     mode = Math.hypot(x - g.tx, y - g.ty) < 14 ? "target" : "press";
-    start = { x, y, geo: g, o2: zoom.o2 && zoom.o2.slice(), xz: zoom[g.xk] && zoom[g.xk].slice() };
+    start = { x, y, geo: g, o2: zoom["o2:" + g.xk] && zoom["o2:" + g.xk].slice(), xz: zoom[g.xk] && zoom[g.xk].slice() };
     if (mode === "target") box.classList.add("dragging");
     box.setPointerCapture(e.pointerId);
     tip.hidden = true;
@@ -404,23 +411,21 @@ function attach(chart) {
   box.addEventListener("pointercancel", end);
   box.addEventListener("pointerleave", () => { if (!mode) tip.hidden = true; });
 
-  // Wheel or trackpad pinch: zooms the oxygen axis around the pointer (both charts together).
-  // With Shift held it zooms this chart's horizontal axis instead. One axis at a time reads calmer
-  // than both at once. Only where the page itself does not scroll (laptop width).
+  // Wheel or trackpad pinch: zooms this chart on both axes around the pointer, like a picture.
+  // Only where the page itself does not scroll (laptop width).
   box.addEventListener("wheel", (e) => {
     const g = view.geo;
     if (!g || !window.matchMedia("(min-width: 1100px)").matches) return;
     e.preventDefault();
     const [x, y] = local(e);
-    const delta = e.deltaY || e.deltaX;                 // Shift turns the wheel sideways on a Mac
+    const delta = e.deltaY || e.deltaX;
     const step = Math.max(-60, Math.min(60, delta * (e.ctrlKey ? 4 : 1)));
     const factor = Math.exp(step * 0.004);              // one mouse notch = about a quarter in or out
-    if (e.shiftKey) {
-      const xx = Math.min(g.x1, Math.max(g.x0, x));
+    const yy = Math.min(g.y0, Math.max(g.y1, y));
+    zoomAxis("o2:" + g.xk, g.ys.lo + ((g.y0 - yy) / (g.y0 - g.y1)) * (g.ys.hi - g.ys.lo), factor);
+    if (x >= g.x0) {                                     // over the "no data" band only oxygen zooms
+      const xx = Math.min(g.x1, x);
       zoomAxis(g.xk, g.xs.lo + ((xx - g.x0) / (g.x1 - g.x0)) * (g.xs.hi - g.xs.lo), factor);
-    } else {
-      const yy = Math.min(g.y0, Math.max(g.y1, y));
-      zoomAxis("o2", g.ys.lo + ((g.y0 - yy) / (g.y0 - g.y1)) * (g.ys.hi - g.ys.lo), factor);
     }
     tip.hidden = true;
     renderCharts();
