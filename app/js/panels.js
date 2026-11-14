@@ -472,8 +472,19 @@ function recordView(t) {
 }
 
 // With conditions set and nothing tapped, Details lists the tests that match them (the larger dots), closest first.
+// When none matches every condition, it lists the tests that fit on what they report (possible matches, never confirmed).
 function matchView() {
-  const tests = D.matchingSelected.slice().sort((a, b) => distance(a).d - distance(b).d);
+  const byDistance = (a, b) => distance(a).d - distance(b).d;
+  if (!D.matchingSelected.length) {
+    const part = D.partSelected.slice().sort(byDistance);
+    const one = part.length === 1;
+    return [h("p", { class: "match-head" },
+      h("strong", null, `No test matches all your conditions`), ` (${conditionWords()}). `,
+      `${part.length} ${one ? "fits" : "fit"} on what ${one ? "it reports" : "they report"}, but ${one ? "its" : "their"} ${missingWords(part)} was not recorded: `,
+      `${one ? "a possible match" : "possible matches"}, not confirmed. Closest first.`),
+      ...tableView(part)];
+  }
+  const tests = D.matchingSelected.slice().sort(byDistance);
   const n = tests.length;
   const mats = new Set(tests.map((t) => t.mat));
   const exps = new Set(tests.map((t) => t.exp));
@@ -491,7 +502,8 @@ function matchView() {
 function renderDetails() {
   const tapped = [...state.tapped].map((id) => testById.get(id)).filter(Boolean);
   const box = $("details");
-  const listing = !tapped.length && condKeysSet().length > 0 && D.matchingSelected.length > 0;
+  const haveList = condKeysSet().length > 0 && (D.matchingSelected.length > 0 || D.partSelected.length > 0);
+  const listing = !tapped.length && haveList;
   if (listing) box.replaceChildren(...matchView());
   else if (!tapped.length) box.replaceChildren(...summaryView());
   else if (tapped.length === 1) box.replaceChildren(...recordView(tapped[0]));
@@ -505,9 +517,9 @@ function renderDetails() {
   }
   const atPoint = tapped.length > 1 && state.tappedPoint.length > 0;      // a tapped mark; otherwise a list opened from a link
   $("details-title").textContent = tapped.length ? (tapped.length === 1 ? "Details · test record" : `Details · ${tapped.length} tests${atPoint ? " at this point" : ""}`)
-    : listing ? "Details · tests at your conditions" : "Details";
+    : listing ? (D.matchingSelected.length ? "Details · tests at your conditions" : "Details · possible matches") : "Details";
   $("details-back").hidden = !tapped.length;
-  $("details-back").textContent = condKeysSet().length > 0 && D.matchingSelected.length > 0 ? "Back to the list" : "Back to the summary";
+  $("details-back").textContent = haveList ? "Back to the list" : "Back to the summary";
 }
 
 function downloadCsv() {
