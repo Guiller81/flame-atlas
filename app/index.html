@@ -42,12 +42,29 @@
     <aside class="chat" id="chat" aria-labelledby="chat-h">
       <div class="chat-head">
         <h2 id="chat-h">Ask</h2>
+        <button type="button" class="link-btn" id="new-conversation" hidden>New conversation</button>
       </div>
-      <div class="chat-log" id="chat-log">
-        <p class="pending">Questions answered from the curated papers, each point with its source page.</p>
+      <div class="chat-log" id="chat-log" aria-live="polite">
+        <div class="welcome" id="chat-welcome">
+          <p>Ask about NASA's combustion experiments in space: what was tested, at which oxygen, pressure and airflow, and what burned.</p>
+          <p>Each point links to its source. What the data shows is kept apart from what is inferred.</p>
+        </div>
+      </div>
+      <form class="composer" id="chat-form">
+        <textarea id="chat-input" rows="2" maxlength="2000" placeholder="Ask, or e.g. What did BASS-II test?" aria-label="Your question"></textarea>
+        <div class="composer-row">
+          <span class="counter" id="chat-counter" hidden></span>
+          <button type="submit" class="send" id="chat-send">Ask</button>
+        </div>
+      </form>
+      <div class="try">
+        <span class="try-label">Try:</span>
+        <button type="button" class="chip" data-try="Which experiments burned solid materials, and on which spacecraft?">Solid-material experiments</button>
+        <button type="button" class="chip" data-try="What did BASS-II set out to learn, and how does it relate to the Earth flammability test?">BASS-II and the Earth test</button>
       </div>
       <p class="ai-note">AI-generated from public NASA documents; not reviewed or endorsed by NASA.</p>
     </aside>
   </div>
+  <script src="app.js"></script>
 </body>
 </html>

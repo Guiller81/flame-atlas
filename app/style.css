@@ -139,3 +139,148 @@ h1, h2, p { margin: 0; }
     border-top: 1px solid var(--line);
   }
 }
+
+/* ---------- Chat ---------- */
+.link-btn {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--you);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+.link-btn:hover { text-decoration: none; opacity: 0.8; }
+
+.welcome { color: var(--ink-soft); font-size: 13px; }
+.welcome p + p { margin-top: 8px; }
+
+.msg { margin-top: 12px; font-size: 13px; }
+
+.msg.user {
+  margin-left: 32px;
+  padding: 8px 10px;
+  border-radius: var(--radius) var(--radius) 2px var(--radius);
+  background: var(--you-soft);
+  white-space: pre-wrap;
+}
+
+.msg.answer {
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.part-h {
+  margin: 0 0 4px;
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.part-h.inferred-h { margin-top: 12px; color: var(--you); }
+
+.points { margin: 0; padding-left: 16px; }
+.points li + li { margin-top: 6px; }
+.points.inferred { color: var(--ink-soft); }
+
+.srcs { display: block; margin-top: 2px; }
+a.src {
+  display: inline-block;
+  margin-right: 10px;
+  color: var(--ink-soft);
+  font-size: 12px;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+a.src:hover { color: var(--ink); }
+
+.history-note { margin-top: 10px; color: var(--ink-faint); font-size: 12px; }
+
+.msg.error {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  padding: 8px 10px;
+  border-radius: var(--radius);
+  background: #eceef1;
+  color: var(--ink-soft);
+}
+
+.msg.waiting {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--you);
+}
+
+/* A flame in microgravity is a ball: it pulses, it does not flicker */
+.flame {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 50%, #b9a3f5 0%, var(--you) 70%);
+  animation: flame-pulse 1.4s ease-in-out infinite;
+}
+@keyframes flame-pulse {
+  0%, 100% { transform: scale(0.8); opacity: 0.75; }
+  50% { transform: scale(1.15); opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .flame { animation: none; }
+}
+
+.composer { padding: 8px var(--gutter) 0; }
+.composer textarea {
+  display: block;
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #c9ced6;
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+  resize: none;
+}
+.composer textarea:focus { outline: 2px solid var(--you); outline-offset: -1px; border-color: var(--you); }
+.composer-row {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+  margin-top: 6px;
+}
+.counter { color: var(--ink-faint); font-size: 12px; }
+.send {
+  padding: 6px 16px;
+  border: 0;
+  border-radius: var(--radius);
+  background: var(--you);
+  color: #fff;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+.send:disabled { opacity: 0.5; cursor: default; }
+
+.try {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  padding: 8px var(--gutter) 10px;
+}
+.try-label { color: var(--ink-faint); font-size: 12px; }
+.chip {
+  padding: 3px 10px;
+  border: 1px solid #d3c8f7;
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--you);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+.chip:hover { background: var(--you-soft); }

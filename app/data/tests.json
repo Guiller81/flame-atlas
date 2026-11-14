@@ -1,123 +1,147 @@
 {
  "_about": "Flame Atlas data file (Team Flame Atlas, NASA Space Apps 2026). Compiled with AI assistance from NASA Physical Sciences Informatics (PSI) records, licence CC0-1.0, read 2026-11-14.",
- "version": "2026-11-14T09:15 stub (experiments only)",
+ "version": "2026-11-14T09:22 stub (experiments only)",
  "sources": {
   "PSI-10": {
+   "short": "ACME/Flame Design record (PSI-10)",
    "title": "NASA PSI investigation record PSI-10: ACME/Flame Design",
    "url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-10",
    "kind": "psi-record"
   },
   "PSI-20": {
+   "short": "ACME BRE record (PSI-20)",
    "title": "NASA PSI investigation record PSI-20: ACME BRE",
    "url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-20",
    "kind": "psi-record"
   },
   "PSI-21": {
+   "short": "ACME CLD Flame record (PSI-21)",
    "title": "NASA PSI investigation record PSI-21: ACME CLD Flame",
    "url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-21",
    "kind": "psi-record"
   },
   "PSI-22": {
+   "short": "ACME E-FIELD Flames record (PSI-22)",
    "title": "NASA PSI investigation record PSI-22: ACME E-FIELD Flames",
    "url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-22",
    "kind": "psi-record"
   },
   "PSI-23": {
+   "short": "ACME s-Flame record (PSI-23)",
    "title": "NASA PSI investigation record PSI-23: ACME s-Flame",
    "url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-23",
    "kind": "psi-record"
   },
   "PSI-25": {
+   "short": "BASS-II record (PSI-25)",
    "title": "NASA PSI investigation record PSI-25: BASS-II",
    "url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-25",
    "kind": "psi-record"
   },
   "PSI-26": {
+   "short": "BASS record (PSI-26)",
    "title": "NASA PSI investigation record PSI-26: BASS",
    "url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-26",
    "kind": "psi-record"
   },
   "PSI-39": {
+   "short": "CFI record (PSI-39)",
    "title": "NASA PSI investigation record PSI-39: CFI",
    "url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-39",
    "kind": "psi-record"
   },
   "PSI-47": {
+   "short": "DAFT / DAFT-2 record (PSI-47)",
    "title": "NASA PSI investigation record PSI-47: DAFT / DAFT-2",
    "url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-47",
    "kind": "psi-record"
   },
   "PSI-60": {
+   "short": "Computational and Experimental Analysis of SPICE Data Sets record (PSI-60)",
    "title": "NASA PSI investigation record PSI-60: Computational and Experimental Analysis of SPICE Data Sets",
    "url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-60",
    "kind": "psi-record"
   },
   "PSI-62": {
+   "short": "Concurrent Flame Spread Modeling using Flamelet Generated Manifolds in Microgravity with Comparison to BASS Experiments using Two-Color Tomography record (PSI-62)",
    "title": "NASA PSI investigation record PSI-62: Concurrent Flame Spread Modeling using Flamelet Generated Manifolds in Microgravity with Comparison to BASS Experiments using Two-Color Tomography",
    "url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-62",
    "kind": "psi-record"
   },
   "PSI-68": {
+   "short": "FLEX-2 record (PSI-68)",
    "title": "NASA PSI investigation record PSI-68: FLEX-2",
    "url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-68",
    "kind": "psi-record"
   },
   "PSI-69": {
+   "short": "FLEX record (PSI-69)",
    "title": "NASA PSI investigation record PSI-69: FLEX",
    "url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "kind": "psi-record"
   },
   "PSI-98": {
+   "short": "SAFFIRE-I record (PSI-98)",
    "title": "NASA PSI investigation record PSI-98: SAFFIRE-I",
    "url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-98",
    "kind": "psi-record"
   },
   "PSI-99": {
+   "short": "SAFFIRE-II record (PSI-99)",
    "title": "NASA PSI investigation record PSI-99: SAFFIRE-II",
    "url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-99",
    "kind": "psi-record"
   },
   "PSI-100": {
+   "short": "SAFFIRE-III record (PSI-100)",
    "title": "NASA PSI investigation record PSI-100: SAFFIRE-III",
    "url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-100",
    "kind": "psi-record"
   },
   "PSI-101": {
+   "short": "SAME-R record (PSI-101)",
    "title": "NASA PSI investigation record PSI-101: SAME-R",
    "url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-101",
    "kind": "psi-record"
   },
   "PSI-102": {
+   "short": "SAME record (PSI-102)",
    "title": "NASA PSI investigation record PSI-102: SAME",
    "url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-102",
    "kind": "psi-record"
   },
   "PSI-106": {
+   "short": "SLICE record (PSI-106)",
    "title": "NASA PSI investigation record PSI-106: SLICE",
    "url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-106",
    "kind": "psi-record"
   },
   "PSI-107": {
+   "short": "SPICE record (PSI-107)",
    "title": "NASA PSI investigation record PSI-107: SPICE",
    "url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-107",
    "kind": "psi-record"
   },
   "PSI-115": {
+   "short": "Utilization of the Smoke Aerosol Measurement Experiment Data for Advanced Modeling and Simulation of Smoke Generation in Micro-Gravity record (PSI-115)",
    "title": "NASA PSI investigation record PSI-115: Utilization of the Smoke Aerosol Measurement Experiment Data for Advanced Modeling and Simulation of Smoke Generation in Micro-Gravity",
    "url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-115",
    "kind": "psi-record"
   },
   "PSI-117": {
+   "short": "Effect of External Thermo-Convective Perturbation on Cool Flame Dynamics: A Multidimensional Multi-Physics CFD Analysis record (PSI-117)",
    "title": "NASA PSI investigation record PSI-117: Effect of External Thermo-Convective Perturbation on Cool Flame Dynamics: A Multidimensional Multi-Physics CFD Analysis",
    "url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-117",
    "kind": "psi-record"
   },
   "PSI-142": {
+   "short": "Quantitative Studies of Cool Flame Transitions at Radiation / Stretch Extinction Using Counterflow Flames record (PSI-142)",
    "title": "NASA PSI investigation record PSI-142: Quantitative Studies of Cool Flame Transitions at Radiation / Stretch Extinction Using Counterflow Flames",
    "url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-142",
    "kind": "psi-record"
   },
   "PSI-159": {
+   "short": "ACME CFI-G record (PSI-159)",
    "title": "NASA PSI investigation record PSI-159: ACME CFI-G",
    "url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159",
    "kind": "psi-record"
