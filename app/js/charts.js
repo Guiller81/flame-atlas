@@ -199,6 +199,8 @@ function build(chart) {
     top.append(el("line", { x1: tx, x2: tx, y1: ty, y2: y0, class: "guide" }));
     top.append(el("text", { x: tx, y: y0 + 16, "text-anchor": "middle", class: "you-value" }, num(cx)));
   }
+  view.geo.tx = tx;
+  view.geo.ty = ty;
   const solid = cx != null && cy != null;
   const target = el("g", { class: "target" + (solid ? "" : " faded"), transform: `translate(${tx},${ty})` });
   target.append(el("circle", { r: 9, class: "target-hit" }));
@@ -288,6 +290,7 @@ function attach(chart) {
     if (e.pointerType === "touch") { touchStart = { x, y, cx: e.clientX, cy: e.clientY }; return; }
     if (!press(x, y)) return;
     dragging = true;
+    box.classList.add("dragging");
     box.setPointerCapture(e.pointerId);
     tip.hidden = true;
     e.preventDefault();
@@ -297,6 +300,8 @@ function attach(chart) {
     if (dragging) { setFromPointer(x, y); return; }
     const m = markAt(view, x, y);
     box.classList.toggle("over-mark", !!m);
+    // a hand over the "+" target shows it can be dragged
+    box.classList.toggle("over-target", !m && !!view.geo && Math.hypot(x - view.geo.tx, y - view.geo.ty) < 14);
     if (!m) { tip.hidden = true; return; }
     tip.textContent = tipText(chart, m);
     tip.hidden = false;
@@ -312,7 +317,7 @@ function attach(chart) {
     if (moved < 10) press(touchStart.x, touchStart.y);
     touchStart = null;
   });
-  const end = (e) => { if (dragging) { dragging = false; try { box.releasePointerCapture(e.pointerId); } catch { /* already released */ } } };
+  const end = (e) => { if (dragging) { dragging = false; box.classList.remove("dragging"); try { box.releasePointerCapture(e.pointerId); } catch { /* already released */ } } };
   box.addEventListener("pointerup", end);
   box.addEventListener("pointercancel", end);
   box.addEventListener("pointerleave", () => { if (!dragging) tip.hidden = true; });

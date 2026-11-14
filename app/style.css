@@ -551,6 +551,8 @@ a.src:hover { color: var(--ink); }
 .charts { display: grid; flex: 1; grid-template-columns: 1fr 1fr; gap: 14px; min-height: 0; margin-top: 4px; }
 .chart { position: relative; min-height: 190px; touch-action: none; user-select: none; cursor: crosshair; }
 .chart.over-mark { cursor: pointer; }
+.chart.over-target { cursor: grab; }
+.chart.dragging { cursor: grabbing; }
 .chart svg { position: absolute; inset: 0; display: block; }
 .chart .grid line { stroke: #eef0f2; stroke-width: 1; }
 .chart .grid .axis, .chart .grid .tickmark { stroke: #c9ced6; }
