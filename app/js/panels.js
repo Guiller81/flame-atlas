@@ -372,6 +372,7 @@ function renderCabins() {
 }
 
 /* ====================== details ====================== */
+const outName = (t) => t.out_label || OUTCOME_NAME[t.out] || t.out;     // e.g. "Burned until suppressed"
 const dash = (v, unit = "") => (v == null || v === "" ? "not reported" : (typeof v === "number" ? num(v, 2) : v) + unit);
 
 function summaryView() {
@@ -403,7 +404,7 @@ function tableView(tests) {
       h("td", null, (matById.get(t.mat) || {}).name || t.mat),
       h("td", null, GRAVITY_NAME[t.g] || t.g),
       h("td", { class: "numcol" }, num(t.o2)), h("td", { class: "numcol" }, num(t.p)), h("td", { class: "numcol" }, num(t.flow)),
-      h("td", null, h("span", { class: "swatch out-" + t.out }), " ", OUTCOME_NAME[t.out] || t.out),
+      h("td", null, h("span", { class: "swatch out-" + t.out }), " ", outName(t)),
       h("td", null, srcLink(t)))))))];
 }
 
@@ -413,7 +414,7 @@ function recordView(t) {
   const item = (label, ...value) => h("div", { class: "rec" }, h("span", { class: "fact-label" }, label), h("span", { class: "rec-value" }, ...value));
   const verb = t.out === "burned" ? "burned" : t.out === "went-out" ? "went out" : "did not ignite";
   return [h("div", { class: "record" },
-    h("div", { class: "rec-head" }, h("strong", null, t.id), h("span", { class: "swatch out-" + t.out }), OUTCOME_NAME[t.out] || t.out,
+    h("div", { class: "rec-head" }, h("strong", null, t.id), h("span", { class: "swatch out-" + t.out }), outName(t),
       h("button", { class: "ai-btn small", type: "button", onclick: () => hooks.ask(`Why did test ${t.id} (${m.name}, ${pct(t.o2)} O2) ${t.out === "burned" ? "burn" : t.out === "went-out" ? "go out" : "not ignite"}?`, "why_test", { test_id: t.id }) }, `Ask why it ${verb}`)),
     h("div", { class: "rec-grid" },
       item("Experiment", e.name || t.exp), item("Platform", dash(t.platform)), item("Burn time", dash(e.burn_time)),
@@ -421,7 +422,7 @@ function recordView(t) {
       item("Class", dash(m.cls)), item("Gravity", GRAVITY_NAME[t.g] || t.g), item("Shape", dash(t.shape)), item("Thickness", dash(t.thick_mm, " mm")),
       item("O2", dash(t.o2, "%")), item("Pressure", dash(t.p, " kPa")), item("Airflow", dash(t.flow, " cm/s")), item("Direction", dash(t.dir)), item("Enclosure", dash(t.enc)),
       item("Spread rate", dash(t.spread, " mm/s")), item("Flame length", dash(t.burn_len, " mm")),
-      item("Printed as", dash(t.printed)), item("Airflow as printed", dash(t.flow_printed)),
+      item("Printed as", dash(t.printed)), t.mat_basis ? item("Material from", t.mat_basis) : null, item("Airflow as printed", dash(t.flow_printed)),
       item("Source", srcLink(t))),
     t.note ? h("p", { class: "muted" }, t.note) : null)];
 }
