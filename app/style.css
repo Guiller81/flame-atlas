@@ -635,11 +635,11 @@ a.src:hover { color: var(--ink); }
 table.tests { width: 100%; min-width: 860px; border-collapse: collapse; font-size: 12px; table-layout: fixed; }
 table.tests th, table.tests td { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 table.tests col.c-fit { width: 212px; }
-table.tests col.c-test { width: 17%; }
-table.tests col.c-mat { width: 15%; }
+table.tests col.c-test { width: 21%; }
+table.tests col.c-mat { width: 14%; }
 table.tests col.c-grav { width: 104px; }
 table.tests col.c-num { width: 54px; }
-table.tests col.c-res { width: 15%; }
+table.tests col.c-res { width: 14%; }
 table.tests .test-link { display: block; max-width: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; text-align: left; }
 table.tests th {
   position: sticky;

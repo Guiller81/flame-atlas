@@ -101,6 +101,21 @@ export function sourceLabel(id, page, loc) {
   return label;
 }
 
+// The name a test is shown under. A test its source names keeps that name ("BASS:11"). A row its source gives no name
+// (a limit or a point read from a table or figure) has only curation's long internal key; it is shown as what was tested:
+// material and form, what happened, and the oxygen level ("PMMA rod · quenching limit at 21.7% O2"). The key stays its id.
+const FORM_IN_NAME = /fabric|film|wire|paper|patch|felt/i;
+export function testName(t) {
+  if (!/:[0-9a-f]{8}$/.test(t.id)) return t.id;
+  const full = (matById.get(t.mat) || {}).name || t.mat;
+  let mat = full.replace(/ in the source$/, "").replace(/\s*\([^)]{13,}\)$/, "");   // a long bracket (a blend, a trade name) is left to the Material column
+  if (mat.length > 34) mat = mat.slice(0, 32).trimEnd() + "…";                       // so the result and the oxygen level stay in view
+  else if (t.shape && !FORM_IN_NAME.test(full) && !full.toLowerCase().includes(t.shape)) mat += " " + t.shape;
+  const what = t.out === "limit" ? (t.kind && t.kind !== "limit" ? t.kind.replace(/\s*\(.*\)$/, "") : "burn limit")
+    : t.out === "burned" ? "burned" : t.out === "went-out" ? "went out" : "no sustained ignition";
+  return `${mat} · ${what}${t.o2 != null ? " at " + pct(t.o2) + " O2" : ""}`;
+}
+
 /* ---------- conditions ---------- */
 export const condKeysSet = () => CONDS.map((c) => c.key).filter((k) => state.cond[k] != null);
 

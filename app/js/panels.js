@@ -6,7 +6,7 @@
 */
 import {
   data, state, D, GROUPS, GRAVITIES, GRAVITY_NAME, OUTCOMES, OUTCOME_NAME, CONDS, CHIP_GROUPS, CABINS,
-  matById, expById, testById, expTotal, distance, num, pct, plural, sourceUrl, sourceLabel, hasSelection, condKeysSet,
+  matById, expById, testById, expTotal, distance, testName, num, pct, plural, sourceUrl, sourceLabel, hasSelection, condKeysSet,
   materialFacts, setView, select, openMaterial, toggleChip, setCond, setWin, tapCabin, activeCabin, tapTests,
   setHighlight, clearHighlight, clearAll, changed, selectionWords, conditionWords, highlightUseful, missingWords, reportedWords,
 } from "./state.js";
@@ -395,7 +395,7 @@ function renderStatus() {
   }
   const kids = [`No ${word}test at your conditions.`];
   if (D.closest) {
-    kids.push(" Closest: ", h("button", { class: "link-btn test-link", type: "button", onclick: () => tapTests([D.closest.id]) }, D.closest.id));
+    kids.push(" Closest: ", h("button", { class: "link-btn test-link", type: "button", title: D.closest.id, onclick: () => tapTests([D.closest.id]) }, testName(D.closest)));
   }
   p.replaceChildren(...kids);
 }
@@ -451,7 +451,7 @@ function tableView(tests, fitOf) {
       const srcTitle = (data.sources[t.src] || {}).title;
       return h("tr", null,
         fitOf ? h("td", null, h("span", { class: "fit " + (fitOf(t) ? "part" : "all") }, fitOf(t) || "All your conditions")) : null,
-        cell(t.id, h("button", { class: "link-btn test-link", type: "button", onclick: () => tapTests([t.id]) }, t.id)),
+        cell(testName(t) === t.id ? t.id : `${testName(t)} (${t.id})`, h("button", { class: "link-btn test-link", type: "button", onclick: () => tapTests([t.id]) }, testName(t))),
         cell(mat),
         cell(t.g_detail || GRAVITY_NAME[t.g] || t.g),
         h("td", { class: "numcol" }, value(t, "o2")), h("td", { class: "numcol" }, value(t, "p")), h("td", { class: "numcol" }, value(t, "flow")),
@@ -470,7 +470,7 @@ function recordView(t) {
     ? `What does the burn limit ${t.id} (${m.name}, ${pct(t.o2)} O2) mean, and how was it measured?`
     : `Why did test ${t.id} (${m.name}, ${pct(t.o2)} O2) ${t.out === "burned" ? "burn" : t.out === "went-out" ? "go out" : "not ignite"}?`;
   return [h("div", { class: "record" },
-    h("div", { class: "rec-head" }, h("strong", null, t.id), h("span", { class: "swatch out-" + t.out }), outName(t, true),
+    h("div", { class: "rec-head" }, h("strong", { title: testName(t) === t.id ? null : t.id }, testName(t)), h("span", { class: "swatch out-" + t.out }), outName(t, true),
       h("button", { class: "ai-btn small", type: "button", onclick: () => hooks.ask(askText, "why_test", { test_id: t.id }) }, isLimit ? "Ask about this limit" : `Ask why it ${verb}`)),
     h("div", { class: "rec-grid" },
       item("Experiment", e.name || t.exp), item("Platform", dash(t.platform)), item("Burn time", dash(e.burn_time)),
