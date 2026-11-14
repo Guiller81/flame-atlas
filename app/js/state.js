@@ -161,12 +161,17 @@ function passesGrid(t) {
 /* ---------- derived values, recomputed on every change ---------- */
 export const D = {
   selected: [], selectedIds: new Set(), matchIds: new Set(), matchingSelected: [], partIds: new Set(), partSelected: [],
-  closest: null, chipTests: [], expStats: new Map(), chipCounts: {}, ranges: {},
+  closest: null, chipTests: [], gridTests: [], expStats: new Map(), chipCounts: {}, ranges: {},
 };
 
 function derive() {
   const T = data.tests;
   D.chipTests = T.filter((t) => passesChips(t));
+  // The opening view's shape filter goes as soon as you pick another material, class or gravity. So the grid counts
+  // those rows without it: the number in a cell is the number of tests you get by clicking it.
+  D.gridTests = state.openingChip
+    ? T.filter((t) => CHIP_GROUPS.every((c) => { const on = [...state.chips[c.key]].filter((v) => !(c.key === "shape" && v === state.openingChip)); return !on.length || on.includes(t[c.key]); }))
+    : D.chipTests;
   D.selected = D.chipTests.filter(passesGrid);
   D.selectedIds = new Set(D.selected.map((t) => t.id));
   D.matchIds = new Set(T.filter(matches).map((t) => t.id));
