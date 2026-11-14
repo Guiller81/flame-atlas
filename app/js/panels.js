@@ -6,7 +6,7 @@
 */
 import {
   data, state, D, GROUPS, GRAVITIES, GRAVITY_NAME, OUTCOMES, OUTCOME_NAME, CONDS, CHIP_GROUPS, CABINS,
-  matById, expById, testById, expTotal, num, pct, plural, sourceUrl, sourceLabel, hasSelection, condKeysSet,
+  matById, expById, testById, expTotal, distance, num, pct, plural, sourceUrl, sourceLabel, hasSelection, condKeysSet,
   materialFacts, setView, select, openMaterial, toggleChip, setCond, setWin, tapCabin, activeCabin, tapTests,
   setHighlight, clearHighlight, clearAll, changed, selectionWords, conditionWords, highlightUseful, missingWords, reportedWords,
 } from "./state.js";
@@ -471,10 +471,29 @@ function recordView(t) {
       t.also ? item("Also in", ...t.also.map((id) => link(sourceLabel(id), sourceUrl(id), (data.sources[id] || {}).title))) : null))];
 }
 
+// With conditions set and nothing tapped, Details lists the tests that match them (the larger dots), closest first.
+function matchView() {
+  const tests = D.matchingSelected.slice().sort((a, b) => distance(a).d - distance(b).d);
+  const n = tests.length;
+  const mats = new Set(tests.map((t) => t.mat));
+  const exps = new Set(tests.map((t) => t.exp));
+  const byOut = OUTCOMES.map(([k, label]) => [k === "limit" ? "burn limit" : label.toLowerCase(), tests.filter((t) => t.out === k).length]).filter((x) => x[1]);
+  const part = D.partSelected;
+  return [h("p", { class: "match-head" },
+    h("strong", null, `${plural(n, "test")} ${n === 1 ? "matches" : "match"} your conditions`), ` (${conditionWords()}): `,
+    byOut.map(([label, k]) => `${k} ${label}${label === "burn limit" && k > 1 ? "s" : ""}`).join(", "),
+    `, from ${plural(mats.size, "material")} in ${plural(exps.size, "experiment")}. Closest first.`,
+    part.length ? [` ${part.length} more ${part.length === 1 ? "fits" : "fit"} on what ${part.length === 1 ? "it reports" : "they report"} (${missingWords(part)} not recorded). `,
+      h("button", { class: "link-btn", type: "button", onclick: () => tapTests(part.map((t) => t.id)) }, "Show")] : null),
+    ...tableView(tests)];
+}
+
 function renderDetails() {
   const tapped = [...state.tapped].map((id) => testById.get(id)).filter(Boolean);
   const box = $("details");
-  if (!tapped.length) box.replaceChildren(...summaryView());
+  const listing = !tapped.length && condKeysSet().length > 0 && D.matchingSelected.length > 0;
+  if (listing) box.replaceChildren(...matchView());
+  else if (!tapped.length) box.replaceChildren(...summaryView());
   else if (tapped.length === 1) box.replaceChildren(...recordView(tapped[0]));
   else box.replaceChildren(...tableView(tapped));
   // "Filtered": the tapped mark holds more tests than your selection shows
@@ -484,8 +503,11 @@ function renderDetails() {
       ` ${plural(tapped.length, "test")} of ${state.tappedPoint.length} at this point. `,
       h("button", { class: "link-btn", type: "button", onclick: () => tapTests(state.tappedPoint, state.tappedPoint) }, `Show all ${state.tappedPoint.length} at this point`)));
   }
-  $("details-title").textContent = tapped.length ? (tapped.length === 1 ? "Details · test record" : `Details · ${tapped.length} tests at this point`) : "Details";
+  const atPoint = tapped.length > 1 && state.tappedPoint.length > 0;      // a tapped mark; otherwise a list opened from a link
+  $("details-title").textContent = tapped.length ? (tapped.length === 1 ? "Details · test record" : `Details · ${tapped.length} tests${atPoint ? " at this point" : ""}`)
+    : listing ? "Details · tests at your conditions" : "Details";
   $("details-back").hidden = !tapped.length;
+  $("details-back").textContent = condKeysSet().length > 0 && D.matchingSelected.length > 0 ? "Back to the list" : "Back to the summary";
 }
 
 function downloadCsv() {

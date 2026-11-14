@@ -625,6 +625,7 @@ a.src:hover { color: var(--ink); }
 .panel.details { display: flex; flex-direction: column; height: 156px; }
 #details { flex: 1; min-height: 0; overflow: auto; font-size: 12.5px; }
 .table-wrap { min-width: 0; }
+.match-head { margin: 0 0 4px; }
 table.tests { width: 100%; border-collapse: collapse; font-size: 12px; }
 table.tests th {
   position: sticky;

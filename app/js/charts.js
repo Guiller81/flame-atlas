@@ -435,6 +435,7 @@ function attach(chart) {
 export function initCharts() {
   setHome();
   document.getElementById("zoom-reset")?.addEventListener("click", resetZoom);
+  document.getElementById("clear-all")?.addEventListener("click", resetZoom);   // Clear all also brings the opening zoom back
   for (const chart of CHARTS) {
     const box = document.getElementById(chart.id);
     const tip = document.createElement("div");
