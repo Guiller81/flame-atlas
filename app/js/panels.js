@@ -434,21 +434,30 @@ function summaryView() {
     data.note ? row("Data status", h("span", { class: "muted" }, data.note)) : null)];
 }
 
-// fitOf (optional): adds a first column saying how a test fits your conditions, and writes "not recorded"
+// Every row is one line: a cell that is too long ends in "…" and shows its full text on hover.
+// fitOf (optional): adds a first column saying how a test fits your conditions, and puts a dash
 // in the cell of a condition you set that the source does not give.
 function tableView(tests, fitOf) {
-  const head = [fitOf ? "Fit" : null, "Test", "Material", "Gravity", "O2 %", "kPa", "cm/s", "Result", "Source"].filter(Boolean);
-  const value = (t, k) => (fitOf && t[k] == null && state.cond[k] != null ? h("span", { class: "not-recorded" }, "not recorded") : num(t[k]));
-  return [h("div", { class: "table-wrap" }, h("table", { class: "tests" },
-    h("thead", null, h("tr", null, head.map((x) => h("th", null, x)))),
-    h("tbody", null, tests.map((t) => h("tr", null,
-      fitOf ? h("td", null, h("span", { class: "fit " + (fitOf(t) ? "part" : "all") }, fitOf(t) || "All your conditions")) : null,
-      h("td", null, h("button", { class: "link-btn test-link", type: "button", onclick: () => tapTests([t.id]) }, t.id)),
-      h("td", null, (matById.get(t.mat) || {}).name || t.mat),
-      h("td", null, GRAVITY_NAME[t.g] || t.g),
-      h("td", { class: "numcol" }, value(t, "o2")), h("td", { class: "numcol" }, value(t, "p")), h("td", { class: "numcol" }, value(t, "flow")),
-      h("td", null, h("span", { class: "swatch out-" + t.out }), " ", outName(t)),
-      h("td", null, srcLink(t)))))))];
+  const cols = [fitOf ? ["Fit", "c-fit"] : null, ["Test", "c-test"], ["Material", "c-mat"], ["Gravity", "c-grav"], ["O2 %", "c-num"], ["kPa", "c-num"], ["cm/s", "c-num"],
+    ["Result", "c-res"], ["Source", "c-src"]].filter(Boolean);
+  const value = (t, k) => (fitOf && t[k] == null && state.cond[k] != null ? h("span", { class: "not-recorded", title: "Not recorded in the source" }, "—") : num(t[k]));
+  const cell = (text, ...kids) => h("td", { title: text }, ...(kids.length ? kids : [text]));
+  return [h("div", { class: "table-wrap" }, h("table", { class: "tests" + (fitOf ? " with-fit" : "") },
+    h("colgroup", null, cols.map((c) => h("col", { class: c[1] }))),
+    h("thead", null, h("tr", null, cols.map((c) => h("th", null, c[0])))),
+    h("tbody", null, tests.map((t) => {
+      const mat = (matById.get(t.mat) || {}).name || t.mat;
+      const src = sourceLabel(t.src, t.page, t.loc) + (t.sheet ? ` · PSI sheet "${t.sheet}", row ${t.row}` : "");
+      const srcTitle = (data.sources[t.src] || {}).title;
+      return h("tr", null,
+        fitOf ? h("td", null, h("span", { class: "fit " + (fitOf(t) ? "part" : "all") }, fitOf(t) || "All your conditions")) : null,
+        cell(t.id, h("button", { class: "link-btn test-link", type: "button", onclick: () => tapTests([t.id]) }, t.id)),
+        cell(mat),
+        cell(t.g_detail || GRAVITY_NAME[t.g] || t.g),
+        h("td", { class: "numcol" }, value(t, "o2")), h("td", { class: "numcol" }, value(t, "p")), h("td", { class: "numcol" }, value(t, "flow")),
+        cell(outName(t), h("span", { class: "swatch out-" + t.out }), " ", outName(t)),
+        h("td", null, link(src, sourceUrl(t.src, t.page), src + (srcTitle ? " · " + srcTitle : ""))));
+    }))))];
 }
 
 function recordView(t) {
