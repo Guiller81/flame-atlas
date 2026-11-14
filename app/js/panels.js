@@ -28,7 +28,7 @@ function h(tag, props, ...kids) {
   return n;
 }
 const link = (text, url, title) => (url ? h("a", { class: "src", href: url, target: "_blank", rel: "noopener", title }, text + " ↗") : h("span", { class: "src-plain" }, text));
-const srcLink = (t) => link(sourceLabel(t.src, t.page, t.loc) + (t.sheet ? ` · sheet "${t.sheet}", row ${t.row}` : ""), sourceUrl(t.src, t.page), (data.sources[t.src] || {}).title);
+const srcLink = (t) => link(sourceLabel(t.src, t.page, t.loc) + (t.sheet ? ` · PSI sheet "${t.sheet}", row ${t.row}` : ""), sourceUrl(t.src, t.page), (data.sources[t.src] || {}).title);
 
 /* ====================== selector ====================== */
 function cells(counts, onPick, picked) {
