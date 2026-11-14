@@ -10,7 +10,7 @@
 import {
   data, state, D, CONDS, CHIP_GROUPS, matById, expById, testById, GRAVITY_NAME, OUTCOME_NAME, num, pct, plural,
   hasSelection, isEmptyPage, materialFacts, selectionWords, conditionWords, snapshot, restore, sameView, viewFor,
-  aboutWords, highlightUseful, setHighlight, clearHighlight, onChange, missingWords,
+  aboutWords, highlightUseful, setHighlight, clearHighlight, onChange, missingWords, testName,
 } from "./state.js";
 
 const CHAT_URL = "https://guillec81.app.n8n.cloud/webhook/fif/chat";
@@ -127,6 +127,69 @@ function sourceLink(src) {
 const SUP = { 0: "⁰", 1: "¹", 2: "²", 3: "³", 4: "⁴", 5: "⁵", 6: "⁶", 7: "⁷", 8: "⁸", 9: "⁹", "-": "⁻", "−": "⁻", "+": "⁺" };
 const tidy = (t) => String(t == null ? "" : t).replace(/\^[({]?([+\-−]?\d+)[)}]?/g, (_, e) => [...e].map((c) => SUP[c]).join(""));
 
+// A test whose source gives it no name is shown under a readable name everywhere on the page (state.js, testName).
+// When an answer's text carries such a test's internal key, the page shows that readable name in its place, with the
+// key on hover. Only exact, known keys are swapped; any other text is left as the model wrote it. What the model
+// reads and returns (test_ids, the stored conversation) is never touched.
+let keyNames = null;               // internal key -> readable name
+let keyRx = null;                  // matches any of those keys, longest first
+function keyTools() {
+  if (keyNames || !data.tests.length) return;
+  keyNames = new Map();
+  for (const t of data.tests) { const n = testName(t); if (n !== t.id) keyNames.set(t.id, n); }
+  const esc = (k) => k.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  keyRx = keyNames.size ? new RegExp([...keyNames.keys()].sort((a, b) => b.length - a.length).map(esc).join("|"), "g") : null;
+}
+// Readable names can repeat (two PMMA sheets that both went out at 30% O2). Within one answer, tests that share a
+// name get the first detail that tells them apart (thickness, rod diameter, pressure, airflow, gravity, page), else a number.
+const DETAILS = [
+  (t) => (t.thick_mm != null ? num(t.thick_mm, 2) + " mm thick" : null),
+  (t) => (t.dia_mm != null ? num(t.dia_mm, 2) + " mm rod" : null),
+  (t) => (t.p != null ? num(t.p) + " kPa" : null),
+  (t) => (t.flow != null ? num(t.flow) + " cm/s" : null),
+  (t) => t.g_detail || GRAVITY_NAME[t.g] || null,
+  (t) => (t.page != null ? "p." + t.page : null),
+];
+const answerNames = new WeakMap();   // answer -> Map(internal key -> the name shown in that answer)
+function namesIn(a) {
+  keyTools();
+  if (!keyRx) return null;           // the data file is not there yet: nothing is cached, the next drawing tries again
+  if (answerNames.has(a)) return answerNames.get(a);
+  const texts = [a.lead && a.lead.text, ...(a.data || []).map((p) => p && p.text), ...(a.inferred || []).map((p) => p && p.text), a.not_covered];
+  const keys = [...new Set(texts.filter((x) => typeof x === "string").join("\n").match(keyRx) || [])];
+  const byName = new Map();
+  for (const k of keys) { const n = keyNames.get(k); if (!byName.has(n)) byName.set(n, []); byName.get(n).push(k); }
+  const shownAs = new Map();
+  for (const [name, group] of byName) {
+    if (group.length === 1) { shownAs.set(group[0], name); continue; }
+    const tests = group.map((k) => testById.get(k));
+    const detail = DETAILS.map((f) => tests.map(f)).find((vals) => vals.every((v) => v != null) && new Set(vals).size === vals.length);
+    group.forEach((k, i) => shownAs.set(k, `${name} (${detail ? detail[i] : "test " + (i + 1)})`));
+  }
+  answerNames.set(a, shownAs);
+  return shownAs;
+}
+
+// The text of an answer, ready for the page: exponents raised, internal keys shown as readable names.
+// shownAs (optional): the names for this answer, from namesIn.
+function rich(text, shownAs) {
+  const t = tidy(text);
+  if (!/:[0-9a-f]{8}/.test(t)) return document.createTextNode(t);        // every internal key ends like this: most answers stop here
+  keyTools();
+  if (!keyRx) return document.createTextNode(t);
+  const out = document.createDocumentFragment();
+  let last = 0;
+  for (const m of t.matchAll(keyRx)) {
+    out.append(t.slice(last, m.index));
+    const name = el("span", "test-name", (shownAs && shownAs.get(m[0])) || keyNames.get(m[0]));
+    name.title = m[0];
+    out.append(name);
+    last = m.index + m[0].length;
+  }
+  out.append(t.slice(last));
+  return out;
+}
+
 // The source links and the Highlight button of one piece of text (a point or the lead), or null.
 function citations(p, owner) {
   const seen = new Set();                              // the same page cited twice shows once
@@ -154,10 +217,12 @@ function citations(p, owner) {
   return null;
 }
 
-function pointItem(p, owner) {
+function pointItem(p, owner, shownAs) {
   const li = el("li", "point");
   if (p.heading) li.append(el("strong", "point-heading", p.heading + ". "));
-  li.append(el("span", "point-text", tidy(p.text)));
+  const text = el("span", "point-text");
+  text.append(rich(p.text, shownAs));
+  li.append(text);
   const cites = citations(p, owner);
   if (cites) li.append(cites);
   return li;
@@ -222,6 +287,7 @@ function showOnCharts(m) {
 function answerNode(m) {
   const box = el("div", "msg answer");
   const a = m.answer;
+  const shownAs = namesIn(a);
   const isBrief = m.kind === "brief";
   if (a.datasheet_read) {
     const p = el("p", "datasheet-read");
@@ -235,19 +301,20 @@ function answerNode(m) {
   const short = !isBrief && a.lead && a.lead.text ? shortPoints(a) : null;   // null: an answer without a short view
   if (short) {
     const lead = el("p", "lead");
-    lead.append(el("span", "lead-label", "In short · " + (LEAD_LABEL[a.lead.basis] || LEAD_LABEL.ours) + " "),
-      el("span", "lead-text", tidy(a.lead.text)));
+    const leadText = el("span", "lead-text");
+    leadText.append(rich(a.lead.text, shownAs));
+    lead.append(el("span", "lead-label", "In short · " + (LEAD_LABEL[a.lead.basis] || LEAD_LABEL.ours) + " "), leadText);
     const cites = citations(a.lead, `chat:${m.id}:lead`);
     if (cites) lead.append(cites);
     box.append(lead);
     if (!m.more && short.length) {
       const ul = el("ul", "points");
-      short.forEach((i) => ul.append(pointItem(a.data[i], `chat:${m.id}:d${i}`)));
+      short.forEach((i) => ul.append(pointItem(a.data[i], `chat:${m.id}:d${i}`, shownAs)));
       box.append(ul);
     }
     if (a.not_covered) {
       const nc = el("p", "not-covered");
-      nc.append(el("span", "about-label", "Not covered: "), tidy(a.not_covered));
+      nc.append(el("span", "about-label", "Not covered: "), rich(a.not_covered, shownAs));
       box.append(nc);
     }
   }
@@ -255,13 +322,13 @@ function answerNode(m) {
   if (full && a.data && a.data.length) {
     box.append(el("h3", "part-h", isBrief ? "From the papers" : "Data shows"));
     const ul = el("ul", "points");
-    a.data.forEach((p, i) => ul.append(pointItem(p, `chat:${m.id}:d${i}`)));
+    a.data.forEach((p, i) => ul.append(pointItem(p, `chat:${m.id}:d${i}`, shownAs)));
     box.append(ul);
   }
   if (full && a.inferred && a.inferred.length) {
     box.append(el("h3", "part-h inferred-h", "Inferred"));
     const ul = el("ul", "points inferred");
-    a.inferred.forEach((p, i) => ul.append(pointItem(p, `chat:${m.id}:i${i}`)));
+    a.inferred.forEach((p, i) => ul.append(pointItem(p, `chat:${m.id}:i${i}`, shownAs)));
     box.append(ul);
   }
   if (short) {
@@ -310,7 +377,7 @@ function render() {
   newConv.hidden = messages.length === 0 && !pending;
   for (const m of messages) {
     if (m.role === "user") {
-      const bubble = el("div", "msg user", m.text);
+      const bubble = el("div", "msg user", m.shown || m.text);     // a question from a button may show a shorter wording than the one sent
       if (m.file) bubble.append(el("span", "file-tag", "📎 " + m.file));
       log.append(bubble);
     } else if (m.role === "answer") log.append(answerNode(m));
@@ -393,6 +460,7 @@ export async function ask(text, kind = "ask", extra = {}) {
   text = String(text || "").trim().slice(0, MAX_CHARS);
   if (!text || pending) return;
   const question = { role: "user", text, kind };
+  if (extra.shown) question.shown = String(extra.shown).slice(0, MAX_CHARS);
   if (extra.datasheet) question.file = extra.datasheet.name;
   const brief = kind === "brief" ? { case: snapshot(), caseWords: [selectionWords(), conditionWords()].filter(Boolean).join(" · ") } : {};
   messages.push(question);

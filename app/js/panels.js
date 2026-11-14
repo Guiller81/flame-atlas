@@ -476,9 +476,15 @@ function recordView(t) {
   const askText = isLimit
     ? `What does the burn limit ${t.id} (${m.name}, ${pct(t.o2)} O2) mean, and how was it measured?`
     : `Why did test ${t.id} (${m.name}, ${pct(t.o2)} O2) ${t.out === "burned" ? "burn" : t.out === "went-out" ? "go out" : "not ignite"}?`;
+  // A test without a name from its source: the chat shows the question without the internal key (the key still goes to the AI).
+  const named = testName(t) === t.id;
+  const what = `${testName(t).split(" · ")[0]}${t.o2 != null ? ", " + pct(t.o2) + " O2" : ""}`;
+  const askShown = named ? null : isLimit
+    ? `What does this burn limit mean, and how was it measured? (${what})`
+    : `Why did this test ${t.out === "burned" ? "burn" : t.out === "went-out" ? "go out" : "not ignite"}? (${what})`;
   return [h("div", { class: "record" },
     h("div", { class: "rec-head" }, h("strong", { title: testName(t) === t.id ? null : t.id }, testName(t)), h("span", { class: "swatch out-" + t.out }), outName(t, true),
-      h("button", { class: "ai-btn small", type: "button", onclick: () => hooks.ask(askText, "why_test", { test_id: t.id }) }, isLimit ? "Ask about this limit" : `Ask why it ${verb}`)),
+      h("button", { class: "ai-btn small", type: "button", onclick: () => hooks.ask(askText, "why_test", askShown ? { test_id: t.id, shown: askShown } : { test_id: t.id }) }, isLimit ? "Ask about this limit" : `Ask why it ${verb}`)),
     h("div", { class: "rec-grid" },
       item("Experiment", e.name || t.exp), item("Platform", dash(t.platform)), item("Burn time", dash(e.burn_time)),
       item("Material", h("button", { class: "link-btn", type: "button", title: "Show this material's Earth rating card", onclick: () => openMaterial(t) }, m.name)),

@@ -141,6 +141,8 @@ h1, h2, p { margin: 0; }
 }
 
 /* ---------- Chat ---------- */
+/* a test shown under its readable name inside an answer (its internal key is on hover) */
+.test-name { padding: 0 4px; border-radius: 4px; background: var(--surface-soft); }
 .link-btn {
   padding: 0;
   border: 0;
