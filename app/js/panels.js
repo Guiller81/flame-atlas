@@ -65,7 +65,7 @@ function experimentList() {
       if (A.rank != null || B.rank != null) return (A.rank ?? 1e9) - (B.rank ?? 1e9);
       return (B.n > 0) - (A.n > 0) || a.name.localeCompare(b.name);
     });
-    const open = state.openGroups.has(group.id) || !!state.search.trim();
+    const open = state.openGroups.has(group.id) || !!state.search.trim() || exps.some((e) => e.id === state.exp);
     rows.push(h("button", { class: "row group", type: "button", "aria-expanded": String(open),
       onclick: () => { state.openGroups.has(group.id) ? state.openGroups.delete(group.id) : state.openGroups.add(group.id); changed(); } },
       h("span", { class: "caret" }, open ? "▾" : "▸"), h("span", { class: "name" }, group.name), h("span", { class: "group-n" }, String(exps.length))));
@@ -74,7 +74,7 @@ function experimentList() {
       const s = stat(e);
       const picked = state.exp === e.id && !state.mat;
       const hasTests = s.n > 0;
-      const expOpen = state.openExps.has(e.id);
+      const expOpen = state.openExps.has(e.id) || (state.exp === e.id && !!state.mat);   // a selected material is always in view
       rows.push(h("div", { class: "row exp" + (picked ? " on" : "") + (hasTests ? "" : " summary"), role: "button", tabindex: "0",
         onclick: () => select({ exp: e.id }),
         onkeydown: (ev) => { if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); select({ exp: e.id }); } } },
@@ -110,7 +110,7 @@ function materialList() {
     let mats = data.materials.filter((m) => m.cls === cls);
     if (state.search.trim()) mats = mats.filter((m) => matchSearch(m.name + " " + m.cls));
     if (!mats.length) continue;
-    const open = !state.closedClasses.has(cls) || !!state.search.trim();
+    const open = !state.closedClasses.has(cls) || !!state.search.trim() || mats.some((m) => m.id === state.mat);
     const clsTests = D.chipTests.filter((t) => (matById.get(t.mat) || {}).cls === cls);
     const clsOn = state.cls === cls;
     rows.push(h("div", { class: "row group cls" + (clsOn ? " on" : ""), role: "button", tabindex: "0", onclick: () => select({ cls }) },
@@ -433,6 +433,13 @@ function renderDetails() {
   if (!tapped.length) box.replaceChildren(...summaryView());
   else if (tapped.length === 1) box.replaceChildren(...recordView(tapped[0]));
   else box.replaceChildren(...tableView(tapped));
+  // "Filtered": the tapped mark holds more tests than your selection shows
+  const hiddenHere = state.tappedPoint.filter((id) => !state.tapped.has(id));
+  if (tapped.length && hiddenHere.length) {
+    box.prepend(h("p", { class: "filtered-tag" }, h("span", { class: "tag" }, "Filtered: " + (selectionWords() || "your selection")),
+      ` ${plural(tapped.length, "test")} of ${state.tappedPoint.length} at this point. `,
+      h("button", { class: "link-btn", type: "button", onclick: () => tapTests(state.tappedPoint, state.tappedPoint) }, `Show all ${state.tappedPoint.length} at this point`)));
+  }
   $("details-title").textContent = tapped.length ? (tapped.length === 1 ? "Details · test record" : `Details · ${tapped.length} tests at this point`) : "Details";
   $("details-back").hidden = !tapped.length;
 }

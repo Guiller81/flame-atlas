@@ -706,3 +706,6 @@ table.tests td { padding: 2px 10px 2px 0; border-top: 1px solid #f0f1f3; }
   #details { overflow-x: auto; }
   .composer textarea, .cond input, #search { font-size: 16px; }   /* no zoom on focus in iOS */
 }
+
+.filtered-tag { margin-bottom: 4px; color: var(--ink-soft); font-size: 12px; }
+.filtered-tag .tag { padding: 1px 6px; border-radius: 4px; background: #eceef1; color: var(--ink); }

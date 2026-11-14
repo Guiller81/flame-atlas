@@ -49,6 +49,7 @@ export const state = {
   win: { o2: 3, p: 10, flow: 5 },
   cabinUndo: null,                    // conditions before the lit cabin button was tapped
   tapped: new Set(),                  // tests you tapped (black ring)
+  tappedPoint: [],                    // every test at the tapped mark, including those your selection hides
   highlight: new Set(),               // tests the chat or a Highlight button points at (violet ring)
   highlightOwner: null,
   search: "",
@@ -275,9 +276,10 @@ export function tapCabin(id) {
   }
   changed();
 }
-export function tapTests(ids) {
+export function tapTests(ids, allAtPoint = []) {
   const same = ids.length === state.tapped.size && ids.every((id) => state.tapped.has(id));
   state.tapped = new Set(same ? [] : ids);
+  state.tappedPoint = same ? [] : allAtPoint;
   changed();
 }
 export function setHighlight(ids, owner) {
@@ -314,6 +316,7 @@ export function restore(s) {
   state.cond = { ...s.cond };
   state.win = { ...s.win };
   state.tapped = new Set(s.tapped);
+  state.tappedPoint = [];
   state.highlight = new Set(s.highlight);
   state.highlightOwner = s.highlightOwner;
   changed();

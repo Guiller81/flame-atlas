@@ -278,7 +278,7 @@ function attach(chart) {
     const g = view.geo;
     if (!g || y > g.y0 + 2 || y < g.y1 - 6 || x < M.l) return false;
     const m = markAt(view, x, y);
-    if (m) { tapTests((m.sel.length ? m.sel : m.g.tests).map((t) => t.id)); return false; }
+    if (m) { tapTests((m.sel.length ? m.sel : m.g.tests).map((t) => t.id), m.g.tests.map((t) => t.id)); return false; }
     setFromPointer(x, y);
     return true;
   };
