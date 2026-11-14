@@ -445,9 +445,7 @@ function tableView(tests) {
       h("td", null, srcLink(t)))))))];
 }
 
-let noteOpenFor = null;   // the test whose reading note you opened; it stays open while that record is shown
 function recordView(t) {
-  if (noteOpenFor !== t.id) noteOpenFor = null;   // another record: its note starts closed
   const e = expById.get(t.exp) || {};
   const m = matById.get(t.mat) || { name: t.mat };
   const item = (label, ...value) => h("div", { class: "rec" }, h("span", { class: "fact-label" }, label), h("span", { class: "rec-value" }, ...value));
@@ -468,9 +466,7 @@ function recordView(t) {
       item("Spread rate", dash(t.spread, " mm/s")), item("Flame length", dash(t.burn_len, " mm")),
       item("Printed as", dash(t.printed)), t.mat_basis ? item("Material from", t.mat_basis) : null, item("Airflow as printed", dash(t.flow_printed)),
       item("Source", srcLink(t)),
-      t.also ? item("Also in", ...t.also.map((id) => link(sourceLabel(id), sourceUrl(id), (data.sources[id] || {}).title))) : null),
-    t.note ? h("details", { class: "rec-note", open: noteOpenFor === t.id, ontoggle: (ev) => { noteOpenFor = ev.target.open ? t.id : noteOpenFor === t.id ? null : noteOpenFor; } },
-      h("summary", null, "How this row was read from the source"), h("p", { class: "muted" }, t.note)) : null)];
+      t.also ? item("Also in", ...t.also.map((id) => link(sourceLabel(id), sourceUrl(id), (data.sources[id] || {}).title))) : null))];
 }
 
 function renderDetails() {
@@ -494,10 +490,11 @@ function downloadCsv() {
   const cols = [["id", "test"], ["exp", "experiment"], ["mat", "material"], ["g", "gravity"], ["platform", "platform"], ["shape", "shape"], ["thick_mm", "thickness_mm"], ["dia_mm", "rod_diameter_mm"],
     ["o2", "o2_pct"], ["o2_start", "o2_start_pct"], ["p", "pressure_kpa"], ["flow", "airflow_cm_s"], ["dir", "airflow_direction"], ["enc", "enclosure"], ["out", "result"],
     ["spread", "spread_rate_mm_s"], ["burn_len", "flame_length_mm"], ["src", "source"], ["page", "page"], ["loc", "locator"]];
+  // curation_note: how the row was read from the source (the team's working note; not shown on the page)
   const esc = (v) => (v == null ? "" : /[",\n]/.test(String(v)) ? '"' + String(v).replace(/"/g, '""') + '"' : String(v));
-  const lines = [cols.map((c) => c[1]).concat("experiment_name", "material_name", "source_url").join(",")];
+  const lines = [cols.map((c) => c[1]).concat("experiment_name", "material_name", "source_url", "curation_note").join(",")];
   for (const t of D.selected) {
-    lines.push(cols.map((c) => esc(t[c[0]])).concat(esc((expById.get(t.exp) || {}).name), esc((matById.get(t.mat) || {}).name), esc(sourceUrl(t.src, t.page))).join(","));
+    lines.push(cols.map((c) => esc(t[c[0]])).concat(esc((expById.get(t.exp) || {}).name), esc((matById.get(t.mat) || {}).name), esc(sourceUrl(t.src, t.page)), esc(t.note)).join(","));
   }
   const a = h("a", { href: URL.createObjectURL(new Blob([lines.join("\n")], { type: "text/csv" })), download: "flame-atlas-tests.csv" });
   document.body.append(a);
