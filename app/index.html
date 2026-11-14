@@ -16,26 +16,65 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="page">
+  <div class="page" id="page" data-tab="explore">
+    <nav class="tabs" id="tabs" aria-label="Sections">
+      <button type="button" data-tab="explore" class="on" aria-pressed="true">Explore</button>
+      <button type="button" data-tab="ask" aria-pressed="false">Ask</button>
+    </nav>
     <main class="explore" id="explore">
       <header class="masthead">
         <h1>Flame in Freefall</h1>
         <p class="tagline">NASA's microgravity fire experiments, ranked for your cabin: real test data and cited SI answers.</p>
       </header>
 
-      <section class="panel" id="select-panel" aria-labelledby="select-h">
-        <h2 id="select-h">Select tests</h2>
-        <p class="pending">The experiment and material selector arrives here during the hackathon weekend (14–15 Nov 2026).</p>
+      <p class="dev-banner" id="dev-banner" hidden>Development data: invented values. Not for publication.</p>
+      <p class="load-error" id="load-error" hidden>The test data could not be loaded. Reload the page to try again. The chat still works.</p>
+
+      <section class="panel select" id="select-panel" aria-labelledby="select-h">
+        <div class="panel-head">
+          <h2 id="select-h">Select tests <span class="by">by</span></h2>
+          <div class="switch" id="view-switch">
+            <button type="button" data-view="experiment" class="on" aria-pressed="true">Experiment</button>
+            <button type="button" data-view="material" aria-pressed="false">Material</button>
+          </div>
+          <p class="order-note" id="order-note"></p>
+          <button type="button" class="link-btn" id="clear-all" hidden>Clear all</button>
+        </div>
+        <div class="select-body">
+          <div class="picker">
+            <input type="search" id="search" placeholder="Search experiments" aria-label="Search">
+            <div class="list" id="list"></div>
+          </div>
+          <div class="chips" id="chips"></div>
+          <div class="card" id="card"></div>
+        </div>
       </section>
 
-      <section class="panel" id="results-panel" aria-labelledby="results-h">
-        <h2 id="results-h">Test results</h2>
-        <p class="pending">Charts of real flight and ground tests: oxygen against airflow and against pressure.</p>
+      <section class="panel results" id="results-panel" aria-labelledby="results-h">
+        <div class="results-head">
+          <div class="results-row">
+            <h2 id="results-h">Test results</h2>
+            <div class="legend" id="legend"></div>
+            <div class="conds" id="conds"></div>
+          </div>
+          <div class="results-row">
+            <p class="status" id="status" aria-live="polite"></p>
+            <div class="cabins" id="cabins"></div>
+          </div>
+        </div>
+        <div class="charts">
+          <div class="chart" id="chart-flow"></div>
+          <div class="chart" id="chart-p"></div>
+        </div>
       </section>
 
-      <section class="panel" id="details-panel" aria-labelledby="details-h">
-        <h2 id="details-h">Details</h2>
-        <p class="pending">The record of each test, with a link to its source page.</p>
+      <section class="panel details" id="details-panel" aria-labelledby="details-title">
+        <div class="panel-head">
+          <h2 id="details-title">Details</h2>
+          <button type="button" class="link-btn" id="details-back" hidden>Back to the summary</button>
+          <button type="button" class="link-btn push" id="csv" title="Saves the tests in your selection: conditions, result, experiment, source and page">Download CSV</button>
+        </div>
+        <div id="details"></div>
       </section>
     </main>
 
@@ -51,20 +90,23 @@
         </div>
       </div>
       <form class="composer" id="chat-form">
+        <div class="attached" id="attached" hidden></div>
         <textarea id="chat-input" rows="2" maxlength="2000" placeholder="Ask, or e.g. What did BASS-II test?" aria-label="Your question"></textarea>
         <div class="composer-row">
           <span class="counter" id="chat-counter" hidden></span>
           <button type="submit" class="send" id="chat-send">Ask</button>
         </div>
+        <input type="file" id="datasheet-file" accept="application/pdf,image/png,image/jpeg" hidden>
       </form>
       <div class="try">
         <span class="try-label">Try:</span>
         <button type="button" class="chip" data-try="Which experiments burned solid materials, and on which spacecraft?">Solid-material experiments</button>
         <button type="button" class="chip" data-try="What did BASS-II set out to learn, and how does it relate to the Earth flammability test?">BASS-II and the Earth test</button>
+        <button type="button" class="chip" data-attach title="A material datasheet: PDF, PNG or JPEG, up to 5 MB">Attach datasheet</button>
       </div>
       <p class="ai-note">AI-generated from public NASA documents; not reviewed or endorsed by NASA.</p>
     </aside>
   </div>
-  <script src="app.js"></script>
+  <script type="module" src="js/main.js"></script>
 </body>
 </html>
