@@ -50,7 +50,7 @@ const MIN_SPAN = { o2: 1, flow: 2, p: 2 };
 const baseKey = (k) => k.split(":")[0];
 const sameRange = (a, b) => (!a && !b) || (!!a && !!b && Math.abs(a[0] - b[0]) < 1e-9 && Math.abs(a[1] - b[1]) < 1e-9);
 const zoomed = () => !AXES.every((k) => sameRange(zoom[k], home[k]));
-// A few reported limits sit far above any cabin (some materials only burn above 50% oxygen). The opening view
+// A few burn limits sit far above any cabin (some materials only burn above 50% oxygen). The opening view
 // stops at 40% oxygen and at the 98th percentile of airflow; zooming out shows the rest.
 function setHome() {
   const o2 = baseDomain("o2");
@@ -228,7 +228,7 @@ function build(chart) {
   for (const m of marks) {
     const cls = ["mark", "out-" + m.g.out, m.bright ? "bright" : "faded", m.match.length ? "match" : ""].join(" ");
     const node = el("g", { class: cls, transform: `translate(${m.px.toFixed(1)},${m.py.toFixed(1)})` });
-    if (m.g.out === "limit") {                           // a reported limit is a diamond, not a dot
+    if (m.g.out === "limit") {                           // a burn limit is a diamond, not a dot
       const d = m.r * 0.92;
       node.append(el("rect", { x: -d - 1, y: -d - 1, width: 2 * d + 2, height: 2 * d + 2, transform: "rotate(45)", class: "halo" }));
       node.append(el("rect", { x: -d, y: -d, width: 2 * d, height: 2 * d, transform: "rotate(45)", class: "dot" }));

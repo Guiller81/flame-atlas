@@ -6,8 +6,8 @@
 */
 import {
   data, state, D, GROUPS, GRAVITIES, GRAVITY_NAME, OUTCOMES, OUTCOME_NAME, CONDS, CHIP_GROUPS, CABINS,
-  matById, expById, testById, num, pct, plural, sourceUrl, sourceLabel, hasSelection, condKeysSet,
-  materialFacts, setView, select, toggleChip, setCond, setWin, tapCabin, activeCabin, tapTests,
+  matById, expById, testById, expTotal, num, pct, plural, sourceUrl, sourceLabel, hasSelection, condKeysSet,
+  materialFacts, setView, select, openMaterial, toggleChip, setCond, setWin, tapCabin, activeCabin, tapTests,
   setHighlight, clearHighlight, clearAll, changed, selectionWords, conditionWords, highlightUseful, missingWords, reportedWords,
 } from "./state.js";
 
@@ -84,7 +84,7 @@ function experimentList() {
             onclick: (ev) => { ev.stopPropagation(); expOpen ? state.openExps.delete(e.id) : state.openExps.add(e.id); changed(); } }, expOpen ? "▾" : "▸") : null,
           e.name),
         hasTests ? cells(s.byG, (g) => select({ exp: e.id, g }), picked ? state.g : null)
-          : h("span", { class: "summary-note" }, group.summary || "Summary only")));
+          : h("span", { class: "summary-note" }, expTotal(e.id) ? "0 tests with these filters" : group.summary || "Summary only")));
       if (hasTests && expOpen) {
         const byMat = new Map();
         for (const t of s.tests) { if (!byMat.has(t.mat)) byMat.set(t.mat, []); byMat.get(t.mat).push(t); }
@@ -196,7 +196,8 @@ function experimentCard(e) {
   const fact = (label, value) => { if (value) facts.push(h("div", { class: "fact" }, h("span", { class: "fact-label" }, label), h("span", { class: "fact-value" }, value))); };
 
   let key;
-  if (!s.n) key = (group.summary || "Summary only: its tests are not in the data") + ".";
+  if (!s.n && expTotal(e.id)) key = `None of its ${plural(expTotal(e.id), "test")} fits the filters you set.`;
+  else if (!s.n) key = (group.summary || "Summary only: its tests are not in the data") + ".";
   else if (e.group === "earth") key = "The 1-g tests that space results are compared with. Shown, not ranked.";
   else if (s.rank == null) key = "Tap a cabin or set your conditions to rank it.";
   else {
@@ -334,10 +335,11 @@ function renderCard() {
 }
 
 /* ====================== test results header ====================== */
+const LIMIT_TIP = "The oxygen level a paper gives as the border for one material: below it the flame goes out, above it the material burns. A conclusion from many tests, not one test.";
 function renderLegend() {
   const present = new Set(data.tests.map((t) => t.out));
   const items = OUTCOMES.filter(([k]) => (k !== "no-ignition" && k !== "limit") || present.has(k)).map(([k, label]) =>
-    h("span", { class: "legend-item" }, h("span", { class: "swatch out-" + k }), label));
+    h("span", { class: "legend-item", title: k === "limit" ? LIMIT_TIP : null }, h("span", { class: "swatch out-" + k }), k === "limit" ? label + " (oxygen where burning starts)" : label));
   if (state.highlight.size) {
     items.push(h("span", { class: "legend-item hl" }, h("span", { class: "swatch ring" }), `${state.highlight.size} highlighted `,
       h("button", { class: "x-btn", type: "button", "aria-label": "Clear highlight", onclick: () => clearHighlight() }, "✕")));
@@ -406,8 +408,8 @@ function renderCabins() {
 }
 
 /* ====================== details ====================== */
-// e.g. "Burned until suppressed", "Reported limit · MOC"
-const outName = (t) => t.out_label || (t.out === "limit" && t.kind && t.kind !== "limit" ? "Reported limit · " + t.kind : OUTCOME_NAME[t.out] || t.out);
+// e.g. "Burned until suppressed", "Burn limit · MOC"
+const outName = (t) => t.out_label || (t.out === "limit" && t.kind && t.kind !== "limit" ? "Burn limit · " + t.kind : OUTCOME_NAME[t.out] || t.out);
 const dash = (v, unit = "") => (v == null || v === "" ? "not reported" : (typeof v === "number" ? num(v, 2) : v) + unit);
 
 function summaryView() {
@@ -415,7 +417,7 @@ function summaryView() {
   if (!tests.length) return [h("p", { class: "muted" }, "No tests in this selection.")];
   const mats = new Set(tests.map((t) => t.mat));
   const exps = [...new Set(tests.map((t) => t.exp))].map((id) => expById.get(id)).filter(Boolean);
-  const byOut = OUTCOMES.map(([k, label]) => [k === "limit" ? "reported limits" : label.toLowerCase(), tests.filter((t) => t.out === k).length]).filter((x) => x[1]);
+  const byOut = OUTCOMES.map(([k, label]) => [k === "limit" ? "burn limits" : label.toLowerCase(), tests.filter((t) => t.out === k).length]).filter((x) => x[1]);
   const srcs = new Map();
   for (const t of tests) if (!srcs.has(t.src)) srcs.set(t.src, t);
   const srcList = [...srcs.keys()];
@@ -450,14 +452,14 @@ function recordView(t) {
   const verb = t.out === "burned" ? "burned" : t.out === "went-out" ? "went out" : "did not ignite";
   const isLimit = t.out === "limit";
   const askText = isLimit
-    ? `What does the reported limit ${t.id} (${m.name}, ${pct(t.o2)} O2) mean, and how was it measured?`
+    ? `What does the burn limit ${t.id} (${m.name}, ${pct(t.o2)} O2) mean, and how was it measured?`
     : `Why did test ${t.id} (${m.name}, ${pct(t.o2)} O2) ${t.out === "burned" ? "burn" : t.out === "went-out" ? "go out" : "not ignite"}?`;
   return [h("div", { class: "record" },
     h("div", { class: "rec-head" }, h("strong", null, t.id), h("span", { class: "swatch out-" + t.out }), outName(t),
       h("button", { class: "ai-btn small", type: "button", onclick: () => hooks.ask(askText, "why_test", { test_id: t.id }) }, isLimit ? "Ask about this limit" : `Ask why it ${verb}`)),
     h("div", { class: "rec-grid" },
       item("Experiment", e.name || t.exp), item("Platform", dash(t.platform)), item("Burn time", dash(e.burn_time)),
-      item("Material", h("button", { class: "link-btn", type: "button", title: "Show this material's Earth rating card", onclick: () => { if (state.view === "experiment" && state.exp === t.exp) select({ exp: t.exp, mat: t.mat }); else { setView("material"); select({ mat: t.mat }); } } }, m.name)),
+      item("Material", h("button", { class: "link-btn", type: "button", title: "Show this material's Earth rating card", onclick: () => openMaterial(t) }, m.name)),
       item("Class", dash(m.cls)), item("Gravity", t.g_detail || GRAVITY_NAME[t.g] || t.g), item("Shape", dash(t.shape)), t.dia_mm != null ? item("Diameter", num(t.dia_mm, 2) + " mm") : item("Thickness", dash(t.thick_mm, " mm")),
       item("O2", (t.o2_approx && t.o2 != null ? "about " : "") + dash(t.o2, "%")), t.o2_start != null ? item("O2 at start", num(t.o2_start) + "% (the dot is the last reading)") : null,
       item("Pressure", dash(t.p, " kPa") + (t.p_disputed ? " (disputed in the source)" : "")), item("Airflow", dash(t.flow, " cm/s")), item("Direction", dash(t.dir)), item("Enclosure", dash(t.enc)),

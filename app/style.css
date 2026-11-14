@@ -737,7 +737,7 @@ table.tests td { padding: 2px 10px 2px 0; border-top: 1px solid #f0f1f3; }
 @media (min-width: 1100px) { .chart .zoom-hint { display: inline; } }
 #zoom-reset { font-weight: 600; white-space: nowrap; }
 
-/* ---------- Reported limits: a hollow dark diamond ---------- */
+/* ---------- Burn limits: a hollow dark diamond ---------- */
 .chart .mark.out-limit .dot { fill: #fff; stroke: #3b4048; stroke-width: 1.5; }
 .chart .mark.out-limit.match .dot { stroke: #111; stroke-width: 2.25; }
 .chart .out-limit .count { fill: #3b4048; }

@@ -15,8 +15,8 @@ const testsPerExp = new Map();        // an experiment without test rows only op
 // "Partial-g" holds lunar, Martian and other partial-gravity tests; each test's record says which.
 export const GRAVITIES = [["micro", "Micro-g"], ["partial", "Partial-g"], ["earth", "Earth"]];
 export const GRAVITY_NAME = { micro: "micro-g", partial: "partial gravity (lunar, Martian)", earth: "Earth gravity" };
-// A "reported limit" is a flammability limit a document states (for example the lowest oxygen that still burned), not one test.
-export const OUTCOMES = [["burned", "Burned"], ["went-out", "Went out"], ["no-ignition", "No sustained ignition"], ["limit", "Reported limit"]];
+// A "burn limit" is the oxygen level a document states as the border between going out and burning, not one test.
+export const OUTCOMES = [["burned", "Burned"], ["went-out", "Went out"], ["no-ignition", "No sustained ignition"], ["limit", "Burn limit"]];
 export const OUTCOME_NAME = Object.fromEntries(OUTCOMES);
 export const GROUPS = [
   { id: "solid", name: "Solid materials and emulators", ranked: true },
@@ -47,6 +47,7 @@ export const state = {
   view: "experiment",                 // which side of the selector is showing
   exp: null, mat: null, cls: null, g: null,
   chips: { shape: new Set(), dir: new Set(), enc: new Set() },
+  openingChip: null,                  // the shape filter the opening view switched on; it goes when you change side
   cond: { o2: null, p: null, flow: null },
   win: { o2: 3, p: 10, flow: 5 },
   cabinUndo: null,                    // conditions before the lit cabin button was tapped
@@ -76,7 +77,7 @@ export async function loadData() {
   data.tests.forEach((t) => { testById.set(t.id, t); testsPerExp.set(t.exp, (testsPerExp.get(t.exp) || 0) + 1); });
   // Opening view: the Material side on the material whose card leads with a comparison the source's own authors make.
   const first = data.materials.find((m) => m.lead && data.tests.some((t) => t.mat === m.id && t.shape === m.lead.shape));
-  if (first) { state.view = "material"; state.mat = first.id; state.chips.shape.add(first.lead.shape); }
+  if (first) { state.view = "material"; state.mat = first.id; state.chips.shape.add(first.lead.shape); state.openingChip = first.lead.shape; }
   derive();
 }
 
@@ -141,6 +142,7 @@ export function reportedWords(tests) {
 
 /* ---------- selection ---------- */
 export const chipsOn = () => CHIP_GROUPS.some((c) => state.chips[c.key].size > 0);
+export const expTotal = (id) => testsPerExp.get(id) || 0;   // all its test rows, whatever the filters
 const expFilter = () => (state.exp && testsPerExp.get(state.exp) ? state.exp : null);
 export const hasSelection = () => !!(expFilter() || state.mat || state.cls || state.g || chipsOn());
 export const isEmptyPage = () => !hasSelection() && !condKeysSet().length && !state.tapped.size && !state.highlight.size;
@@ -268,7 +270,7 @@ export function materialFacts(matId) {
     const r = sized.filter((t) => t.dia_mm === d);
     const eo = r.filter((t) => t.g === "earth" && t.out === "limit").map((t) => t.o2);
     const sp = r.filter((t) => t.g !== "earth");
-    // lowest oxygen with a flame in space: a test that burned, a reported limit, or the last reading of a flame that then went out
+    // lowest oxygen with a flame in space: a test that burned, a burn limit, or the last reading of a flame that then went out
     const low = sp.filter((t) => t.o2 != null && (t.out === "burned" || t.out === "limit" || (t.out === "went-out" && t.o2_start != null))).map((t) => t.o2);
     return { d, ids: r.map((t) => t.id), earthN: eo.length, earthLo: eo.length ? Math.min(...eo) : null, earthHi: eo.length ? Math.max(...eo) : null,
       spaceN: sp.length, spaceLow: low.length ? Math.min(...low) : null };
@@ -297,6 +299,24 @@ export function setView(view) {
   state.view = view;
   state.exp = null; state.mat = null; state.cls = null; state.g = null;
   state.search = "";
+  dropOpeningChip();
+  changed();
+}
+// The opening view switches a shape filter on for its material. It goes as soon as you leave that material.
+function dropOpeningChip() {
+  if (state.openingChip) { state.chips.shape.delete(state.openingChip); state.openingChip = null; }
+}
+// From a test record: select the test's material and keep the record open.
+// A filter that would hide this test is cleared, so the test and its material always light up.
+export function openMaterial(t) {
+  const inExp = state.view === "experiment" && state.exp === t.exp;
+  const materialChanged = state.mat !== t.mat;
+  if (!inExp) { state.view = "material"; state.search = ""; }
+  Object.assign(state, { exp: inExp ? t.exp : null, mat: t.mat, cls: null, g: null });
+  if (materialChanged) { clearHighlight(false); dropOpeningChip(); }
+  for (const c of CHIP_GROUPS) { const set = state.chips[c.key]; if (set.size && !set.has(t[c.key])) set.clear(); }
+  state.tapped = new Set([t.id]);
+  state.tappedPoint = [];
   changed();
 }
 export function select(next) {
@@ -306,12 +326,13 @@ export function select(next) {
   const same = Object.keys(cur).every((k) => cur[k] === norm[k]);
   const materialChanged = cur.mat !== (same ? null : norm.mat);
   Object.assign(state, same ? { exp: null, mat: null, cls: null, g: null } : norm);
-  if (materialChanged) clearHighlight(false);
+  if (materialChanged) { clearHighlight(false); dropOpeningChip(); }
   state.tapped.clear();
   changed();
 }
 export function toggleChip(group, value) {
   const set = state.chips[group];
+  if (group === "shape" && value === state.openingChip) state.openingChip = null;   // from now on it is your own filter
   if (set.has(value)) set.delete(value); else set.add(value);
   changed();
 }
@@ -363,6 +384,7 @@ export function clearHighlight(notify = true) {
 export function clearAll() {
   Object.assign(state, { exp: null, mat: null, cls: null, g: null, cabinUndo: null, search: "" });
   CHIP_GROUPS.forEach((c) => state.chips[c.key].clear());
+  state.openingChip = null;
   state.cond = { o2: null, p: null, flow: null };
   state.tapped.clear();
   clearHighlight(false);
