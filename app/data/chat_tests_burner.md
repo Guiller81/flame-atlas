@@ -1,4 +1,4 @@
-# TESTS (data file version 2026-11-15 08:15)
+# TESTS (data file version 2026-11-15 08:20)
 id | exp | mat | printed | inferred | g | g_detail | shape | thick_mm | dia_mm | o2 | o2_approx | o2_start | p | p_disputed | flow | flow_printed | dir | ign | out | kind | spread | burn_len | claim | src | page | loc | note
 BRE:20346L4 | PSI-20 | ethylene-nitrogen-gas-burner | ethylene-nitrogen |  | micro |  | burner |  |  | 36 |  |  | 105.5 |  |  |  | still air |  | went-out |  |  |  | MEASURED | ACM-06 | 110 | Table 6.1 | [S17]; [S4]; [S8]; [S5]; [S12]
 BRE:20358B1 | PSI-20 | ethylene-nitrogen-gas-burner | ethylene-nitrogen |  | micro |  | burner |  |  | 39 |  |  | 106 |  |  |  | still air |  | went-out |  |  |  | MEASURED | ACM-06 | 110 | Table 6.1 | [S17]; [S4]; [S8]; [S5]; [S12]
@@ -196,4 +196,4 @@ ref | text
 [S359] | no Δhc and no ṁ'' printed for this row (p.112)
 
 # TESTS NOT IN THIS TABLE
-This context is the dashboard's burner memory: it holds the burner documents, the PSI catalogue and only the 173 rows of the ACME BRE experiment (PSI-20). The charts' other 714 tests (solid materials on the ISS, Cygnus, drop towers, aircraft and on Earth) and their documents are covered by the dashboard's main memory, which answers when no burner test, experiment or gas is selected and the question does not name the burner. If a question needs those tests or documents, the lead says that they are on the chart and that clearing the burner selection gets the answer from the main documents; never guess their values from this context.
+This context is the dashboard's burner memory: it holds the burner documents, the PSI catalogue and only the 173 rows of the ACME BRE experiment (PSI-20). The charts' other 714 tests (solid materials on the ISS, Cygnus, drop towers, aircraft and on Earth) and their documents are covered by the dashboard's main memory, which answers when no burner test, experiment or gas is selected and the question does not name the burner. If a question needs those tests or documents, the lead says that they are on the chart and that clearing the burner selection gets the answer from the main documents; never guess their values from this context. In an answer, say "the main documents"; never write "memory" or "context".
