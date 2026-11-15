@@ -4,6 +4,8 @@
   a one-sentence lead, the points to show first and a "Not covered" line. "More detail" opens the
   rest of the same answer. The page builds the links and the chart highlights from its own copy of
   the data file and drops any ID it does not know.
+  A question a button asks may have an answer prepared in advance (data/prepared.json, same format):
+  the page shows it at once and sends nothing; every other question goes to the backend.
   Team Flame Atlas, NASA Space Apps Challenge 2026. Licence: Apache-2.0.
   Written with an AI coding assistant (Claude Code), directed by the team.
 */
@@ -456,6 +458,39 @@ const ERR = {
   bad: "Something went wrong with this answer.",
 };
 
+/* ---------- prepared answers ---------- */
+// Answers to the questions the buttons ask, written and checked in advance, in the format of a live answer.
+// They are found by the kind and exact wording of the question, so a prepared answer is shown only for the
+// question it was written for. If the file is missing or late, every question is simply answered by the backend.
+const PREPARED_URL = "data/prepared.json";
+const prepared = new Map();        // kind + question -> answer
+const preparedKey = (kind, text) => kind + "|" + text;
+async function loadPrepared(url) {
+  try {
+    const res = await fetch(url, { cache: "no-cache" });
+    if (!res.ok) return;
+    const file = await res.json();
+    for (const item of file.answers || []) {
+      if (item && item.answer && Array.isArray(item.answer.data)) prepared.set(preparedKey(item.kind, item.question), item.answer);
+    }
+    await Promise.all((file.more || []).map((name) => loadPrepared(new URL(name, new URL(url, location.href)).href)));
+  } catch { /* the chat works without it */ }
+}
+let preparedReady = Promise.resolve();
+const soon = (promise, ms) => Promise.race([promise, new Promise((done) => setTimeout(done, ms))]);
+
+// A follow-up after a prepared answer goes to the backend, which has not seen that answer: its gist travels
+// with the screen description, so "it" and "that test" still resolve.
+function preparedContext() {
+  let last = -1;
+  for (let i = messages.length - 1; i >= 0; i -= 1) if (messages[i].role === "answer") { last = i; break; }
+  if (last < 1 || !messages[last].prepared) return "";
+  const a = messages[last].answer;
+  const asked = messages[last - 1].role === "user" ? messages[last - 1].text : "";
+  const gist = a.lead && a.lead.text ? a.lead.text : (a.data || []).concat(a.inferred || []).map((p) => p.text).join(" ");
+  return ("\nAnswer shown just before this question" + (asked ? ' (to "' + asked + '")' : "") + ": " + gist).slice(0, 1500);
+}
+
 // The chat keeps two memories. A question goes to the second one (the burner documents and NASA's PSI catalogue)
 // when what is selected is a gas-burner test, a burner gas, or an experiment the data file lists under burner_memory.
 // The backend also sends it there when the question itself names the burner.
@@ -487,10 +522,13 @@ export async function ask(text, kind = "ask", extra = {}) {
   render();
 
   let timedOut = false;
-  const giveUp = setTimeout(() => { timedOut = true; abort.abort(); }, GIVE_UP_MS);
   let outcome;
-  try {
-    const body = { user_id: userId, conversation_id: conversationId, kind, message: text, screen: screenText(), memory: memoryFor(extra) };
+  await soon(preparedReady, 1500);                      // normally loaded long before the first question
+  const stored = extra.datasheet ? null : prepared.get(preparedKey(kind, text));
+  const giveUp = stored ? null : setTimeout(() => { timedOut = true; abort.abort(); }, GIVE_UP_MS);
+  if (stored) outcome = { role: "answer", id: newId("a"), kind, answer: stored, prepared: true, ...brief };
+  else try {
+    const body = { user_id: userId, conversation_id: conversationId, kind, message: text, screen: (screenText() + preparedContext()).slice(0, 4000), memory: memoryFor(extra) };
     if (extra.test_id) body.test_id = extra.test_id;
     if (extra.datasheet) body.datasheet = { mime: extra.datasheet.mime, data: extra.datasheet.data };
     const res = await fetch(CHAT_URL, { method: "POST", headers: { "Content-Type": "application/json" }, signal: abort.signal, body: JSON.stringify(body) });
@@ -605,5 +643,6 @@ newConv.addEventListener("click", () => {
 });
 
 export function initChat() {
+  preparedReady = loadPrepared(PREPARED_URL);
   render();
 }
