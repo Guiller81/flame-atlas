@@ -525,7 +525,7 @@ function tableView(tests, fitOf) {
       const src = sourceLabel(t.src, t.page, t.loc) + (t.sheet ? ` · PSI sheet "${t.sheet}", row ${t.row}` : "");
       const srcTitle = (data.sources[t.src] || {}).title;
       return h("tr", null,
-        fitOf ? h("td", null, h("span", { class: "fit " + fitOf(t).kind }, fitOf(t).label)) : null,
+        fitOf ? h("td", { title: fitOf(t).label }, h("span", { class: "fit " + fitOf(t).kind }, fitOf(t).label)) : null,
         cell(testName(t) === t.id ? t.id : `${testName(t)} (${t.id})`, h("button", { class: "link-btn test-link", type: "button", onclick: () => tapTests([t.id]) }, testName(t))),
         cell(mat, state.mat === t.mat ? mat : h("button", { class: "link-btn test-link", type: "button", title: `Select ${mat}: its card and its tests`,
           onclick: () => openMaterial(t, false) }, mat)),

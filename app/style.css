@@ -671,17 +671,20 @@ a.src:hover { color: var(--ink); }
 /* One line per row: fixed column widths, long text ends in "…" (full text on hover). */
 table.tests { width: 100%; min-width: 860px; border-collapse: collapse; font-size: 12px; table-layout: fixed; }
 table.tests th, table.tests td { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-table.tests col.c-fit { width: 212px; }
-table.tests col.c-test { width: 21%; }
-table.tests col.c-mat { width: 14%; }
-table.tests col.c-grav { width: 104px; }
-table.tests col.c-num { width: 54px; }
-table.tests col.c-res { width: 14%; }
+/* Every column has a width of its own. Source used to take what was left, which was nothing on a 1280-wide window. */
+table.tests col.c-fit { width: 176px; }
+table.tests col.c-test { width: 17%; }
+table.tests col.c-mat { width: 15%; }
+table.tests col.c-grav { width: 96px; }
+table.tests col.c-num { width: 50px; }
+table.tests col.c-res { width: 12%; }
+table.tests col.c-src { width: 150px; }
 /* the materials of a selected class or experiment, side by side */
-table.tests.mats col.c-mname { width: 27%; }
-table.tests.mats col.c-count { width: 84px; }
-table.tests.mats col.c-count2 { width: 132px; }
-table.tests.mats col.c-low { width: 148px; }
+table.tests.mats col.c-mname { width: 24%; }
+table.tests.mats col.c-count { width: 82px; }
+table.tests.mats col.c-count2 { width: 124px; }
+table.tests.mats col.c-low { width: 136px; }
+table.tests.mats col.c-earth { width: 150px; }   /* its own width, like Source: it used to get what was left */
 table.tests.mats .link-btn { font-size: inherit; }
 table.tests .test-link { display: block; max-width: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; text-align: left; }
 table.tests th {
