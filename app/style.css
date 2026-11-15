@@ -204,7 +204,8 @@ a.src:hover { color: var(--ink); }
 
 .history-note { margin-top: 10px; color: var(--ink-faint); font-size: 12px; }
 
-/* Short view of an answer: one lead sentence, the points picked for it, the gap, then "More detail" */
+/* Short view of an answer: one lead sentence, the data points picked for it, "More detail" (opens the other data
+   points under itself), then what is inferred and what is not covered */
 .lead { margin: 0 0 8px; font-weight: 550; }
 .lead-label {
   display: block;
@@ -218,6 +219,7 @@ a.src:hover { color: var(--ink); }
 .lead .srcs { font-weight: 400; }
 .not-covered { margin: 8px 0 0; color: var(--ink-soft); font-size: 13px; }
 .more-btn { display: block; margin-top: 8px; }
+.more-btn + .points, .more-btn + .part-h { margin-top: 8px; }   /* the other data points open right under the line */
 .msg.answer .lead + .not-covered { margin-top: 0; }
 .msg.answer .not-covered + .part-h, .msg.answer .lead + .part-h { margin-top: 12px; }
 
@@ -276,6 +278,7 @@ a.src:hover { color: var(--ink); }
   gap: 10px;
   margin-top: 6px;
 }
+.composer-row .attach { margin-right: auto; }   /* an action on your question: left of the row, Ask on the right */
 .counter { color: var(--ink-faint); font-size: 12px; }
 .send {
   padding: 6px 16px;
@@ -297,6 +300,7 @@ a.src:hover { color: var(--ink); }
   padding: 8px var(--gutter) 10px;
 }
 .try-label { color: var(--ink-faint); font-size: 12px; }
+.try .chip { padding: 3px 9px; }   /* three questions in two rows */
 .chip {
   padding: 3px 10px;
   border: 1px solid #d3c8f7;

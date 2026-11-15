@@ -13,15 +13,15 @@
   <meta name="description" content="NASA's microgravity fire experiments, ranked for your cabin: real test data and cited SI answers.">
   <meta name="generator" content="Written with AI assistance (Claude Code), directed by Team Flame Atlas">
   <title>Flame Atlas · Flame in Freefall</title>
-  <link rel="stylesheet" href="style.css?v=becdaa2a97">
+  <link rel="stylesheet" href="style.css?v=3c5a50e361">
   <!-- Every script and style address carries the same version stamp (set at deploy), so a returning
        visitor's browser never mixes a new page with old cached code. -->
   <script type="importmap">
   { "imports": {
-    "./js/state.js": "./js/state.js?v=becdaa2a97",
-    "./js/charts.js": "./js/charts.js?v=becdaa2a97",
-    "./js/panels.js": "./js/panels.js?v=becdaa2a97",
-    "./js/chat.js": "./js/chat.js?v=becdaa2a97"
+    "./js/state.js": "./js/state.js?v=3c5a50e361",
+    "./js/charts.js": "./js/charts.js?v=3c5a50e361",
+    "./js/panels.js": "./js/panels.js?v=3c5a50e361",
+    "./js/chat.js": "./js/chat.js?v=3c5a50e361"
   } }
   </script>
 </head>
@@ -104,6 +104,7 @@
         <div class="attached" id="attached" hidden></div>
         <textarea id="chat-input" rows="2" maxlength="2000" placeholder="Ask, or e.g. What did BASS-II test?" aria-label="Your question"></textarea>
         <div class="composer-row">
+          <button type="button" class="chip attach" data-attach title="A material datasheet: PDF, PNG or JPEG, up to 5 MB">📎 Attach datasheet</button>
           <span class="counter" id="chat-counter" hidden></span>
           <button type="submit" class="send" id="chat-send">Ask</button>
         </div>
@@ -111,13 +112,13 @@
       </form>
       <div class="try">
         <span class="try-label">Try:</span>
-        <button type="button" class="chip" data-try="Which experiments burned solid materials, and on which spacecraft?">Solid-material experiments</button>
-        <button type="button" class="chip" data-try="What did BASS-II set out to learn, and how does it relate to the Earth flammability test?">BASS-II and the Earth test</button>
-        <button type="button" class="chip" data-attach title="A material datasheet: PDF, PNG or JPEG, up to 5 MB">Attach datasheet</button>
+        <button type="button" class="chip" data-try="Do materials that pass the Earth flammability test burn at lower oxygen in space?">Does an Earth rating hold in space?</button>
+        <button type="button" class="chip" data-try="Which materials were tested near 34% O2 and 56.5 kPa, and what burned?">Moon base: what burns?</button>
+        <button type="button" class="chip" data-try="What did Saffire IV to VI (Cygnus) find, and how far can I trust it?">What did Saffire IV–VI find?</button>
       </div>
       <p class="ai-note">AI-generated from public NASA documents; not reviewed or endorsed by NASA.</p>
     </aside>
   </div>
-  <script type="module" src="js/main.js?v=becdaa2a97"></script>
+  <script type="module" src="js/main.js?v=3c5a50e361"></script>
 </body>
 </html>

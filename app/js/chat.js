@@ -1,8 +1,8 @@
 /*
   Flame Atlas: the chat column. One request per question to the n8n backend; the answer comes back
   as data points and inferred points, each with source IDs, pages and test IDs, plus a short view:
-  a one-sentence lead, the points to show first and a "Not covered" line. "More detail" opens the
-  rest of the same answer. The page builds the links and the chart highlights from its own copy of
+  a one-sentence lead, the data points to show first, what is inferred and a "Not covered" line.
+  "More detail" opens the other data points of the same answer under itself. The page builds the links and the chart highlights from its own copy of
   the data file and drops any ID it does not know.
   A question a button asks may have an answer prepared in advance (data/prepared.json, same format):
   the page shows it at once and sends nothing; every other question goes to the backend.
@@ -322,6 +322,19 @@ function showOnCharts(m) {
   document.dispatchEvent(new CustomEvent("fa:show-tab", { detail: "explore" }));   // on a phone, go and look
 }
 
+// After "More detail" opens: if the new points run below the visible chat, scroll up just enough to show them,
+// and never so far that the line you clicked leaves the top of the chat.
+function revealMore(id) {
+  const btn = [...log.querySelectorAll(".more-btn")].find((b) => b.dataset.more === id);
+  const list = btn && btn.parentElement.querySelector(".more-points");
+  if (!list) return;
+  const view = log.getBoundingClientRect();
+  const below = list.getBoundingClientRect().bottom - view.bottom + 10;
+  const room = btn.getBoundingClientRect().top - view.top - 8;
+  const by = Math.min(below, room);
+  if (by > 0) log.scrollTo({ top: log.scrollTop + by, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+}
+
 function answerNode(m) {
   const box = el("div", "msg answer");
   const a = m.answer;
@@ -337,7 +350,15 @@ function answerNode(m) {
     if (about) box.append(about);
   }
   const short = !isBrief && a.lead && a.lead.text ? shortPoints(a) : null;   // null: an answer without a short view
+  const dataList = (indexes, extra) => {
+    const ul = el("ul", "points" + (extra ? " more-points" : ""));
+    indexes.forEach((i) => ul.append(pointItem(a.data[i], `chat:${m.id}:d${i}`, shownAs)));
+    return ul;
+  };
   if (short) {
+    // Short view, in reading order: the lead, the data points picked for it, a "More detail" line that opens the other
+    // data points right under itself, then what is inferred and what is not covered. The points above the line never
+    // change, so the line stays where it is when it opens and closes; "Inferred" is always shown, never folded away.
     const lead = el("p", "lead");
     const leadText = el("span", "lead-text");
     leadText.append(rich(a.lead.text, shownAs));
@@ -345,35 +366,12 @@ function answerNode(m) {
     const cites = citations(a.lead, `chat:${m.id}:lead`);
     if (cites) lead.append(cites);
     box.append(lead);
-    if (!m.more && short.length) {
-      const ul = el("ul", "points");
-      short.forEach((i) => ul.append(pointItem(a.data[i], `chat:${m.id}:d${i}`, shownAs)));
-      box.append(ul);
-    }
-    if (a.not_covered) {
-      const nc = el("p", "not-covered");
-      nc.append(el("span", "about-label", "Not covered: "), rich(a.not_covered, shownAs));
-      box.append(nc);
-    }
-  }
-  const full = !short || m.more;
-  if (full && a.data && a.data.length) {
-    box.append(el("h3", "part-h", isBrief ? "From the papers" : "Data shows"));
-    const ul = el("ul", "points");
-    a.data.forEach((p, i) => ul.append(pointItem(p, `chat:${m.id}:d${i}`, shownAs)));
-    box.append(ul);
-  }
-  if (full && a.inferred && a.inferred.length) {
-    box.append(el("h3", "part-h inferred-h", "Inferred"));
-    const ul = el("ul", "points inferred");
-    a.inferred.forEach((p, i) => ul.append(pointItem(p, `chat:${m.id}:i${i}`, shownAs)));
-    box.append(ul);
-  }
-  if (short) {
-    const rest = (a.data || []).length - short.length + (a.inferred || []).length;
-    if (rest > 0 || m.more) {                           // the rest of the same answer, no new request
-      const btn = el("button", "link-btn more-btn", m.more ? "Less detail" : "More detail (" + plural(rest, "more point") + ")");
+    if (short.length) box.append(el("h3", "part-h", "Data shows"), dataList(short));
+    const rest = (a.data || []).map((_, i) => i).filter((i) => !short.includes(i));
+    if (rest.length) {                                  // the rest of the same answer, no new request
+      const btn = el("button", "link-btn more-btn", m.more ? "Less detail" : "More detail (" + plural(rest.length, "more point") + ")");
       btn.type = "button";
+      btn.dataset.more = m.id;
       btn.setAttribute("aria-expanded", String(!!m.more));
       btn.addEventListener("click", () => {
         const y = log.scrollTop;                        // the reader stays where they are
@@ -381,9 +379,27 @@ function answerNode(m) {
         saveMessages();
         render();
         log.scrollTop = y;
+        if (m.more) revealMore(m.id);
       });
       box.append(btn);
+      if (m.more) {
+        if (!short.length) box.append(el("h3", "part-h", "Data shows"));
+        box.append(dataList(rest, true));
+      }
     }
+  } else if (a.data && a.data.length) {
+    box.append(el("h3", "part-h", isBrief ? "From the papers" : "Data shows"), dataList(a.data.map((_, i) => i)));
+  }
+  if (a.inferred && a.inferred.length) {
+    box.append(el("h3", "part-h inferred-h", "Inferred"));
+    const ul = el("ul", "points inferred");
+    a.inferred.forEach((p, i) => ul.append(pointItem(p, `chat:${m.id}:i${i}`, shownAs)));
+    box.append(ul);
+  }
+  if (short && a.not_covered) {
+    const nc = el("p", "not-covered");
+    nc.append(el("span", "about-label", "Not covered: "), rich(a.not_covered, shownAs));
+    box.append(nc);
   }
   if (isBrief) box.append(el("p", "not-covered", "Not covered: quantity, placement, ignition sources, qualification rules."));
   if (a.turn > HISTORY_LIMIT) {
