@@ -284,25 +284,30 @@ function earthCard(matId) {
   // A paper often prints only the limit it found, not the single burns behind it: the card counts both kinds of row,
   // so its numbers add up to the grid's. A side with limits only says what is there, in the legend's words and with its
   // diamond; it never says "tests: 0" or "no tests", which reads as if nothing was tested.
-  const limitsOnly = (side, n, tail = "") => [`${side}: ${plural(n, "burn limit")} `, h("span", { class: "swatch out-limit card-swatch" }),
+  const diamond = () => h("span", { class: "swatch out-limit card-swatch" });
+  const limitsOnly = (side, n, tail = "") => [`${side}: ${plural(n, "burn limit")} `, diamond(),
     `, ${n === 1 ? "" : "each "}from many tests${tail} `];
+  // Space counts are split by gravity under the grid's own column names, so each number can be matched to a grid cell.
+  const gSplit = (list) => {
+    const parts = GRAVITIES.filter(([g]) => g !== "earth").map(([g, label]) => [label.toLowerCase(), list.filter((t) => t.g === g).length]).filter(([, n]) => n);
+    return parts.length === 1 ? (list.length === 1 ? "" : "all ") + parts[0][0] : parts.map(([label, n]) => `${n} ${label}`).join(", ");
+  };
   const limitsButton = (list, owner) => highlightButton(list.map((t) => t.id), owner, list.length === 1 ? "Highlight the limit" : "Highlight the limits");
   if (f.earth.length || (m.earth && !f.earthLimits.length)) {
     lines.push(h("p", null, `Earth tests: ${f.earth.length}` + (m.earth && f.earth.length ? ` · ${f.earthBurnedBelow.length} burned ${ratingWords} ` : " "),
       highlightButton(f.earthBurnedBelow.map((t) => t.id), "card-earth")));
   }
   if (f.earthLimits.length) {
-    lines.push(h("p", null, f.earth.length ? `Earth limits reported: ${f.earthLimits.length} ` : limitsOnly("Earth", f.earthLimits.length),
+    lines.push(h("p", null, f.earth.length ? ["Earth burn limits ", diamond(), `: ${f.earthLimits.length} `] : limitsOnly("Earth", f.earthLimits.length),
       limitsButton(f.earthLimits, "card-earth-limits")));
   }
-  const gNames = f.spaceGravities.map((g) => GRAVITY_NAME[g]);
-  let space = `Space tests: ${f.space.length}` + (f.space.length && gNames.length === 1 ? `, all ${gNames[0]}` : "");
+  let space = `Space tests: ${f.space.length}` + (!f.space.length ? "" : f.spaceGravities.length === 1 ? `, ${gSplit(f.space)}` : ` (${gSplit(f.space)})`);
   if (f.space.length && m.earth) space += ` · ${f.spaceBurnedBelow.length} burned ${ratingWords}` + (f.lowestSpaceBurn != null ? (f.lead ? ` (a flame lasted down to ${pct(f.lowestSpaceBurn)})` : ` (lowest ${pct(f.lowestSpaceBurn)})`) : "");
   else if (f.space.length && f.lowestSpaceBurn != null) space += ` · lowest burn ${pct(f.lowestSpaceBurn)}`;
   if (f.space.length || !f.spaceLimits.length) lines.push(h("p", null, space + " ", highlightButton((m.earth ? f.spaceBurnedBelow : []).map((t) => t.id), "card-space")));
   if (f.spaceLimits.length) {
-    lines.push(h("p", null, f.space.length ? `Space limits reported: ${f.spaceLimits.length} (lowest ${pct(f.lowestLimit)}) `
-      : limitsOnly("Space", f.spaceLimits.length, ` (lowest ${pct(f.lowestLimit)})`),
+    lines.push(h("p", null, f.space.length ? ["Space burn limits ", diamond(), `: ${f.spaceLimits.length} (${gSplit(f.spaceLimits)}; lowest ${pct(f.lowestLimit)}) `]
+      : limitsOnly("Space", f.spaceLimits.length, ` (${gSplit(f.spaceLimits)}; lowest ${pct(f.lowestLimit)})`),
       limitsButton(f.spaceLimits, "card-limits")));
   }
   out.push(h("div", { class: "card-lines" }, lines));
