@@ -456,6 +456,22 @@ const ERR = {
   bad: "Something went wrong with this answer.",
 };
 
+// The chat keeps two memories. A question goes to the second one (the burner documents and NASA's PSI catalogue)
+// when what is selected is a gas-burner test, a burner gas, or an experiment the data file lists under burner_memory.
+// The backend also sends it there when the question itself names the burner.
+function memoryFor(extra) {
+  const exps = new Set((data.burner_memory || {}).experiments || []);
+  const burnerTest = (id) => { const t = testById.get(id); return !!t && exps.has(t.exp); };
+  const allBurner = (tests) => tests.length > 0 && tests.every((t) => exps.has(t.exp));
+  let burner = false;
+  if (extra.test_id) burner = burnerTest(extra.test_id);
+  else if (state.tapped.size) burner = [...state.tapped].every(burnerTest);
+  else if (state.exp) burner = exps.has(state.exp);
+  else if (state.mat) burner = allBurner(data.tests.filter((t) => t.mat === state.mat));
+  else if (state.cls) burner = allBurner(data.tests.filter((t) => (matById.get(t.mat) || {}).cls === state.cls));
+  return burner ? "burner" : "main";
+}
+
 export async function ask(text, kind = "ask", extra = {}) {
   text = String(text || "").trim().slice(0, MAX_CHARS);
   if (!text || pending) return;
@@ -474,7 +490,7 @@ export async function ask(text, kind = "ask", extra = {}) {
   const giveUp = setTimeout(() => { timedOut = true; abort.abort(); }, GIVE_UP_MS);
   let outcome;
   try {
-    const body = { user_id: userId, conversation_id: conversationId, kind, message: text, screen: screenText() };
+    const body = { user_id: userId, conversation_id: conversationId, kind, message: text, screen: screenText(), memory: memoryFor(extra) };
     if (extra.test_id) body.test_id = extra.test_id;
     if (extra.datasheet) body.datasheet = { mime: extra.datasheet.mime, data: extra.datasheet.data };
     const res = await fetch(CHAT_URL, { method: "POST", headers: { "Content-Type": "application/json" }, signal: abort.signal, body: JSON.stringify(body) });
