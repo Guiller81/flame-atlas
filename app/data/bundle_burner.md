@@ -1705,3 +1705,554 @@ SAME and SAME-R share these stated impacts: SAME will provide technology for an 
 
 ## Open items / gaps
 - Not found in the 33 curated documents: a PSI Combustion Science record (PSI-n accession) of an investigation run at partial gravity (lunar or Martian level).
+
+# FILE: DETECTION_SUPPRESSION
+# DETECTION_SUPPRESSION — Putting out and detecting fires in spacecraft: ISS droplet-extinction results (FLEX) and NASA's guide to ISS combustion science
+
+## Scope
+Covers: how fires are suppressed and detected in spacecraft, from two documents only.
+- FLX-03 = Nayagam et al. (2011), a conference results paper with measured values: methanol droplets burned to extinction in oxygen / carbon-dioxide / nitrogen mixtures on the International Space Station (ISS) in the Flame Extinguishment Experiment (FLEX), compared with a quasi-steady droplet-burning theory.
+- OVR-12 = NASA Johnson Space Center (2015), "A Researcher's Guide to: International Space Station Combustion Science" (NP-2015-10-034-JSC), an overview guide that mostly reports findings in words, cites other work, and describes several experiments as planned or in development at its date (2015). Statuses below are as of that guide.
+Not here: per-test data on solid materials (burn-by-burn oxygen, pressure, flow and outcome) and the measured results of the Smoke Aerosol Measurement Experiment (SAME); these are not in the two documents.
+Labels: MEASURED = observed or measured in tests; MODELED = from theory or a model; AUTHOR-INTERPRETATION = the authors' explanation, definition or judgement; CITED = attributed to other work. Flags: ~fig = read from a figure (approximate); nominal = a set point or stated condition; single-test = rests on one test. "Planned" marks intentions stated in the guide, never results.
+
+## Conditions covered
+| Source | Campaign / test family | Fuel or material and form | Gravity, platform, facility | Atmosphere (oxygen, diluents, pressure) | Flow | Tests | Citation |
+|---|---|---|---|---|---|---|---|
+| FLX-03 | Flame Extinguishment Experiment (FLEX): methanol droplet burns | methanol, isolated single droplets, free-floating; initial diameters 2 to 4 mm | microgravity, ISS, MDCA in the CIR | oxygen with nitrogen and/or carbon dioxide at 0.7 and 1 atm, oxygen lowered from test to test toward the LOI; 13% to 21% O2 at 1 atm in Fig. 3 | quiescent | 54 analysed, of 104 methanol tests (over 200 methanol and heptane burns in all) | [FLX-03 p.1 · MEASURED · nominal; FLX-03 p.2 · MEASURED; FLX-03 p.3–4 · Fig. 3 · MEASURED; OVR-12 p.53 · AUTHOR-INTERPRETATION]
+| OVR-12 | FLEX, as the guide describes it | heptane and methanol droplets; Fig. 2 an n-heptane droplet | microgravity, ISS, Combustion Integrated Rack (CIR) with the Multi-user Droplet Combustion Apparatus (MDCA) | oxygen/nitrogen mixtures diluted with nitrogen, carbon dioxide, helium or xenon; Fig. 2: 70% CO2, 21% O2, balance N2; pressure not stated | Fig. 2 droplet moved at 3 cm/s | not stated | [OVR-12 p.12 · MEASURED; OVR-12 p.12 · Fig. 2 · MEASURED; OVR-12 p.36 · MEASURED · nominal]
+| OVR-12 | FLEX-2 image (Fig. 3) | ethanol droplets | ISS (FLEX-2) | 30% O2 at 2.4 atm; diluents vary between panels | not stated | not stated | [OVR-12 p.12 · Fig. 3 · MEASURED]
+| OVR-12 | Burning and Suppression of Solids (BASS) | flat samples, polymethylmethacrylate (PMMA) spheres, porous wax slabs, wax candles; images of 2-cm diameter acrylic spheres and a 2-cm wide cotton-fiberglass fabric | microgravity, ISS, Microgravity Science Glovebox (MSG), SPICE flow duct | ISS air, nominally 21% O2 by volume at 1 atm; nitrogen added for tests down to 17% O2 | airflow speed is the main variable; sphere images at 10 and 12 cm/s; fabric in opposed flow stepped from 10 cm/s to below 1 cm/s | not stated | [OVR-12 p.2 · MEASURED; OVR-12 p.19 · MEASURED · nominal; OVR-12 p.20 · Fig. 11 · MEASURED · nominal; OVR-12 p.20 · Fig. 12 · MEASURED · nominal; OVR-12 p.21 · MEASURED; OVR-12 p.22 · MEASURED]
+| OVR-12 | BASS-related drop-tower test (Fig. 13) | PMMA sphere | 1 g, then 0 g in a drop tower | nitrogen jet applied for extinguishment; oxygen and pressure not stated | not stated | one test shown | [OVR-12 p.21 · Fig. 13 · MEASURED · nominal, single-test]
+| OVR-12 | Solid Fuel Ignition and Extinction (SoFIE), planned | solid plastics, most likely PMMA or Delrin; plastic spheres for long burns | microgravity, ISS, CIR insert plus a large flow duct in the MSG | 10 to 40% O2 by volume at 0.2 to 1.5 atm; Space Exploration Atmospheres (SEA) | 0 to 30 cm/s ventilation airflow | none yet (planned) | [OVR-12 p.19 · AUTHOR-INTERPRETATION · nominal; OVR-12 p.21 · AUTHOR-INTERPRETATION · nominal; OVR-12 p.22 · AUTHOR-INTERPRETATION · nominal; OVR-12 p.23 · AUTHOR-INTERPRETATION · nominal]
+| OVR-12 | Water Mist Fire Suppression experiment (Mist) | premixed flames moving along a tube, various fuel and oxygen mixtures, attacked with water mist | microgravity, space shuttle STS-107 (2003), Combustion Module (CM) | not stated | not stated | not stated | [OVR-12 p.26 · CITED · nominal]
+| OVR-12 | Smoke Aerosol Measurement Experiment (SAME); Dust Aerosol measurement Feasibility Test | smoke from spacecraft materials; background aerosol | ISS; SAME in the MSG in 2007 and 2010 | not stated | not stated | not stated | [OVR-12 p.26 · CITED; OVR-12 p.45 · AUTHOR-INTERPRETATION]
+| OVR-12 | Candle flames | candles | microgravity, Mir space station | not stated | not stated | several ("some tests") | [OVR-12 p.30 · CITED]
+| OVR-12 | Structure of Flame Balls at Low Lewis-number (SOFBALL) | premixed fuel/oxidizer/diluent mixtures, very fuel-lean, very low Lewis number | microgravity, space shuttle STS-83 and STS-94 (1997), STS-107 (2003), CM | compositions and pressure not stated | not stated | not stated | [OVR-12 p.25 · CITED · nominal; OVR-12 p.30 · CITED]
+| OVR-12 | Gas-jet flames: LSP, TGDF, ELF, SPICE, SLICE | laminar, axisymmetric gas-jet diffusion flames | microgravity, space shuttle (1997, 2003) and ISS MSG (2009, 2012) | sealed chambers (LSP, TGDF) or fan-driven flow ducts (ELF, SPICE) | coflow in SPICE | not stated | [OVR-12 p.13 · MEASURED · nominal; OVR-12 p.14 · MEASURED · nominal]
+| OVR-12 | ACME drop-tower tests (Figs. 6, 7) | ethylene at 1.51 mg/s from a porous sphere; 25% propane, 2% O2, 49% argon, 24% N2 from a porous burner | 2.2-second Drop Tower, NASA Glenn | air at atmospheric pressure (Fig. 6); not stated for Fig. 7 | not stated | one test per image | [OVR-12 p.2 · MEASURED · nominal; OVR-12 p.17 · Fig. 6 · MEASURED · single-test; OVR-12 p.17 · Fig. 7 · MEASURED · single-test]
+
+## Fire suppression
+
+### Flame Extinguishment Experiment (FLEX): methanol droplets in oxygen / carbon-dioxide / nitrogen on the ISS (FLX-03)
+- FLEX, under way on the ISS at the paper's date (2011), uses microgravity droplet combustion to study the fire-safety side of space exploration environments: methanol and heptane droplets burn in carbon-dioxide- and nitrogen-diluted atmospheres of varying oxygen and pressure, and FLX-03 reports the methanol tests, then recently completed. [FLX-03 p.1 · MEASURED · nominal]
+- Motivation: the authors wanted to understand condensed-phase fuel flammability limits in microgravity. [FLX-03 p.1 · AUTHOR-INTERPRETATION]
+
+| Set | Fuel and form | Gravity, platform, facility | Atmosphere and pressure | Flow | Ignition | Not reported by this source | Citation |
+|---|---|---|---|---|---|---|---|
+| C1 | methanol, isolated single droplets, free-floating after opposed-needle deployment; initial diameters 2 to 4 mm across the study (diameter of each plotted point not stated) | microgravity, ISS, MDCA installed in the CIR (US Module) | oxygen with nitrogen and/or carbon dioxide (split for each point not stated); 0.7 or 1 atm, as the series states | quiescent | two symmetrically positioned hot-wire igniters | ambient temperature, test duration | [FLX-03 p.1 · MEASURED · nominal]
+| C2 | methanol, isolated single droplets, free-floating after opposed-needle deployment; initial diameter as plotted | microgravity, ISS, MDCA installed in the CIR (US Module) | 1 atm; oxygen 13% to 21% (the series label); inert gas pure nitrogen or nitrogen/carbon-dioxide mixtures, most mixtures holding more N2 than CO2, one test at 21% O2 holding 70% CO2 and 9% N2 (split for each point not stated) | quiescent | two symmetrically positioned hot-wire igniters | ambient temperature, test duration | [FLX-03 p.1 · MEASURED · nominal; FLX-03 p.3–4 · MEASURED · nominal]
+
+- Test count at the paper's date: over two hundred methanol and heptane droplet burns in oxygen/nitrogen/carbon-dioxide mixtures, initial diameters 2 to 4 mm (ISS, MDCA in the CIR); 104 were methanol tests, 54 of which gave an extinction diameter while the droplet stayed in the back-lit camera's view, and those 54 are the tests analysed. [FLX-03 p.1 · MEASURED · nominal; FLX-03 p.2 · MEASURED]
+- Method: at fixed ambient pressure, oxygen was lowered systematically from one test to the next to approach the limiting oxygen index (LOI) (conditions C1). [FLX-03 p.1 · MEASURED]
+- Found: at 1 atm, with 13% oxygen and the rest nitrogen, ignition and some burning were observed (conditions C1; initial diameter of this burn not stated). [FLX-03 p.1 · MEASURED]
+- FLX-03 presents measured burning rates, flame stand-off ratios and extinction diameters of methanol droplets 2 to 4 mm across, for varying oxygen and diluent concentrations (conditions C1). [FLX-03 p.1 · MEASURED; FLX-03 p.6 · MEASURED]
+- It also gives simplified theoretical models to explain the observed variations in extinction diameter and flame stand-off ratio. [FLX-03 p.1 · MODELED]
+- Values read from the figures below are approximate; † marks a low-confidence read where the marker is partly hidden by overlapping markers and its centre estimated, ‡ a low-confidence read from a stack of overlapping markers whose count and centres are estimated. [FLX-03 p.2 · Fig. 1a · MEASURED · ~fig; FLX-03 p.2 · Fig. 1b · MEASURED · ~fig; FLX-03 p.3 · Fig. 2b · MEASURED · ~fig; FLX-03 p.4 · Fig. 3 · MEASURED · ~fig]
+
+- Burning rate: droplet diameter d against time came from the droplet-view camera's digital images. [FLX-03 p.2 · MEASURED]
+- The burning-rate constant K_e is the slope of the d²-against-time plot. [FLX-03 p.2 · AUTHOR-INTERPRETATION]
+- Fig. 1a plots measured K_e (axis 0 to 0.8 mm²/s) against the ambient oxygen mole fraction x_o∞ (axis 0 to 0.4), series p = 0.7 atm (+) and p = 1 atm (o). [FLX-03 p.2 · Fig. 1a · MEASURED]
+- Found: the burning rate falls as oxygen falls, as expected (conditions C1, 0.7 and 1 atm). [FLX-03 p.2 · MEASURED]
+- Found: at fixed oxygen, raising carbon dioxide at the expense of nitrogen tends to lower K slightly (conditions C1; pressure for this statement not stated, Fig. 1a covering 0.7 and 1 atm). [FLX-03 p.2 · MEASURED]
+
+| Set | Pressure (series) | x_o∞, about (±0.01) | K_e read from Fig. 1a, mm²/s, about (±0.025), in reading order | Citation |
+|---|---|---|---|---|
+| C1 | 0.7 atm | 0.15 | 0.190; 0.330; 0.346; 0.372† | [FLX-03 p.2 · Fig. 1a · MEASURED · ~fig]
+| C1 | 0.7 atm | 0.17 | 0.382; 0.396; 0.401 | [FLX-03 p.2 · Fig. 1a · MEASURED · ~fig]
+| C1 | 0.7 atm | 0.18 | 0.360; 0.368; 0.424 | [FLX-03 p.2 · Fig. 1a · MEASURED · ~fig]
+| C1 | 0.7 atm | 0.20 | 0.409; 0.432†; 0.443; 0.456† | [FLX-03 p.2 · Fig. 1a · MEASURED · ~fig]
+| C1 | 0.7 atm | 0.21 | 0.408; 0.432; 0.449 | [FLX-03 p.2 · Fig. 1a · MEASURED · ~fig]
+| C1 | 0.7 atm | 0.23 | 0.505 | [FLX-03 p.2 · Fig. 1a · MEASURED · ~fig]
+| C1 | 0.7 atm | 0.25 | 0.568 | [FLX-03 p.2 · Fig. 1a · MEASURED · ~fig]
+| C1 | 0.7 atm | 0.33 | 0.686 | [FLX-03 p.2 · Fig. 1a · MEASURED · ~fig]
+| C1 | 0.7 atm | 0.34 | 0.652 | [FLX-03 p.2 · Fig. 1a · MEASURED · ~fig]
+| C1 | 1 atm | 0.13 | 0.382‡; 0.378‡; 0.373‡; 0.366‡ | [FLX-03 p.2 · Fig. 1a · MEASURED · ~fig]
+| C1 | 1 atm | 0.14 | 0.373; 0.342; 0.304 | [FLX-03 p.2 · Fig. 1a · MEASURED · ~fig]
+| C1 | 1 atm | 0.15 | 0.426; 0.388‡; 0.380‡; 0.373‡; 0.366‡; 0.363‡; 0.302 | [FLX-03 p.2 · Fig. 1a · MEASURED · ~fig]
+| C1 | 1 atm | 0.16 | 0.383‡; 0.382‡; 0.374‡; 0.339 | [FLX-03 p.2 · Fig. 1a · MEASURED · ~fig]
+| C1 | 1 atm | 0.18 | 0.440; 0.409 | [FLX-03 p.2 · Fig. 1a · MEASURED · ~fig]
+| C1 | 1 atm | 0.20 | 0.464; 0.440; 0.415 | [FLX-03 p.2 · Fig. 1a · MEASURED · ~fig]
+| C1 | 1 atm | 0.21 | 0.553; 0.540‡; 0.536‡; 0.527‡; 0.500; 0.493; 0.465; 0.451 | [FLX-03 p.2 · Fig. 1a · MEASURED · ~fig]
+| C1 | 1 atm | 0.30 | 0.602 | [FLX-03 p.2 · Fig. 1a · MEASURED · ~fig]
+
+- K_e is set against the classical quasi-steady theoretical burning-rate constant K_c. [FLX-03 p.2 · MODELED]
+- Fig. 1b plots the fractional deviation (K_e − K_c)/K_e (no unit; axis -2.0 to 0.5) against x_o∞ (axis 0 to 0.4), series p = 0.7 atm (+) and p = 1 atm (o). [FLX-03 p.2 · Fig. 1b · MEASURED]
+- Fig. 1b also carries an unlabelled dashed horizontal line at about 0, drawn from x_o∞ about 0.10 to 0.40 (read tolerance ±0.05 on the deviation, ±0.01 on x_o∞). [FLX-03 p.2 · Fig. 1b · AUTHOR-INTERPRETATION · ~fig]
+- The authors judge that at low oxygen the burning-rate constant departs substantially from the quasi-steady prediction (conditions C1). [FLX-03 p.2 · AUTHOR-INTERPRETATION]
+
+| Set | Pressure (series) | x_o∞, about (±0.01) | (K_e − K_c)/K_e read from Fig. 1b, about (±0.05), in reading order | Citation |
+|---|---|---|---|---|
+| C1 | 0.7 atm | 0.15 | -1.530; -0.455; -0.390†; -0.293† | [FLX-03 p.2 · Fig. 1b · MEASURED · ~fig]
+| C1 | 0.7 atm | 0.17 | -0.259; -0.211; -0.197 | [FLX-03 p.2 · Fig. 1b · MEASURED · ~fig]
+| C1 | 0.7 atm | 0.18 | -0.361; -0.333; -0.155 | [FLX-03 p.2 · Fig. 1b · MEASURED · ~fig]
+| C1 | 0.7 atm | 0.20 | -0.198†; -0.151‡; -0.138‡; -0.081† | [FLX-03 p.2 · Fig. 1b · MEASURED · ~fig]
+| C1 | 0.7 atm | 0.21 | -0.204; -0.133†; -0.087† | [FLX-03 p.2 · Fig. 1b · MEASURED · ~fig]
+| C1 | 0.7 atm | 0.23 | 0.013 | [FLX-03 p.2 · Fig. 1b · MEASURED · ~fig]
+| C1 | 0.7 atm | 0.25 | 0.118 | [FLX-03 p.2 · Fig. 1b · MEASURED · ~fig]
+| C1 | 0.7 atm | 0.33 | 0.254 | [FLX-03 p.2 · Fig. 1b · MEASURED · ~fig]
+| C1 | 0.7 atm | 0.34 | 0.215 | [FLX-03 p.2 · Fig. 1b · MEASURED · ~fig]
+| C1 | 1 atm | 0.13 | -0.334‡; -0.355‡; -0.366‡; -0.397‡ | [FLX-03 p.2 · Fig. 1b · MEASURED · ~fig]
+| C1 | 1 atm | 0.14 | -0.315; -0.488; -0.614 | [FLX-03 p.2 · Fig. 1b · MEASURED · ~fig]
+| C1 | 1 atm | 0.15 | -0.153; -0.317‡; -0.347‡; -0.354‡; -0.396‡; -0.624 | [FLX-03 p.2 · Fig. 1b · MEASURED · ~fig]
+| C1 | 1 atm | 0.16 | -0.279‡; -0.284‡; -0.312; -0.446 | [FLX-03 p.2 · Fig. 1b · MEASURED · ~fig]
+| C1 | 1 atm | 0.18 | -0.158; -0.247 | [FLX-03 p.2 · Fig. 1b · MEASURED · ~fig]
+| C1 | 1 atm | 0.20 | -0.097; -0.160; -0.230 | [FLX-03 p.2 · Fig. 1b · MEASURED · ~fig]
+| C1 | 1 atm | 0.21 | 0.109‡; 0.076‡; 0.051‡; 0.046‡; -0.018‡; -0.097; -0.135 | [FLX-03 p.2 · Fig. 1b · MEASURED · ~fig]
+| C1 | 1 atm | 0.30 | 0.149 | [FLX-03 p.2 · Fig. 1b · MEASURED · ~fig]
+
+- Flame stand-off ratio: d_f/d was computed over time from the measured droplet diameter d and flame diameter d_f. [FLX-03 p.2 · AUTHOR-INTERPRETATION]
+- Flame diameters came from frame-by-frame analysis of both the UV and the CCD camera images. [FLX-03 p.2 · MEASURED]
+- Found: in a typical run d_f/d stays roughly constant away from the ignition and final-extinction periods (conditions C1). [FLX-03 p.2–3 · MEASURED]
+- Fig. 2a plots the average d_f/d over that quasi-steady period (axis 3 to 6.5) against x_o∞ (printed χo∞; axis labelled 0.00 to 0.30) for 1 atm (filled square) and 0.7 atm (filled circle), each point standing for a unique ambient condition. [FLX-03 p.3 · Fig. 2a · MEASURED]
+- Found: d_f/d rises as ambient oxygen falls, as expected (conditions C1). [FLX-03 p.3 · MEASURED]
+- The authors' reason: the flame has to sit farther out to meet the stoichiometric requirement. [FLX-03 p.3 · AUTHOR-INTERPRETATION]
+
+| Set | Pressure (series) | x_o∞, about (±0.01) | average d_f/d read from Fig. 2a, about (±0.05); camera not stated | Citation |
+|---|---|---|---|---|
+| C1 | 1 atm | 0.13 | 6.00 | [FLX-03 p.3 · Fig. 2a · MEASURED · ~fig]
+| C1 | 1 atm | 0.14 | 6.00; 5.50 | [FLX-03 p.3 · Fig. 2a · MEASURED · ~fig]
+| C1 | 1 atm | 0.15 | 5.70; 5.10 | [FLX-03 p.3 · Fig. 2a · MEASURED · ~fig]
+| C1 | 1 atm | 0.16 | 5.70 | [FLX-03 p.3 · Fig. 2a · MEASURED · ~fig]
+| C1 | 1 atm | 0.18 | 5.00 | [FLX-03 p.3 · Fig. 2a · MEASURED · ~fig]
+| C1 | 1 atm | 0.20 | 5.20 | [FLX-03 p.3 · Fig. 2a · MEASURED · ~fig]
+| C1 | 1 atm | 0.21 | 4.90; 4.70; 4.50 | [FLX-03 p.3 · Fig. 2a · MEASURED · ~fig]
+| C1 | 1 atm | 0.30 | 4.40 | [FLX-03 p.3 · Fig. 2a · MEASURED · ~fig]
+| C1 | 0.7 atm | 0.15 | 6.20 | [FLX-03 p.3 · Fig. 2a · MEASURED · ~fig]
+| C1 | 0.7 atm | 0.17 | 5.80 | [FLX-03 p.3 · Fig. 2a · MEASURED · ~fig]
+| C1 | 0.7 atm | 0.18 | 5.40 | [FLX-03 p.3 · Fig. 2a · MEASURED · ~fig]
+| C1 | 0.7 atm | 0.20 | 4.80; 4.60 | [FLX-03 p.3 · Fig. 2a · MEASURED · ~fig]
+| C1 | 0.7 atm | 0.21 | 4.80 | [FLX-03 p.3 · Fig. 2a · MEASURED · ~fig]
+| C1 | 0.7 atm | 0.23 | 5.00 | [FLX-03 p.3 · Fig. 2a · MEASURED · ~fig]
+
+- The measured d_f/d can also be correlated with a simplified quasi-steady model that includes water absorption, developed by Nayagam (FLX-03 ref. [2]). [FLX-03 p.3 · CITED]
+- That model takes the measured burning-rate constant K and calculated effective diffusion coefficients of oxygen (D_o) and water vapour (D_w), and predicts d_f/d by Eq. 1. [FLX-03 p.3 · MODELED]
+- Eq. 1: d_f/d ≈ (1/2)[a + √(a² − 2a + 4b + 1) + 1], with a = (W_av ν_o ρ_f K)/(8 W_f ν_f ρ_g D_o) · 1/x_o,∞, while b = (W_w ρ_f)/(W_f ρ_w) · (ν_o D_w x_w,f)/(ν_f D_o x_o,∞); W, ν, ρ and D are molecular weight, stoichiometric coefficient, density and effective diffusivity, and subscripts f, w, g, av and ∞ mean fuel, water vapour, gas, average gas phase and ambient (not reported by this source: the meaning of x_w,f, units, fitted range). [FLX-03 p.3 · Eq. 1 · MODELED]
+- Fig. 2b plots measured d_f/d (axis 2 to 8) against d_f/d predicted by Eq. 1 (axis 2.0 to 8.0) in four series: 1atm-uv (open square), 0.7atm-uv (open circle), 1atm-cc (filled square) and 0.7atm-cc (filled circle). [FLX-03 p.3 · Fig. 2b · MODELED]
+- An unlabelled dotted diagonal joins about (2.5, 2.5) and (7.5, 7.5) on the (predicted, measured) axes (read tolerance ±0.1). [FLX-03 p.3 · Fig. 2b · AUTHOR-INTERPRETATION · ~fig]
+- The UV values are the outermost digitally enhanced threshold of detected intensity, so they mark the outer edge of the reaction zone. [FLX-03 p.3 · AUTHOR-INTERPRETATION]
+- The CC (CCD colour) values mark peak visible-range intensity, to which fuel molecules may contribute, possibly biasing them toward smaller diameters. [FLX-03 p.3 · AUTHOR-INTERPRETATION]
+- The authors judge that overall the results appear to compare well with the predictions, and that Eq. 1 agrees closely even at low oxygen because it uses the measured burning-rate constants instead of the quasi-steady theoretical ones. [FLX-03 p.3 · AUTHOR-INTERPRETATION]
+
+| Set | Series (pressure, camera, legend label) | predicted d_f/d (Eq. 1) → measured d_f/d, read from Fig. 2b, about (±0.1 on both) | Citation |
+|---|---|---|---|
+| C1 | 1 atm, UV camera (1atm-uv) | 4.65 → 6.20; 5.17 → 5.70; 5.22 → 6.20; 5.69 → 6.90; 5.69 → 6.10†; 5.76 → 6.10†; 5.72 → 6.00†; 5.96 → 7.20; 6.13 → 6.60; 6.62 → 7.00†; 6.75 → 7.30 | [FLX-03 p.3 · Fig. 2b · MEASURED · ~fig; FLX-03 p.3 · Fig. 2b · MODELED · ~fig]
+| C1 | 0.7 atm, UV camera (0.7atm-uv) | 5.22 → 6.00; 5.48 → 5.80; 5.55 → 6.10; 5.59 → 6.40; 5.94 → 6.20; 6.60 → 6.90 | [FLX-03 p.3 · Fig. 2b · MEASURED · ~fig; FLX-03 p.3 · Fig. 2b · MODELED · ~fig]
+| C1 | 1 atm, CCD colour camera (1atm-cc) | 4.65 → 4.40; 5.17 → 4.70; 5.22 → 5.20; 5.69 → 5.00†; 5.69 → 4.90†; 5.71 → 5.10; 5.76 → 5.50; 5.96 → 5.70†; 6.13 → 5.70; 6.62 → 6.00; 6.75 → 6.00 | [FLX-03 p.3 · Fig. 2b · MEASURED · ~fig; FLX-03 p.3 · Fig. 2b · MODELED · ~fig]
+| C1 | 0.7 atm, CCD colour camera (0.7atm-cc) | 5.23 → 4.60; 5.48 → 4.80; 5.55 → 5.00; 5.60 → 4.80; 5.94 → 5.80; 6.11 → 5.40; 6.60 → 6.20 | [FLX-03 p.3 · Fig. 2b · MEASURED · ~fig; FLX-03 p.3 · Fig. 2b · MODELED · ~fig]
+
+- Extinction diameter: Fig. 3 plots droplet extinction diameter d_e (mm, axis 0 to 5) against initial diameter d_0 (mm, axis 0 to 5) for tests at 1 atm with 13% to 21% oxygen; legend: + 13%, filled circle 14%, asterisk 15%, x 16%, filled triangle 18%, open circle 20% and open square 21% O2, dashed line "calc", dotted line "no burn". [FLX-03 p.3–4 · Fig. 3 · MEASURED]
+- The dotted "no burn" line, where extinction diameter equals initial diameter, goes from about 0.5 mm to 5 mm on both axes (read tolerance ±0.1 mm on d_0, ±0.125 mm on d_e). [FLX-03 p.4 · Fig. 3 · AUTHOR-INTERPRETATION · ~fig]
+- The dashed "calc" line goes from about (d_0, d_e) = (1.05, 0.50) mm to about (3.5, 1.7) mm (same read tolerance; 1 atm); the text identifies it as a calculated infinite-rate flame temperature of 1800 K. [FLX-03 p.4 · Fig. 3 · MODELED · ~fig; FLX-03 p.5 · MODELED]
+
+| Set | Oxygen (series) | initial diameter d_0 → extinction diameter d_e, mm, read from Fig. 3, about (d_0 ±0.1, d_e ±0.125) | Citation |
+|---|---|---|---|
+| C2 | 13% | 2.56 → 1.78; 2.67 → 1.87†; 2.93 → 2.44; 3.29 → 2.77 | [FLX-03 p.4 · Fig. 3 · MEASURED · ~fig]
+| C2 | 14% | 2.37 → 1.86; 3.28 → 3.12; 3.41 → 2.97 | [FLX-03 p.4 · Fig. 3 · MEASURED · ~fig]
+| C2 | 15% | 2.45 → 1.33; 2.59 → 1.66; 2.62 → 1.34†; 2.70 → 1.87; 3.08 → 2.55; 3.79 → 3.54; 4.01 → 3.31 | [FLX-03 p.4 · Fig. 3 · MEASURED · ~fig]
+| C2 | 16% | 2.71 → 1.36†; 2.81 → 1.54; 3.78 → 3.28; 4.31 → 4.03 | [FLX-03 p.4 · Fig. 3 · MEASURED · ~fig]
+| C2 | 18% | 3.09 → 1.44; 3.78 → 1.94 | [FLX-03 p.4 · Fig. 3 · MEASURED · ~fig]
+| C2 | 20% | 3.38 → 1.66; 3.64 → 1.58; 4.42 → 1.99 | [FLX-03 p.4 · Fig. 3 · MEASURED · ~fig]
+| C2 | 21% | 1.71 → 0.92†; 1.80 → 0.99†; 1.80 → 0.90†; 1.95 → 0.73; 2.00 → 0.92; 2.72 → 1.32; 2.90 → 1.43; 3.13 → 1.64; 3.32 → 1.35 | [FLX-03 p.4 · Fig. 3 · MEASURED · ~fig]
+
+- Found: the points fall roughly into two bands; extinction diameters are small at 18% oxygen or more, but near the initial diameter (the no-burn line) at 14% or less (conditions C2). [FLX-03 p.4 · MEASURED]
+- Found: the 15% and 16% points move from the small-extinction-diameter group to the large one as initial diameter grows, leaving the small-diameter range at a larger initial diameter for the higher oxygen level (conditions C2). [FLX-03 p.4 · MEASURED]
+- The authors read this as entirely consistent with a transition from diffusive to radiative extinction: the upper group extinguishes radiatively and the lower group diffusively; at 18% oxygen or more all droplets show diffusive extinction, at 14% or less all show radiative extinction, and critical initial diameters separate the two behaviours at 15% and 16% (methanol, 1 atm). [FLX-03 p.4 · AUTHOR-INTERPRETATION]
+- Found: the 14% points lying closer to the no-burn line than the 13% points had more carbon dioxide in the atmosphere (conditions C2; their CO2 fractions not stated). [FLX-03 p.4 · MEASURED]
+- The authors take this to suggest that carbon dioxide promotes radiative extinction, as expected from its much greater infrared emissivity. [FLX-03 p.4 · AUTHOR-INTERPRETATION]
+- Found: among the three diffusive-extinction points with the smallest initial diameters, one had 70% carbon dioxide (conditions C2; its oxygen is not restated in that sentence). [FLX-03 p.4 · MEASURED · single-test]
+- The authors infer that carbon dioxide's influence on diffusive extinction is not very different from that of nitrogen. [FLX-03 p.4 · AUTHOR-INTERPRETATION]
+- Found: with very few exceptions, radiant extinction occurs at extinction diameters very close to the initial diameter, in the upper group of Fig. 3 (conditions C2). [FLX-03 p.6 · MEASURED]
+- The authors infer that the whole combustion process in that upper group was probably transient and its extinction diameter probably depends on the ignition energy supplied, the amount of combustion that can be forced being likely proportional to that initiation impulse; in that sense these atmospheres might be regarded as lying outside the LOI. [FLX-03 p.6 · AUTHOR-INTERPRETATION]
+
+- Theory: to complement full numerical computations and give another perspective, the authors applied the quasi-steady droplet theory of Zhang et al. (FLX-03 ref. [3]) to the data. [FLX-03 p.4 · CITED]
+- That theory treats quasi-steady, spherically symmetric burning with water absorbed into the droplet, and addresses two limits: water diffusing through the liquid methanol, and a well-mixed liquid. [FLX-03 p.4 · CITED]
+- The authors hold the well-mixed limit to be the realistic one, because of a strong solutal-Marangoni (diffuso-capillary) instability. [FLX-03 p.4 · AUTHOR-INTERPRETATION]
+- Zhang et al. derived, from gas-phase conservation of fuel, water and temperature in the flame-sheet (infinitely fast reaction) limit, a pair of nonlinear ordinary differential equations that give the liquid temperature and the liquid's water concentration as functions of droplet diameter. [FLX-03 p.4 · CITED]
+- Here the well-mixed limit is used, gas-phase Lewis numbers are taken as unity (an approximation shown sufficiently accurate in FLX-03 ref. [4]), and the pair of equations is integrated numerically for the specific atmospheres of the tests. [FLX-03 p.4–5 · MODELED]
+- Zhang et al. also used rate-ratio asymptotics for finite-rate chemistry to calculate droplet extinction diameters, extinction being where the droplet diameter and the extinction diameter, both plotted against time, became equal. [FLX-03 p.5 · CITED]
+- Rate-ratio asymptotics and detailed chemical-kinetic calculations often put droplet extinction at a more or less fixed flame temperature of about 1300 K to 1600 K, the value depending on atmosphere and conditions (not reported by this source for this range: atmosphere, pressure, droplet size). [FLX-03 p.5 · CITED]
+- Extinction is therefore judged here through flame temperature: as a rough indication, the measured extinction diameters are compared with droplet diameters calculated for fixed infinite-rate adiabatic flame temperatures. [FLX-03 p.5 · MODELED]
+- Limitation: the most relevant quantity is the actual flame temperature at extinction, which lies a few hundred degrees below the infinite-rate adiabatic value. [FLX-03 p.5 · AUTHOR-INTERPRETATION]
+- In the model, once burning starts some flame-made water diffuses back to the droplet and is absorbed, so the liquid's water content builds up while the flame temperature stays practically constant; eventually water begins to vaporize with the fuel, the gas-phase water flux reverses, and the vapour reaching the flame grows ever more dilute, lowering the flame temperature (methanol, well-mixed liquid, unity Lewis numbers; atmosphere not specified). [FLX-03 p.4–5 · MODELED]
+- In air, for example, the calculated infinite-rate flame temperature falls from 1815 K to 1300 K while the droplet diameter shrinks by about a factor of two (methanol; not reported by this source for this calculation: pressure, initial diameter). [FLX-03 p.5 · MODELED]
+- The first fall after the zero-water-flux condition is noticeably steep, so the true extinction temperature is expected to be reached shortly after that condition. [FLX-03 p.5 · MODELED]
+- The authors find that the calculated zero-flux condition for air gives a tight upper bound for the lower (diffusive) group of Fig. 3, and that a similarly calculated 1750 K line (not drawn in the figure) gives a tight lower bound. [FLX-03 p.4 · Fig. 3 · AUTHOR-INTERPRETATION; FLX-03 p.5 · AUTHOR-INTERPRETATION]
+- They conclude that diffusive extinction occurs when the infinite-rate ideal flame temperature drops to near 1800 K in atmospheres with 21% O2, a value that falls with dilution, to below 1650 K at 18% (methanol, 1 atm, Fig. 3 data). [FLX-03 p.4 · Fig. 3 · MEASURED · nominal; FLX-03 p.5 · AUTHOR-INTERPRETATION]
+- Limitation: all these calculations neglect radiant energy loss, so they cannot address radiant extinction. [FLX-03 p.5 · MODELED]
+- Radiant loss could be added by artificially lowering the heat release per unit mass of oxidizer consumed to an effective net value, which needs an estimate of the ratio of radiant-loss rate to heat-release rate and so of Planck-mean absorption lengths for H2O and CO2 in the flame. [FLX-03 p.5 · MODELED]
+- Once estimated for one droplet size, the net heat release follows for any size: the heat-release rate scales with surface area times gradient, so with the diameter, and the radiant-loss rate with surface area times flame thickness, so with the diameter cubed; their ratio, and with it the radiant fraction and the needed cut in heat release, grows as the square of the diameter (stated in words, no equation number). [FLX-03 p.5 · MODELED]
+- Limitation: this approximation ignores how emissivities and similar properties vary with droplet radius, an effect the authors expect to be small. [FLX-03 p.5 · AUTHOR-INTERPRETATION]
+- The authors see little point in repeating the calculation with radiant loss, given Fig. 3: for such small diameter changes the droplet absorbs very little water before extinction, ordinary droplet-combustion theory does as well, and water absorption can be neglected for methanol droplets undergoing radiant extinction. [FLX-03 p.5–6 · AUTHOR-INTERPRETATION]
+- Only near the critical transition diameters at 15% and 16% oxygen would radiant loss need to be included together with water absorption in the liquid. [FLX-03 p.6 · AUTHOR-INTERPRETATION]
+- Conclusions: measured burning rates, flame stand-off ratios and extinction diameters agree reasonably well with simplified theoretical models; below about 14% oxygen, radiative extinction occurred instead of extinction caused by water absorption (methanol droplets 2 to 4 mm, ISS microgravity); more detailed analyses were under way. [FLX-03 p.1 · MEASURED · nominal; FLX-03 p.6 · AUTHOR-INTERPRETATION]
+
+### FLEX and FLEX-2 as the 2015 guide describes them
+| Set | Fuel and form | Gravity, platform, facility | Atmosphere | Not reported by this source | Citation |
+|---|---|---|---|---|---|
+| C3 | heptane and methanol droplets | microgravity, ISS, CIR with MDCA | oxygen/nitrogen mixtures diluted with a second inert gas: nitrogen, carbon dioxide, helium or xenon | droplet diameters, oxygen and diluent fractions, pressure, flow, ignition, test count | [OVR-12 p.12 · MEASURED; OVR-12 p.36 · MEASURED · nominal]
+
+- Goal: find how adding an inert-gas suppressant shifts the flammability limit of heptane and methanol, to understand quantitatively how flammability limits change in reduced gravity, for fire safety. [OVR-12 p.12 · AUTHOR-INTERPRETATION · nominal]
+- Motivation: better identification and prediction of limiting oxygen indices (LOIs) and of how well inert-gas suppressants work. [OVR-12 p.36 · AUTHOR-INTERPRETATION]
+- Status in the guide: FLEX was operating inside the CIR with the MDCA; FLEX and its follow-on FLEX-2 use microgravity to burn liquid droplets with spherical symmetry. [OVR-12 p.36 · MEASURED · nominal]
+- Found: the work so far shows a lower flammability limit in reduced gravity (conditions C3). [OVR-12 p.12 · MEASURED]
+- The guide infers that terrestrial standards for inert-gas suppressants do not give the same safety margin in low gravity as in normal gravity. [OVR-12 p.12 · AUTHOR-INTERPRETATION]
+- Found: FLEX tests showed radiative and diffusive extinction (both extinction limits identified for heptane and methanol droplets), combustion instabilities, lower flammability limits, and a cool-flame phenomenon after the visible flame went out, since explained (conditions C3). [OVR-12 p.13 · MEASURED; OVR-12 p.36 · MEASURED]
+- Found: FLEX and FLEX-2 identified an LOI significantly lower than in normal gravity and lower than previously predicted and expected (conditions C3; also not reported by this source: which fuel, the LOI value). [OVR-12 p.36 · MEASURED]
+- Comparing FLEX results with theoretical and numerical models validated parts of the models and showed where they need improvement. [OVR-12 p.13 · AUTHOR-INTERPRETATION]
+- Wider use per the guide: heptane and methanol models are building blocks for models of practical liquid fuels such as diesel and jet fuel; long ISS burns give benchmark data to develop, improve and validate detailed models of liquid hydrocarbon combustion; the data help refine chemical kinetic models for combustion systems on Earth. [OVR-12 p.12–13 · AUTHOR-INTERPRETATION; OVR-12 p.36 · AUTHOR-INTERPRETATION]
+- FLEX-2 builds on FLEX: more fuels (blends of pure fuels, surrogates of real fuels), soot formation, effects of slow convection below buoyant speeds, and interactions between droplets; through international partners it also covers flames running along droplet arrays and liquid fuels of biological origin. [OVR-12 p.13 · AUTHOR-INTERPRETATION]
+- FLEX-2's stated motivation is droplet burning as it bears on energy conversion and use, liquid hydrocarbon fuels being a predominant energy source worldwide. [OVR-12 p.36 · AUTHOR-INTERPRETATION]
+- Fig. 2 (FLEX): an n-heptane droplet burning in 70% carbon dioxide, 21% oxygen, balance nitrogen, while being moved to the right at 3 cm/s (not reported by this source: droplet diameter, pressure). [OVR-12 p.12 · Fig. 2 · MEASURED · single-test]
+- Fig. 3 (FLEX-2): how readily burning ethanol droplets form soot in different diluents, at 30% oxygen and 2.4 atm (not reported by this source: the diluent in each panel, droplet diameter). [OVR-12 p.12 · Fig. 3 · MEASURED]
+
+### Nitrogen applied to burning solids (BASS)
+| Set | Fuel or material and form | Gravity, platform, facility | Atmosphere | Not reported by this source | Citation |
+|---|---|---|---|---|---|
+| C4 | BASS sample types: flat samples, PMMA spheres, porous wax slabs, wax candles | microgravity, ISS, MSG, SPICE flow duct | ISS air, nominally 21% O2 by volume at 1 atm, or nitrogen-diluted down to 17% O2; airflow speed varied | which material, oxygen, pressure and flow in a given result; ignition method; duration; test count | [OVR-12 p.3 · MEASURED · nominal; OVR-12 p.19 · MEASURED · nominal; OVR-12 p.22 · MEASURED]
+
+- BASS (Burning and Suppression of Solids) is a rapid turn-around ISS flight experiment that began operating in March 2012; at the guide's date it was the only solid-fuel combustion flight research. [OVR-12 p.18–19 · MEASURED · nominal]
+- It examines how a wide variety of fuel samples burn and go out in microgravity (Figs. 11 to 13). [OVR-12 p.21 · MEASURED]
+- Method: the fuel is ignited, airflow speed is the main variable, and after some time nitrogen gas was applied as a suppressant to selected flames (conditions C4). [OVR-12 p.22 · MEASURED · nominal]
+- Hypothesis tested: with adequate ventilation, a material in microgravity burns as well as or better than the same material in normal gravity, other conditions (pressure, oxygen concentration, temperature, etc.) being identical. [OVR-12 p.21 · AUTHOR-INTERPRETATION]
+- Found: useful results on the effect of flow velocity and on flame suppression by nitrogen (conditions C4; no values given). [OVR-12 p.19 · MEASURED]
+- Found (early results): nitrogen applied to the flame can actually strengthen it (conditions C4). [OVR-12 p.22 · MEASURED]
+- The authors attribute this to oxygen entrainment: depending on flame geometry and the extinguisher's distance from the flame and dispersion angle, the suppressant stream may be ineffective or may worsen the flame by drawing in oxygen. [OVR-12 p.22 · AUTHOR-INTERPRETATION]
+- Found (later findings): local application of suppressant is not adequate to extinguish the flame; the local jet entrains air and keeps the flame burning even with the ambient airflow switched off (conditions C4; the agent is not named in this passage). [OVR-12 p.31 · MEASURED]
+- On Earth, extinguishers are understood to work best aimed at the flame base, which both anchors the flame and is where fresh air first enters it; in microgravity the best aiming point may not be obvious, especially for a partly obstructed flame or one stabilized in a wake. [OVR-12 p.22 · AUTHOR-INTERPRETATION]
+- Using nitrogen as the suppressant in microgravity links the results directly to current and planned extinguishing techniques. [OVR-12 p.22 · AUTHOR-INTERPRETATION]
+- Fig. 13: a drop-tower test of a burning PMMA sphere through the switch from 1 g to 0 g and the flame's response to a nitrogen jet applied to put it out; panel labels "1-g", "0-g, 1 s after drop" and "0-g, 4 s after drop Nitrogen extinguishing" (not reported by this source: sphere size, oxygen, pressure). [OVR-12 p.21 · Fig. 13 · MEASURED · nominal, ~fig, single-test]
+- Expected uses of BASS: better 1-g fire-safety rating tests for materials, guidance on strategies to extinguish accidental fires in microgravity, additions to the limited database on solid combustion in microgravity, and guidance for the computational combustion models used to design fire detection and suppression systems in microgravity and on Earth. [OVR-12 p.21 · AUTHOR-INTERPRETATION]
+- Detailed combustion models are validated in the simpler flow of microgravity tests and then serve to build the more complex models that normal-gravity flames require, with wide use for combustion problems on Earth. [OVR-12 p.21 · AUTHOR-INTERPRETATION]
+- The quick return of BASS results helped guide the next, more complete flight experiments; BASS is a precursor to the SoFIE flight experiments, planned at the guide's date for launch in 2019. [OVR-12 p.19 · AUTHOR-INTERPRETATION · nominal]
+
+### Water mist and portable extinguishers
+- The Water Mist Fire Suppression experiment (Mist), of T. McKinnon (Colorado School of Mines) et al., ran in the CM facility on space shuttle mission STS-107 in 2003. [OVR-12 p.26 · CITED · nominal]
+- It measured how well water mist extinguishes a premixed flame travelling along a tube, to understand water-mist suppression and help design better mist systems to replace banned Halon systems; it studied how water droplet diameter and water concentration change the speed, strength and shape of flames in various fuel and oxygen mixtures. [OVR-12 p.26 · CITED]
+- After years of research, testing, flight experiments and advocacy, non-toxic water-mist portable fire extinguishers were designed, tested, built and certified for spaceflight. [OVR-12 p.26 · AUTHOR-INTERPRETATION]
+- The first 2 of 9 planned water-mist portable extinguishers went to the ISS in December 2015 to replace the carbon-dioxide units on board; the other units were to follow on three more missions. [OVR-12 p.26 · MEASURED · nominal]
+
+### Suppression aims of planned work (plans in the 2015 guide, not results)
+- Planned SoFIE investigation "External Heat Flux Effects on the Ignitability and Suppression of Materials in Microgravity": tests in microgravity of how materials ignite and are suppressed when they burn in a slow forced flow while an external heat flux is applied, in SEA. [OVR-12 p.22 · AUTHOR-INTERPRETATION · nominal; OVR-12 p.24 · AUTHOR-INTERPRETATION]
+- Its measurements: time to ignition, and time from release of the suppression agent to extinction, as functions of the environment. [OVR-12 p.24 · AUTHOR-INTERPRETATION]
+- A comprehensive model of piloted ignition and extinction of materials in SEA is to support it. [OVR-12 p.24 · AUTHOR-INTERPRETATION · nominal]
+- The microgravity tests are to validate that model, which would then predict the fire behaviour of different combustible materials in SEA. [OVR-12 p.24 · AUTHOR-INTERPRETATION · nominal]
+- Found (reduced-gravity aircraft tests already run in this line of work): the short low-gravity time allowed ignition times only at high radiant heat fluxes; at airflow speeds below those buoyancy induces, ignition times dropped well below those seen in normal-gravity buoyant flow (not reported by this source: materials, oxygen, pressure, heat-flux values). [OVR-12 p.24 · MEASURED]
+- The authors read the shorter ignition times as showing that, at such low flow, reduced heat loss from the surface matters more to ignition than reduced oxygen supply. [OVR-12 p.24 · AUTHOR-INTERPRETATION]
+- A theoretical ignition-time model showed that the critical heat flux for ignition in microgravity can be as little as half the value measured in normal gravity (not reported by this source: material, oxygen, pressure, flow). [OVR-12 p.24 · MODELED]
+- Per the guide, no test method existed that was designed to find the fire hazard of materials in SEA; this work would supply one, add data on how SEA affects flammability and suppression, and may help interpret and extend current NASA test procedures to SEA. [OVR-12 p.24 · AUTHOR-INTERPRETATION]
+- Proposed: a Microgravity Wind Tunnel for fire research in the MSG, alongside SoFIE in the CIR, to study fire growth patterns on large samples, material flammability against NASA-STD-6001 Test 1, fire suppression, and applied research on post-fire cleanup. [OVR-12 p.38 · AUTHOR-INTERPRETATION · nominal; OVR-12 p.45 · AUTHOR-INTERPRETATION · nominal]
+- The two facilities are meant to complement each other: SoFIE can test in exploration atmospheres with lower pressure and higher oxygen, the Wind Tunnel takes large samples and easy sample change-out. [OVR-12 p.38 · AUTHOR-INTERPRETATION · nominal]
+
+## Fire detection
+
+### Smoke and particles in microgravity
+- Detecting fires in spacecraft is harder than on Earth because buoyancy affects the properties of the smoke a fire gives off, and spacecraft need fast detection with few false alarms. [OVR-12 p.26 · AUTHOR-INTERPRETATION]
+- Found: fundamental microgravity research showed that flames in microgravity produce particulates of very different size (not reported by this source: fuels, particle sizes, conditions). [OVR-12 p.35 · MEASURED]
+- Since many fire detectors work by sensing particulates from the fire, they would need different signatures for fires in microgravity; a terrestrial detector flown in space would be "looking" for the wrong thing. [OVR-12 p.35 · AUTHOR-INTERPRETATION]
+- In gas-jet diffusion flames tested in drop towers and space facilities, the onset of smoke production in low gravity differed substantially from normal gravity and went against predictions in earlier literature (not reported by this source: fuels, conditions). [OVR-12 p.32 · CITED]
+- The same experiments showed significant differences in primary soot particle size and a larger fractal dimension of the soot agglomerates (e.g., Greenberg et al., 1997; not reported by this source: sizes, conditions). [OVR-12 p.32 · CITED]
+- The guide counts technologies to measure and characterize small aerosol particles among the most significant developments of the programme (e.g., Qi et al., 2008). [OVR-12 p.34 · CITED · nominal]
+
+### ISS experiments: SAME and the Dust Aerosol measurement Feasibility Test
+- Two recent experiments addressed spacecraft fire detection: the Dust Aerosol measurement Feasibility Test examined background aerosol particulate levels on the ISS, and the Smoke Aerosol Measurement Experiment (SAME) examined the particle-size distribution of smoke from spacecraft materials. [OVR-12 p.26 · CITED]
+- SAME ran in the MSG in 2007 and 2010. [OVR-12 p.45 · AUTHOR-INTERPRETATION]
+- The guide says these instruments can usefully guide designers of future spacecraft smoke detectors. [OVR-12 p.26 · AUTHOR-INTERPRETATION]
+
+### Detectors
+- NASA Glenn Research Center (GRC) runs active research programmes in both fire detection and fire suppression. [OVR-12 p.35 · AUTHOR-INTERPRETATION · nominal]
+- One achievement is a new device that monitors particulates and chemical species at the same time to better detect the onset of a fire. [OVR-12 p.35 · MEASURED · nominal]
+- Found: in tests run jointly with the Federal Aviation Administration, the device did better than the smoke detectors now used on aircraft both at rejecting false alarms and at catching real events (not reported by this source: test platform, fire sources). [OVR-12 p.35 · MEASURED]
+- The device can be "tuned" to the particulate and species signatures of fires in microgravity. [OVR-12 p.35 · AUTHOR-INTERPRETATION · nominal]
+
+## Spacecraft fire-safety frame (OVR-12)
+
+### Hazard and how NASA controls it
+- For the guide, fire safety is a key operational part of crewed exploration, aiming to make accidental fires in spacecraft and habitats both less likely and less harmful. [OVR-12 p.9 · AUTHOR-INTERPRETATION]
+- It cites the 1967 Apollo 1 cabin fire during a launch-pad test, which killed three astronauts, and the 1970 Apollo 13 oxygen-tank explosion on the way to the Moon as showing the hazard of accidental spacecraft fires. [OVR-12 p.34–35 · CITED]
+- A fire or explosion needs all three elements of the "fire triangle" (fuel, oxygen, an ignition source), and a crewed spacecraft necessarily contains all three. [OVR-12 p.35 · AUTHOR-INTERPRETATION]
+- Spacecraft also often operate at an ambient oxygen mole fraction above that of air, have few ways to escape, and tolerate almost no damage to critical life-support systems. [OVR-12 p.35 · AUTHOR-INTERPRETATION · nominal]
+- NASA therefore keeps a disciplined fire-safety culture: strict material controls, rigid design standards for electronic equipment and every possible ignition source, and suppression systems required on all spacecraft. [OVR-12 p.35 · AUTHOR-INTERPRETATION]
+- Fire prevention, detection and suppression all differ fundamentally in space, so better knowledge of combustion in reduced gravity is called essential to adapt fire-safety concepts and systems to the stricter conditions of space. [OVR-12 p.9–10 · AUTHOR-INTERPRETATION]
+- How such environmental changes affect combustion in reduced gravity is described as unclear and in need of better understanding for all mission-relevant scenarios. [OVR-12 p.9 · AUTHOR-INTERPRETATION]
+
+### Three misconceptions the guide says research showed false
+- NASA's approach to spacecraft fire safety was dominated by a general lack of knowledge of how fire behaves in microgravity, which led to several critical misconceptions. [OVR-12 p.35 · AUTHOR-INTERPRETATION]
+- Misconception 1 (shown false): in still microgravity air a fire cannot burn steadily. [OVR-12 p.35 · CITED]
+- Misconception 2 (shown false): a fire will put itself out if the ventilation is shut off. [OVR-12 p.35 · CITED]
+- Misconception 3 (shown false): because reduced gravity is inherently safer, terrestrial fire standards and tests are a very conservative approach to fire safety. [OVR-12 p.35 · CITED]
+- GRC research in ground laboratories, ground microgravity facilities and space experiments (summarized by Friedman and Ross, 2001, and Ruff et al., 2009) showed these assumptions to be false; the guide presents this as GRC's contribution to fire prevention through material flammability and screening. [OVR-12 p.35 · CITED]
+- Elsewhere the guide recalls that many researchers, notable experts among them, had argued in print that without convection diffusion alone could not sustain a steady flame, and that two spaceflight experiments proved this wrong. [OVR-12 p.30 · AUTHOR-INTERPRETATION]
+
+### Why Earth-based flammability tests may not be conservative
+- Space-based and ground-based low-gravity experiments found substantial differences in how flames over solid materials behave in reduced gravity, many of them bearing directly on the spacecraft fire hazard. [OVR-12 p.18 · AUTHOR-INTERPRETATION]
+- Microgravity experiments showed that the assumed safety margin of lower flammability in microgravity, based on quiescent tests, may not hold in most spacecraft environments, where ventilation flow strongly enhances flames. [OVR-12 p.18 · AUTHOR-INTERPRETATION]
+- Found: in the low flows of microgravity or partial gravity, some materials burn at lower oxygen concentrations than in normal gravity (Fig. 8; not reported by this source: materials, oxygen values, pressure, flow speeds). [OVR-12 p.18 · MEASURED]
+- Found: recent BASS results on the ISS indicate that NASA-STD-6001 Test 1 is not conservative: in microgravity, materials can keep burning at oxygen levels lower than on Earth (not reported by this source: materials, oxygen values, pressure, flow). [OVR-12 p.31 · MEASURED]
+- Recent drop-tower results, cited without a reference, suggest that the current Test 1 might not be conservative. [OVR-12 p.23 · CITED]
+- Fig. 8 "Flammability Map" is a schematic with no axis values: ambient oxygen concentration against forced or buoyant flow velocity; a U-shaped boundary encloses the "Flammable region", its low-flow minimum marked "0g Limit"; a point on the higher-flow branch is marked "Modified Test 1 Limit"; the band between those two oxygen levels is labelled "Enhanced Flammability" and their oxygen difference "Negative Oxygen Margin of Safety"; the caption places enhanced flammability in the low-convective-flow range. [OVR-12 p.18 · Fig. 8 · AUTHOR-INTERPRETATION · ~fig]
+- For flame spread over solids, Fig. 8 is read with ambient oxygen mole fraction on the ordinate and gas velocity across the solid surface on the abscissa; the boundary is the limit of steady flame spread, which occurs inside it and not outside. [OVR-12 p.31 · AUTHOR-INTERPRETATION]
+- Reduced-gravity facilities allow flames with characteristic velocities far below typical buoyancy-induced gas velocities (about 1 m/s in the candle flame of Fig. 1), giving flame stretch or strain rates unattainable in bench-scale tests on Earth. [OVR-12 p.31 · CITED · nominal]
+- Conventional flame-limit theories all predicted that as the characteristic velocity of flame stretch decreased, the oxygen concentration needed for steady or quasi-steady burning would fall monotonically. [OVR-12 p.31 · CITED]
+- Several classes of experiments showed otherwise: at low characteristic velocity (low flame stretch) radiative loss begins to dominate and finally extinguishes the flame at low enough velocity or stretch rate (e.g., Olson et al., 1988; reduced gravity; not reported by this source: fuels, pressure, platforms). [OVR-12 p.31 · CITED]
+- The resulting curve gives a much lower flammability limit than first predicted. [OVR-12 p.31 · AUTHOR-INTERPRETATION]
+- For flame spread over solids, the curve's minimum lies at a characteristic gas velocity on the order of 10 cm/s, which is also where flame spread rate peaks (reduced gravity; not reported by this source: materials, oxygen mole fraction at the minimum, pressure). [OVR-12 p.31 · CITED]
+- That velocity is typical of spacecraft ventilation systems, so the guide sees the minimum as having large implications for material flammability in reduced gravity and for spacecraft fire safety. [OVR-12 p.31 · AUTHOR-INTERPRETATION]
+
+## Reduced-gravity combustion research bearing on fire safety (OVR-12)
+
+### Why burn things in microgravity
+- Although studied for over 80 years, combustion remains one of the most poorly controlled phenomena; even a simple combustor such as a kitchen stove is beyond detailed numerical modelling. [OVR-12 p.8 · AUTHOR-INTERPRETATION]
+- Combustion typically involves hundreds of chemical species and up to thousands of reactions, and these set flammability limits (combustor operating ranges) and pollutant emissions. [OVR-12 p.8 · AUTHOR-INTERPRETATION]
+- Flames typically run on the order of 2,300 K against an ambient of about 300 K, an eight-fold density change over about a centimetre; the density gradient drives a strong flow that dominates all but the strongest imposed flows, lifts the flame upward, and causes the flicker of flames on Earth. [OVR-12 p.8 · AUTHOR-INTERPRETATION]
+- In bench-scale experiments this buoyancy dominates and often hides the physics and chemistry of interest; without gravity, buoyancy can be suppressed and analyses reduced to much simpler one-dimensional systems. [OVR-12 p.8 · AUTHOR-INTERPRETATION]
+- Ground platforms that vary or remove gravity's effects are limited in test time and size; long tests at realistic sizes, possible only in space facilities, are called essential. [OVR-12 p.8–9 · AUTHOR-INTERPRETATION]
+- Benefits listed: removing the complex coupling between buoyant flow and energy feedback to the flame, realistic simulation of the fire risk in crewed spacecraft, and practical simulation of the gravity environment of reacting systems in future spacecraft. [OVR-12 p.10 · AUTHOR-INTERPRETATION]
+- Images pairing 1-g and 0-g flames: candle flames (cover pages), and in Fig. 1 ethane jet flames, ethylene jet flames ("1-g Buoyant" against "micro-g non-buoyant"), candle flames, burning heptane droplets and flame spread over a butanol pool (the Fig. 1 microgravity candle flame burned aboard the Russian Mir station, and buoyancy-induced gas velocities in the Fig. 1 candle flame are about 1 m/s; not reported by this source: oxygen, pressure). [OVR-12 p.2 · MEASURED; OVR-12 p.9 · Fig. 1 · MEASURED; OVR-12 p.30 · CITED; OVR-12 p.31 · AUTHOR-INTERPRETATION · nominal]
+- Over the two decades before the guide, microgravity combustion research focused mainly on fundamentals (droplet combustion, soot production, flame spread, smouldering, gas-jet flames), helped by synergistic programmes in Europe and Japan, and improved the ability to model droplet burning in spray combustors such as jet engines, to predict flame spread and soot production, and to detect and prevent spacecraft fires. [OVR-12 p.11 · AUTHOR-INTERPRETATION]
+- Well over 200 principal investigators used reduced-gravity facilities, mostly drop towers and aircraft; the most promising experiments were chosen for space after thorough scientific and engineering review. [OVR-12 p.30 · MEASURED]
+- The guide credits this work with numerous discoveries, attention to often-neglected phenomena, better understanding and prediction for all combustion systems, and a better ability to detect and prevent spacecraft fires. [OVR-12 p.30 · AUTHOR-INTERPRETATION]
+
+### Droplets and cool flames
+| Set | Fuel and form | Gravity, platform, facility | Atmosphere | Not reported by this source | Citation |
+|---|---|---|---|---|---|
+| C5 | single large alkane droplets | spaceflight microgravity, FLEX, ISS CIR with MDCA | quiescent ambient | droplet diameter, oxygen and diluent fractions, pressure, test count | [OVR-12 p.33 · MEASURED · nominal; OVR-12 p.36 · MEASURED · nominal]
+
+- Long, high-quality microgravity makes possible the textbook case of a spherical droplet inside a spherical flame in an infinite, quiescent atmosphere, which researchers set up as a test bed for fundamental and applied combustion work. [OVR-12 p.11 · AUTHOR-INTERPRETATION · nominal]
+- Microgravity also lets researchers study this classical problem (e.g., Dietrich et al., 1996; Nayagam et al., 1998), and nearly every combustion textbook analyses it. [OVR-12 p.32 · CITED · nominal]
+- The droplet programmes combined drop towers, aircraft flying parabolic trajectories, 1-g laboratories, numerical and theoretical modelling, and finally space experiments. [OVR-12 p.11 · AUTHOR-INTERPRETATION · nominal]
+- Topics studied: departures from quasi-steady burning, the transition from diffusive to radiative extinction, liquid-phase transport, the influence of convection on flame dynamics (Fig. 2), soot formation and destruction (Fig. 3), multi-component fuels, droplet-droplet interactions and flammability limits. [OVR-12 p.11 · AUTHOR-INTERPRETATION]
+- For droplets, Fig. 8 is read with ambient oxygen mole fraction on the ordinate and droplet diameter on the abscissa, the boundary again marking flammability; the curve is reversed, since larger droplets have lower stretch rates or larger Damköhler numbers. [OVR-12 p.32 · AUTHOR-INTERPRETATION]
+- Space tests and, to a limited extent, drop-tower tests showed that this droplet flammability limit exists (not reported by this source: fuels, diluents, pressure, droplet sizes). [OVR-12 p.32 · CITED]
+- The curve matters for spacecraft fire-safety flammability limits and also practically: it arises from the coupling of heat and mass transport with chemical kinetics, whose mechanisms are building blocks for practical fuels, so droplet tests give benchmark data to validate physical and kinetic sub-models of practical fuels. [OVR-12 p.32 · AUTHOR-INTERPRETATION]
+- Droplet flames burning with spherical symmetry show flame oscillations similar to those of the near-extinction candle flame (Dietrich et al., 1996). [OVR-12 p.33 · CITED]
+- Found: recent FLEX spaceflight tests on single alkane droplets uncovered unexpected behaviour; a large droplet first burns briefly with a typical hot flame, which goes out, as expected, once radiative loss pulls the flame temperature below a critical value (conditions C5). [OVR-12 p.33 · MEASURED]
+- Found: after that hot-flame extinction the droplet kept vaporizing at the same rate for an extended period, then abruptly stopped at a finite size just as a large vapour cloud formed (conditions C5). [OVR-12 p.33 · MEASURED]
+- Explanation now accepted by the authors: a lower-temperature cool flame that forms after the visible flame goes out sustains this vaporization; vaporization stops when the cool flame dies and the vapour cloud forms, because the cool flame burns only part of the fuel leaving the droplet. [OVR-12 p.33–34 · AUTHOR-INTERPRETATION]
+- Cool flames normally form as an intermediate stage between unreacted fuel and oxidizer and should not form after a hot flame goes out; many peers had thought cool-flame-supported droplet burning impossible, and it took the team one year to convince itself and another to convince the community. [OVR-12 p.34 · AUTHOR-INTERPRETATION]
+- Found: the cool flame can burn for a prolonged time (conditions C5; durations not given). [OVR-12 p.34 · MEASURED]
+- The guide ranks first among FLEX/FLEX-2 observations the cool flames, stable and quasi-steady, that appear in burning heptane droplets once the visible flame has gone out by radiative extinction (Nayagam et al., 2012; conditions C5). [OVR-12 p.36 · CITED]
+- Microgravity droplet tests are called a unique platform for studying these low-temperature reactions. [OVR-12 p.34 · AUTHOR-INTERPRETATION]
+- Proposed (Cool Flames initiative): a new research line growing out of this unprecedented CIR-FLEX finding, using the existing FLEX-2 CIR/MDCA hardware with some added diagnostics. [OVR-12 p.41 · AUTHOR-INTERPRETATION; OVR-12 p.42 · AUTHOR-INTERPRETATION · nominal]
+- Its objectives: (i) across a range of fuels and conditions (e.g., pressure, diluent concentrations), the pre-conditions for hot-to-cool flame transition, cool-flame stability and spontaneous re-ignition; (ii) a robust numerical model with detailed chemistry to complement analytical Cool Flame Theory. [OVR-12 p.41 · AUTHOR-INTERPRETATION]
+- Fire-safety relevance per the guide: reduced gravity has been shown to favour a low-temperature regime of very weak but persistent flames, invisible to the unaided eye, that re-ignite spontaneously long after the visible flame is out; the pre-conditions, chemistry and re-ignition mechanisms are poorly understood (not reported by this source: fuel, oxygen, diluent, pressure, flow). [OVR-12 p.41–42 · AUTHOR-INTERPRETATION]
+- The initiative also bears on engines that rely on low-temperature combustion such as cool flames to cut emissions and fuel use (Homogeneous Charged Compression Ignition, Reactivity Controlled Compression Ignition). [OVR-12 p.41 · AUTHOR-INTERPRETATION]
+- Programme gaps named in the guide: funding limits have severely cut the number of droplet researchers and projects; CIR/MDCA work should widen to practical fuels and surrogates, ideally aligned with Department of Energy and Department of Defense efforts; high-pressure droplet and spray combustion are virtually absent although liquid fuels supply most transport energy; and a comprehensive ground programme (drop towers plus theory and modelling), which gives physical insight, trains students and seeds the next space experiments, is missing. [OVR-12 p.36–37 · AUTHOR-INTERPRETATION]
+
+### Gas flames and soot
+- Past research included four space experiments on soot processes, flame-vortex interaction and flame stability. [OVR-12 p.13 · AUTHOR-INTERPRETATION · nominal]
+
+| Experiment | Investigators | Platform and year | Enclosure | Notes | Citation |
+|---|---|---|---|---|---|
+| Laminar Soot Processes (LSP) | G. Faeth (U. Michigan) et al. | CM, shuttle STS-83 and STS-94 (1997), again STS-107 (2003) | sealed chamber | soot processes, ambient (no coflow) configuration | [OVR-12 p.13 · MEASURED · nominal]
+| Turbulent Gas-jet Diffusion Flame (TGDF) | M. Y. Bahadori (SAIC) et al. | shuttle STS-87 (1997), automated, Get-Away-Special Canister in the payload bay | sealed chamber | flame not turbulent: an iris mechanism at its base induced vortices in the entrained air | [OVR-12 p.13 · MEASURED · nominal]
+| Enclosed Laminar Flames (ELF) | L. D. Chen (U. Iowa) et al. | shuttle STS-87 (1997), crew-operated in the Middeck Glovebox | fan-driven flow duct | — | [OVR-12 p.13 · MEASURED · nominal]
+| Smoke Point In Coflow Experiment (SPICE) | D. L. Urban (GRC) et al. | ISS MSG, 2009 | fan-driven flow duct | soot processes in coflow | [OVR-12 p.13 · MEASURED · nominal]
+
+- All four were laminar, axisymmetric gas-jet diffusion flames. [OVR-12 p.13 · MEASURED · nominal]
+- SPICE studied the transition from non-sooting to sooting flames, a major goal being simple predictions of soot emission; the smoke point, set by fuel chemistry and flow conditions, indicates how prone a fuel is to emit light and produce soot. [OVR-12 p.13–14 · AUTHOR-INTERPRETATION]
+- Fig. 4: 2009 SPICE flames on the ISS going from non-smoking to a fully open, smoking tip as fuel flow increases (not reported by this source: fuel, oxygen, pressure, coflow speed). [OVR-12 p.13 · MEASURED · nominal; OVR-12 p.14 · Fig. 4 · MEASURED]
+- Soot control remains one of the major unsolved problems of combustion and engine development. [OVR-12 p.14 · AUTHOR-INTERPRETATION]
+- The Structure & Liftoff In Combustion Experiment (SLICE; M. B. Long, Yale U., et al.) used the SPICE hardware in the station glovebox to study lifted and lifting flames, in effect a second-generation ELF; it started and completed operations in 2012. [OVR-12 p.14 · MEASURED · nominal]
+- SLICE studies flames that flow and chemistry detach from the burner so that they stabilize downstream; its twin aims are higher fuel efficiency and lower pollutant emission in practical devices, through better combustion modelling. [OVR-12 p.14–15 · AUTHOR-INTERPRETATION]
+- Another passage describes SLICE as to be carried out with the SPICE hardware in the MSG, as a precursor to the CLD Flame experiment then in development for the CIR under ACME. [OVR-12 p.15 · AUTHOR-INTERPRETATION · nominal]
+- Fig. 5: effect of raising coflow velocity on lifted-flame behaviour, from exploratory SLICE tests run on the ISS in 2009 within SPICE (image scale not constant; not reported by this source: coflow velocities, fuel, oxygen, pressure). [OVR-12 p.15 · Fig. 5 · MEASURED]
+- The guide counts six experiments planned for the ISS in its current gas-flame programme. [OVR-12 p.14 · AUTHOR-INTERPRETATION · nominal]
+- Planned: Advanced Combustion via Microgravity Experiments (ACME), five experiments developed together for the CIR and sharing one modular hardware set; topics: soot, flame stability and extinction, materials flammability, electric-field effects; start of operations expected in 2016. [OVR-12 p.14 · AUTHOR-INTERPRETATION · nominal; OVR-12 p.44 · AUTHOR-INTERPRETATION · nominal]
+- All ACME flames are laminar diffusion flames: two use a one-dimensional spherical flame around a porous spherical burner, one a porous plate burner, and two a gas-jet flame with and without coaxial air flow. [OVR-12 p.14 · AUTHOR-INTERPRETATION · nominal; OVR-12 p.44 · AUTHOR-INTERPRETATION · nominal]
+
+| ACME experiment (planned) | Investigators | Burner and method | Fuels, atmosphere, measurements | Aim | Citation |
+|---|---|---|---|---|---|
+| Burning Rate Emulator (BRE) | J. G. Quintiere (U. Maryland) et al. | flat porous burner fed with gaseous fuel; fuel flow set from the measured heat flux at the burner and surface temperature, mimicking how a condensed fuel's vaporization depends on thermal feedback | a few gaseous fuels matched to fuels such as paper, plastic and alcohol by surface temperature and smoke production | fire prevention, especially in spacecraft: ignition and extinction of materials, and whether existing flammability tests are relevant in low and partial gravity | [OVR-12 p.14 · AUTHOR-INTERPRETATION · nominal; OVR-12 p.15 · AUTHOR-INTERPRETATION · nominal]
+| Coflow Laminar Diffusion Flame (CLD Flame) | M. B. Long (Yale U.) et al. | lifted coflow flames, to avoid dependence on heat loss to the burner | diluted methane and ethylene flames in an air coflow; injection velocity and dilution varied from very dilute to highly sooting | extend the range of predictable flames by developing and testing kinetic and soot sub-models | [OVR-12 p.14 · AUTHOR-INTERPRETATION · nominal; OVR-12 p.16 · AUTHOR-INTERPRETATION · nominal]
+| Electric-Field Effects on Laminar Diffusion Flames (E-FIELD Flames) | D. Dunn-Rankin (UC Irvine) et al. | coflow flame, or perhaps a simple gas jet without coflow; up to 10 kV between the burner and a flat circular mesh above it | ion current through the flame and response time to electric forcing, against field strength and fuel dilution | how flames produce ions and how ions can control non-premixed flames | [OVR-12 p.14 · AUTHOR-INTERPRETATION · nominal; OVR-12 p.16 · AUTHOR-INTERPRETATION · nominal]
+| Flame Design | R. L. Axelbaum (Washington U.) et al. | spherical flames as in s-Flame; an inverse spherical flame if the Payload Safety Review Panel allows, otherwise a coflow burner with normal and inverse flames | ethylene or methane at various concentrations, oxygen-enriched atmospheres | soot inception and extinction limits, toward robust soot-free non-premixed flames; test whether the stoichiometric mixture fraction marks soot and flammability limits as the equivalence ratio does for premixed flames | [OVR-12 p.14 · AUTHOR-INTERPRETATION · nominal; OVR-12 p.16–17 · AUTHOR-INTERPRETATION · nominal]
+| Structure and Response of Spherical Diffusion Flames (s-Flame) | C. K. Law (Princeton U.) et al. | porous spherical burner issuing a fuel/inert mixture into the CIR chamber; flames ignited at non-steady conditions and left to drift toward extinction | hydrogen and methane (soot-free), ethylene (sooty); various inert diluents in fuel and chamber | structure and dynamics, including extinction, of soot-free and sooty flames; radiative and convective extinction limits (high and low system Damköhler numbers) | [OVR-12 p.14 · AUTHOR-INTERPRETATION · nominal; OVR-12 p.17–18 · AUTHOR-INTERPRETATION · nominal]
+
+- BRE's significance per the guide: it could measure burning rate efficiently and completely over a wide range of fuel properties and, by controlling the fuel properties behind different fire scenarios, establish whether existing flammability tests are relevant in low and partial gravity. [OVR-12 p.15 · AUTHOR-INTERPRETATION]
+- Research, including microgravity work, shows predictive ability is significantly lacking at the extremes of fuel dilution (sooty pure-fuel flames and dilute flames near extinction); CLD Flame results are expected to apply to turbulent combustion, ignition and flame stability. [OVR-12 p.16 · AUTHOR-INTERPRETATION]
+- Electric fields act on flames through the ions combustion produces: direct ion transport and the induced ion wind can change flame shape, shift soot or flammability limits, steer heat transfer and cut pollutant emission. [OVR-12 p.16 · AUTHOR-INTERPRETATION]
+- Theory predicts pulsating instabilities in such spherical flames for fuel/diluent mixtures above a critical Lewis number (no reference printed); s-Flame aims to establish whether they exist, their onset and their nature. [OVR-12 p.18 · CITED]
+- Fig. 6 (Flame Design, 2.2-second Drop Tower): a spherical diffusion flame on a visible porous burner at the end of a test, 1.51 mg/s of 100% ethylene issuing into air at atmospheric pressure (not reported by this source: burner diameter, ignition). [OVR-12 p.17 · Fig. 6 · MEASURED · single-test]
+- Fig. 7 (s-Flame, 2.2-second Drop Tower): a partially premixed spherical flame on a visible porous burner, the gas being 25% propane, 2% oxygen, 49% argon and 24% nitrogen (not reported by this source: ambient atmosphere, pressure, flow rate). [OVR-12 p.17 · Fig. 7 · MEASURED · single-test]
+- Cover image, a prelude to Flame Design in NASA Glenn's 2.2-Second Drop Tower: ethylene flowing from a porous sphere into quiescent air forms a spherical flame, with glowing soot trapped inside the blue flame and a bright arc of large soot particles in front (not reported by this source: pressure, oxygen beyond "air", ignition, duration). [OVR-12 p.2 · MEASURED · nominal, single-test]
+- A gas-jet flame is a fuel gas issuing from a nozzle into an initially still oxidizing atmosphere; on Earth such flames serve to study simple-fuel kinetics, flame stability and soot formation and destruction, but in bench-scale laminar tests buoyancy is hard to suppress. [OVR-12 p.32 · AUTHOR-INTERPRETATION]
+- In drop-tower and space tests, jet-flame heights differ strikingly from normal gravity when the jet Reynolds number is low or moderate (e.g., Hegde et al., 1994; Urban et al., 1998; not reported by this source: fuels, oxygen, pressure, Reynolds numbers). [OVR-12 p.32 · CITED]
+- These data serve as benchmarks for detailed chemical kinetic and soot formation and destruction models. [OVR-12 p.32 · AUTHOR-INTERPRETATION]
+- Outlook: gas diffusion-flame research mainly targets better combustion technology on Earth, where flames are often turbulent, at elevated pressure and partly premixed; microgravity allows momentum-dominated flames with larger scales and longer residence times, and tests on pulsed laminar flames and vortex-flame interaction (e.g., TGDF) can advance turbulence understanding; high-pressure combustion is strongly affected by buoyancy and hard to study in normal gravity. [OVR-12 p.37 · AUTHOR-INTERPRETATION]
+- The ACME investigations, planned to follow FLEX, examine gas-jet diffusion flames, and the hardware in development will also take burner-stabilized, partially premixed flames; simplified precursor experiments were under way in the MSG to give ACME investigators interim data. [OVR-12 p.37 · AUTHOR-INTERPRETATION · nominal]
+- These experiments again use microgravity's simple flame geometry to develop, validate and refine chemical kinetic models relevant to nearly all combustion systems on Earth. [OVR-12 p.37 · AUTHOR-INTERPRETATION]
+
+### Solid fuels and material flammability
+| Set | Material and form | Gravity, platform, facility | Atmosphere and flow | Not reported by this source | Citation |
+|---|---|---|---|---|---|
+| C6 | 2-cm diameter acrylic sphere | microgravity, ISS, BASS | 17% O2, 12 cm/s flow; nitrogen has been used for BASS tests as low as 17% O2 | pressure, ignition method | [OVR-12 p.18 · MEASURED · nominal; OVR-12 p.19 · MEASURED · nominal; OVR-12 p.20 · Fig. 11 · MEASURED · nominal]
+| C7 | 2-cm wide cotton-fiberglass fabric | microgravity, BASS (the BASS text points to Figs. 11 to 13) | opposed flow cut in steps from 10 cm/s to below 1 cm/s | oxygen, pressure, ignition method | [OVR-12 p.20 · Fig. 12 · MEASURED · nominal; OVR-12 p.21 · MEASURED]
+
+- Materials ignite more easily in low gravity because natural convection cools the fuel surface less. [OVR-12 p.18 · AUTHOR-INTERPRETATION]
+- Found: once established, flames in slow airflow may spread preferentially into the oncoming air, depending on flow speed, the opposite of normal gravity (Fig. 9, Radiative Ignition and Transition to Spread Investigation, in the microgravity of spaceflight; not reported by this source: flow speeds, materials, oxygen, pressure). [OVR-12 p.18 · MEASURED; OVR-12 p.31 · MEASURED]
+- Found: in spaceflight microgravity, a thin fuel ignited mid-sample spreads upstream into the oncoming air when forced flow is slow, whereas in normal gravity the flame always spreads downstream with the buoyant flow, even without forced flow (not reported by this source: flow speeds, oxygen, pressure). [OVR-12 p.31 · MEASURED]
+- Found: radiant heat transfer strongly affects flammability; radiative heat loss from the surface lowers it, while an external radiant heat flux can make materials ignite and spread faster (not reported by this source: materials, oxygen, pressure, flow). [OVR-12 p.18 · MEASURED]
+- BASS acrylic sphere, 2 cm diameter, burning on the ISS at 17% oxygen and 10 cm/s: occasional yellowish-red streaks appear where vapour bubbles formed in the solid ignite as they burst through the blue flame (nitrogen has more recently been used for BASS tests as low as 17% oxygen; not reported by this source: pressure). [OVR-12 p.2 · MEASURED · single-test; OVR-12 p.19 · MEASURED · nominal]
+- A crew member holds a sample holder with a burned, bubbled BASS acrylic sheet, its bag labelled "2cm Acrylic Flat Sample". [OVR-12 p.3 · MEASURED · ~fig]
+- Fig. 11 shows a flame sequence with images about 1.5 s apart (conditions C6). [OVR-12 p.20 · Fig. 11 · MEASURED · single-test]
+- Found: with oxygen lowered from 21% (air) to 17%, the flame stays blue much longer, soot formation being delayed (conditions C6). [OVR-12 p.20 · Fig. 11 · MEASURED · single-test]
+- The authors note this eases comparison with models, the high-resolution images allowing comparison of flame growth rate, flame-to-fuel distance and solid regression rate. [OVR-12 p.20 · Fig. 11 · AUTHOR-INTERPRETATION]
+- Fig. 12: digital still images every 1.25 s; flow steps printed on the image are 10, 6, 4, 2, 1.5 and 1 cm/s, with an arrow marked "Airflow" pointing up; total burn time 90 s (conditions C7). [OVR-12 p.20 · Fig. 12 · MEASURED · ~fig, single-test]
+- Found: the flame responds very rapidly to each flow change, and flow has dramatic effects on the flame and its spread rate (conditions C7). [OVR-12 p.20 · Fig. 12 · MEASURED · single-test]
+- Near the limit, flame spread over solids can show a complex finger-like smouldering front under certain conditions (Olson et al., 1998), and flame spread across a liquid pool can pulsate in the gas phase under selected ambient conditions (e.g., Miller et al., 2000). [OVR-12 p.33 · CITED]
+- Planned SoFIE status: the project is in its Science Definition phase, planning a CIR insert and a large flow duct in the MSG to serve up to five separate investigations. [OVR-12 p.22 · AUTHOR-INTERPRETATION · nominal; OVR-12 p.44 · AUTHOR-INTERPRETATION]
+- The investigations share SoFIE's overall objective: characterizing how solid spacecraft materials ignite and burn in practical shapes and realistic atmospheres. [OVR-12 p.22 · AUTHOR-INTERPRETATION; OVR-12 p.44 · AUTHOR-INTERPRETATION]
+- Planned SoFIE investigation "Correlation of Flammability between Normal and Microgravity": map microgravity flammability of selected materials against ventilation flow, ambient oxygen and possibly pressure, to find the fundamental limiting oxygen concentration in microgravity, taken as the microgravity worst case and compared with the worst case of NASA-STD-6001 Test 1 (upward flame spread in normal gravity), so as to evaluate the oxygen safety margins of normal-gravity testing. [OVR-12 p.22 · AUTHOR-INTERPRETATION]
+- It would also measure microgravity burning of real engineering materials planned for spacecraft against oxygen, pressure and flow speed for comparison with normal gravity, clarify how Test 1 limits relate to actual microgravity limits, and give a larger flammability safety margin through a slightly modified Test 1 protocol. [OVR-12 p.22–23 · AUTHOR-INTERPRETATION]
+- Planned SoFIE investigation "Fundamentals of Flame Growth and Extinction in Microgravity": how flame growth, spread and decay over solids depend on gravity, flow velocity, oxygen percentage, pressure, sample size and preheating. [OVR-12 p.23 · AUTHOR-INTERPRETATION]
+- In it, solid plastic spheres are to be burned in long tests so the whole flame history is recorded. [OVR-12 p.23 · AUTHOR-INTERPRETATION · nominal]
+- A robust numerical model built from those results is to simulate transient flame growth in reduced gravity, relate material flammability between normal and reduced gravity, and examine the relevance of NASA-STD-6001 (Flammability, Offgassing, and Compatibility Requirements and Test Procedures) Test 1. [OVR-12 p.23 · AUTHOR-INTERPRETATION]
+- Ground microgravity facilities have well-understood practical limits, and long ISS tests will have some too; carefully chosen ISS tests plus the model are expected to overcome many of them enough to improve markedly the understanding of how Earth flammability tests apply in space. [OVR-12 p.23 · AUTHOR-INTERPRETATION]
+- Planned SoFIE investigation "Thermal and Species Field Effects on Material Flammability": theory and modelling suggest that a key difference between normal-gravity and microgravity flammability comes from how the flow field affects the overlap of the thermal and species fields in the flame zone. [OVR-12 p.23 · AUTHOR-INTERPRETATION]
+- Its goal is the flame spread rate over thin fuels in quiescent microgravity, compared with a closed-form expression containing the relevant solid properties and environmental parameters. [OVR-12 p.23 · AUTHOR-INTERPRETATION]
+- Gas temperature and carbon-dioxide and oxygen concentration fields are to be measured at key points to separate how the thermal field and the species field propagate, the separation being controlled by changing fuel thickness and ambient pressure. [OVR-12 p.23 · AUTHOR-INTERPRETATION · nominal]
+- That separation is postulated to be the mechanism of radiative flame extinction. [OVR-12 p.23 · AUTHOR-INTERPRETATION]
+- Expected outcome: fundamentals-based quantitative criteria for flammability in microgravity, where radiative heat transfer dominates because the lack of buoyant or forced flow makes residence times long, possibly leading to a critical fuel thickness, forced velocity or oxygen level that makes a material inherently fire safe. [OVR-12 p.24 · AUTHOR-INTERPRETATION]
+- Planned SoFIE investigation "Narrow Channel as a 1-g Flammability Test Method": flame spread rate over a representative thick solid against forced opposed-flow velocity, oxygen and pressure, especially for NASA's SEA in microgravity. [OVR-12 p.24–25 · AUTHOR-INTERPRETATION]
+- Opposed-flow extinction limits are to be found by lowering the flow velocity until the flame goes out at a given oxygen concentration and pressure. [OVR-12 p.25 · AUTHOR-INTERPRETATION · nominal]
+- The data would show whether one gap height in the Narrow Channel device reproduces these results in normal gravity, or how the gap must change with conditions; the flight tests would compare directly with Narrow Channel tests and the numerical model, so that normal-gravity Narrow Channel tests could predict aspects of microgravity flammability for many candidate materials. [OVR-12 p.25 · AUTHOR-INTERPRETATION]
+- Outlook: new initiatives are needed for continuing long-duration solid-fuel testing in microgravity, and a robust ground-based solid-fuel programme should be restarted to refine and extend flight research; since many earlier results came from ground tests, the guide judges this well worth the modest cost. [OVR-12 p.38 · AUTHOR-INTERPRETATION]
+- This investment is expected to improve evaluation of material flammability and fire risk in low gravity for the practical materials and flow configurations of future spacecraft. [OVR-12 p.38 · AUTHOR-INTERPRETATION]
+
+### Premixed flames and flame balls
+- Earlier premixed-flame work in space was limited to very fuel-lean mixtures in which mass diffusivity dominated thermal diffusivity (very low Lewis number); under those conditions steady flame balls proved possible (Fig. 14), a classical phenomenon unique to microgravity. [OVR-12 p.25 · CITED · nominal]
+- SOFBALL, of P. Ronney (USC), ran in the CM on shuttle missions STS-83 and STS-94 in 1997 and again on STS-107 in 2003. [OVR-12 p.25 · CITED · nominal]
+- Flame balls, stationary spherical premixed flames, had been predicted to exist when (among other conditions) the bulk mixture's thermal diffusivity is much lower than the mass diffusivity of the limiting reactant, i.e., at low Lewis number, but were thought a purely mathematical exercise. [OVR-12 p.30 · AUTHOR-INTERPRETATION]
+- Found: SOFBALL, burning premixed fuel/oxidizer/diluent mixtures in a large chamber, showed conclusively that flame balls exist, producing the weakest flames ever burned (about 1 W), some lasting over 40 minutes until the experiment timed out (e.g., Ronney et al., 1998; not reported by this source: compositions, pressure). [OVR-12 p.30 · CITED]
+- This validated earlier theory, improved understanding of reactions near extinction limits and gave clean test beds for numerical models. [OVR-12 p.25 · CITED]
+- Premixed flames in microgravity become unstable in gas mixtures of both low and high Lewis number (e.g., Pearlman and Ronney, 1994). [OVR-12 p.33 · CITED]
+- Experts agree that premixed flames, the basic unit of combustion, are key to understanding turbulent combustion; fuel-lean burners and engines promise higher thermal efficiency and lower emissions. [OVR-12 p.39 · AUTHOR-INTERPRETATION]
+- Real accidental explosions can start from tiny kernels of barely flammable mixtures (Fig. 19), so settling the extinction limits, if they exist, is of paramount importance, with impact from cars and propulsion to fire safety and Type Ia supernovae (not reported by this source: fuel, gravity, oxygen, pressure). [OVR-12 p.39 · AUTHOR-INTERPRETATION]
+- Laminar burning velocity, the propagation rate of a flame relative to the gas ahead of it, is called perhaps the most important premixed-combustion parameter, indicating burning intensity and the tendency toward blowout, flashback and combustion instability; the fidelity of computational fluid dynamics (CFD) combustor codes depends on reliable laminar flame speeds. [OVR-12 p.39–40 · AUTHOR-INTERPRETATION]
+- Status in the guide: premixed flames are in the current baseline, but the ISS budget funds no specific premixed experiment or insert. [OVR-12 p.39 · AUTHOR-INTERPRETATION]
+- Future premixed studies are expected to explore the true limits of reactivity, with uses in terrestrial combustion and in astrophysical models of stellar ignition and explosions (not reported by this source: conditions). [OVR-12 p.39 · AUTHOR-INTERPRETATION]
+
+### Flames near their limits (candles and instabilities)
+- Candle flames on Mir (Dietrich et al., 2000): contrary to published speculation, in some tests the flame lasted more than 45 minutes and went out only when its fuel ran out; despite a much lower burning rate (nearly invisible to the eye, needing a very long shutter time to photograph), it burned to a lower ambient oxygen mole fraction than an identical candle would on Earth (not reported by this source: oxygen values, pressure). [OVR-12 p.30 · CITED]
+- In normal gravity, flames approaching their flammability limit are often "blown off" by the strong buoyant flow; in microgravity the same near-limit flames often behave very differently. [OVR-12 p.33 · CITED]
+- The Mir candle flame, as it used up the ambient oxygen and neared extinction, oscillated in most tests; the oscillations grew until extinction and could last for long periods, over one minute in extreme cases (Dietrich et al., 2000; not reported by this source: oxygen, pressure). [OVR-12 p.30 · CITED; OVR-12 p.33 · CITED]
+- These instabilities, hidden in normal gravity by buoyant flow, show what microgravity reveals about flame behaviour; strongly exothermic reactions with nonlinear radiative and diffusive losses of heat and mass give modellers a rich basis to build and validate flame models. [OVR-12 p.33 · AUTHOR-INTERPRETATION]
+
+### Future initiatives envisioned in the guide
+- Combustion research is called an active field with direct uses on Earth, in fundamental science and for NASA's exploration goals; the New Initiative programme rests on continued use of CIR inserts plus one more CIR insert, with topics drawn from the data sources the Decadal survey considered. [OVR-12 p.36 · AUTHOR-INTERPRETATION]
+- Besides SoFIE and ACME planned for the CIR, new initiatives are envisioned; some, such as Cool Flames in CIR, a NASA Flammability Test Campaign and a Schlieren Diagnostic in MSG, could come sooner as spin-offs needing fewer resources. [OVR-12 p.41 · AUTHOR-INTERPRETATION]
+- Other envisioned initiatives: Clean-airLab (carbon sequestration and pollution reduction), NanopropLab (self-assembling propellants and catalysts), CombustionLab (high pressures for engines and supernova formation), and CyberLab (a Fire Database Reference with transport measurements at flame conditions, flame speeds and chemical kinetics). [OVR-12 p.42 · AUTHOR-INTERPRETATION]
+- The guide closes that microgravity combustion research has strongly influenced the discipline, that spacecraft fire-safety research directions promise large gains in vehicle safety, and that microgravity remains a critical resource the field wants to keep using. [OVR-12 p.42 · AUTHOR-INTERPRETATION]
+
+## Facilities and their limits
+
+### FLEX hardware in FLX-03
+- For the methanol tests, the MDCA was installed in the CIR in the ISS US Module; with the MDCA insert in place the CIR's cylindrical combustion chamber has a free volume of about 95 L; the MDCA deploys droplets of chosen size free-floating by an opposed-needle technique, and two symmetrically positioned hot-wire igniters light them. [FLX-03 p.1 · MEASURED · nominal]
+- Diagnostics: a black-and-white back-lit camera imaging the droplet, a UV-sensitive flame camera filtered to see OH* chemiluminescence at 310 nm, and a CCD colour camera with a wider view angle. [FLX-03 p.1 · MEASURED · nominal]
+- Before a run, the CIR's Fuel and Oxidizer Management Assembly (FOMA) fills the combustion chamber with the chosen oxygen/nitrogen/carbon-dioxide mixture at a selected pressure; several droplets were typically burned in each fill before the chamber was vented to space vacuum and refilled. [FLX-03 p.2 · MEASURED · nominal]
+- Further details of the experiments and operating procedures are in Dietrich et al. (FLX-03 ref. [1]). [FLX-03 p.2 · CITED]
+
+### ISS combustion facilities (OVR-12)
+- Combustion Integrated Rack (CIR): designed for experiments on fire prevention, detection and suppression in space; delivered on STS-126 (November 2008) and installed in the U.S. Laboratory. [OVR-12 p.43 · AUTHOR-INTERPRETATION · nominal]
+- The CIR offers a 100-litre chamber with eight optical windows, easily reconfigured diagnostics, digital cameras and lighting with large data storage, gas distribution and cleanup, passive vibration isolation and vacuum, for gaseous, liquid and solid combustion tests. [OVR-12 p.43–44 · AUTHOR-INTERPRETATION · nominal]
+- Multi-user Droplet Combustion Apparatus (MDCA), a CIR insert, operational at the guide's date: dispenses, deploys and ignites droplets of 1 to 5 mm, free-floating or fiber-supported, in 0 to 3 atm with up to 40% oxygen by volume, the balance a range of inert gases or mixtures. [OVR-12 p.12 · AUTHOR-INTERPRETATION · nominal]
+- Microgravity Science Glovebox (MSG): a rack in the U.S. Laboratory operating since July 2002, a workbench-type facility; its enclosed volume is held below ISS cabin pressure, giving two levels of containment for small parts, particulates, fluids and gases to protect the crew. [OVR-12 p.44–45 · AUTHOR-INTERPRETATION · nominal]
+- MSG resources: a 255-litre enclosed work space, 1,000 W of dc power (120, 28, +12 and 5 Vdc), 1,000 W of cooling, video and data recording with real-time downlink, ground commanding, ISS vacuum exhaust and vacuum resource systems, and a gaseous nitrogen supply. [OVR-12 p.45 · AUTHOR-INTERPRETATION · nominal]
+- The MSG has supported more than 10,000 hours of payload operations in fields from cryogenic fluid management and fluid physics to spacecraft fire safety, combustion, materials science, plant growth, human health and life support, and is called ideal for studying gravity's role and using the ISS as an exploration technology platform. [OVR-12 p.45 · AUTHOR-INTERPRETATION]
+- Combustion work in the MSG: SAME in 2007 and 2010, SPICE in 2009, SLICE in 2012, and BASS since 2012. [OVR-12 p.45 · AUTHOR-INTERPRETATION]
+- The glovebox is normally limited to ISS air, nominally 21% oxygen by volume at one atmosphere; nitrogen has more recently been used for BASS tests down to 17% oxygen. [OVR-12 p.19 · MEASURED · nominal]
+- SoFIE insert (planned): flight hardware under development as a CIR insert, planned for launch in 2019, plus a larger, improved flow duct like the BASS one for some investigations; in its concept (Fig. 10) a recirculating flow gives a region of well-characterized jet flow in which solid samples burn (diagram labels "Axi-symmetric", "flow in", "flow out", "Recirculation tube"). [OVR-12 p.19 · Fig. 10 · AUTHOR-INTERPRETATION · nominal, ~fig; OVR-12 p.44 · AUTHOR-INTERPRETATION · nominal]
+- SoFIE chamber (planned): 10 to 40% oxygen by volume at 0.2 to 1.5 atm; SEA relevant to NASA can be studied, and ventilation-range airflows of 0 to 30 cm/s are to be supplied to the flame, with a well-characterized flow field to give models accurate boundary conditions. [OVR-12 p.19 · AUTHOR-INTERPRETATION · nominal; OVR-12 p.21 · AUTHOR-INTERPRETATION · nominal]
+- SoFIE fuel choices weigh material, preparation and purity, geometry, external heating, pre-ignition conditions and ignition, with plastics such as PMMA or Delrin the most likely; burning, extinguishing and re-igniting a sample several times would save the slow work of opening the chamber to change specimens. [OVR-12 p.19 · AUTHOR-INTERPRETATION · nominal]
+- The SoFIE insert could later serve further investigators selected through NASA Research Announcements (NRA) studying solid-fuel flammability and flame spread for fuels of different geometry over a range of oxygen, pressure, flow and external heat flux (p.38 says "principal investigators", p.44 "private investigators"). [OVR-12 p.38 · AUTHOR-INTERPRETATION · nominal; OVR-12 p.44 · AUTHOR-INTERPRETATION · nominal]
+- Drop towers named: NASA Glenn's 2.2-Second Drop Tower (used for ACME preludes) and the Zero Gravity Facility (ZGF), the 5.2-second drop tower. [OVR-12 p.2 · MEASURED; OVR-12 p.27 · MEASURED · nominal]
+
+| Appendix table | MDCA | ACME | SoFIE | MSG | Citation |
+|---|---|---|---|---|---|
+| Up mass (kg) | 254 | 250 | 250 | 40 | [OVR-12 p.52 · Table Appendix · AUTHOR-INTERPRETATION · nominal]
+| Volume (m3) | 0.48 | 0.5 | 0.5 | 0.1 | [OVR-12 p.52 · Table Appendix · AUTHOR-INTERPRETATION · nominal]
+| Power (kW) | 0.73 | 0.75 | 0.75 | 0.05 | [OVR-12 p.52 · Table Appendix · AUTHOR-INTERPRETATION · nominal]
+| Data volume (GB) | 72 | 72 | 72 | 10 | [OVR-12 p.52 · Table Appendix · AUTHOR-INTERPRETATION · nominal]
+| Diagnostics | radiometer; cameras: analog color, low-light-level UV, two HiBMs | radiometers; cameras: two color, low-light-level UV, two HiBMs; photomultiplier tubes; gas chromatograph; ion-current measurement | as for ACME | radiometer; fuel flow; air flow; video camera; digital still camera | [OVR-12 p.52 · Table Appendix · AUTHOR-INTERPRETATION · nominal]
+| TSC capable | yes | yes | yes | yes | [OVR-12 p.52 · Table Appendix · AUTHOR-INTERPRETATION · nominal]
+| On orbit at the guide's date | yes | no | no | yes | [OVR-12 p.52 · Table Appendix · AUTHOR-INTERPRETATION]
+| Experiments supported | FLEX, FLEX-2, FLEX-ICE-GA, FLEX-2J (future) | planned: BRE, CLD Flame, E-FIELD Flames, Flame Design, s-Flame | planned: Flame Spread, GEL, Narrow Channel, SMμRF, MIST | SPICE, SLICE, BASS | [OVR-12 p.52 · Table Appendix · AUTHOR-INTERPRETATION]
+
+- The CIR mini-facilities and inserts are summarized in the guide's appendix table (above). [OVR-12 p.44 · AUTHOR-INTERPRETATION]
+
+### Measuring the gravity level
+- The words microgravity, reduced gravity, low gravity, zero gravity and weightlessness are often swapped freely for surroundings in which gravity's body force is far below Earth's; this vagueness raises the question of how to measure such an environment and its disturbances. [OVR-12 p.43 · AUTHOR-INTERPRETATION]
+- Disturbances come from crew activity (exercise, push-offs and landings, opening and closing drawers and doors), equipment operation, vehicle docking and undocking, thruster firings and other movements, and must be measured to judge their effect on experiment data. [OVR-12 p.43 · AUTHOR-INTERPRETATION]
+- The Space Acceleration Measurement System (SAMS, tri-axis accelerometers) measures the vibratory environment and the Microgravity Acceleration Measurement System (MAMS) the quasi-steady one, MAMS covering very low-frequency disturbances below 0.01 Hz that SAMS cannot detect. [OVR-12 p.43 · AUTHOR-INTERPRETATION · nominal]
+- SAMS flew on Mir from 1994 to 1998, continued on 20 shuttle missions and currently flies on the ISS; SAMS and MAMS have measured ISS accelerations since 2001 and currently record disturbances at 21 locations, SAMS covering all three laboratories and MAMS data being mapped to any location with rigid-body assumptions. [OVR-12 p.43 · AUTHOR-INTERPRETATION]
+- With the Principal Investigator Microgravity Services (PIMS) project, they support NASA's Physical Sciences Research Program, vehicle loads and dynamics monitoring, and investigators who need to know the acceleration environment. [OVR-12 p.43 · AUTHOR-INTERPRETATION]
+
+### Diagnostics, design lessons and constraints
+- Drop-tower and space experiments face severe space, weight, volume, safety and power limits, which make hardware and diagnostics hard but drove technology with uses far beyond microgravity combustion. [OVR-12 p.34 · AUTHOR-INTERPRETATION; OVR-12 p.47 · AUTHOR-INTERPRETATION]
+- Diagnostic advances include full-field, quantitative soot volume fraction measured by laser-light extinction (Greenberg et al., 1997a), which enables benchmark soot data, and GRC's Rainbow Schlieren Deflectometry, which gave the first full-field quantitative gas temperatures in microgravity combustion tests (Greenberg et al., 1995). [OVR-12 p.34 · CITED]
+- Design lessons: keep experiments as simple as possible, since added complexity raises cost and stretches development past a Ph.D. student's tenure; design them flexible and repairable, since ISS crews operate an experiment for months and can become adept at repairs with clear procedures. [OVR-12 p.47 · AUTHOR-INTERPRETATION]
+- Future needs include advanced diagnostics, which require more space and power; crew time is among the most severe limits and should be assumed to stay as scarce as before, so experiments should start, run and finish autonomously with minimal maintenance, and test matrices should need little crew handling of fuel and oxygen supplies, sample and holder changes, or diagnostic adjustment. [OVR-12 p.47 · AUTHOR-INTERPRETATION]
+- Flight experiments may be limited by power, crew time or volume; launch or landing scrubs are not unusual, so alternative plans reduce risk; ground-based simulators may be needed to optimize procedures, and many experiments need unique hardware. [OVR-12 p.48 · AUTHOR-INTERPRETATION]
+- Records of earlier work: the NASA ISS Program Science Office database (including International Partners' research); a catalogue of past, current and proposed experiments, facilities and results at www.nasa.gov/iss-science; and the Space Life & Physical Sciences Research and Applications Division Task Book at https://taskbook.nasaprs.com/Publication/welcome.cfm. [OVR-12 p.48 · AUTHOR-INTERPRETATION]
+- Web pointers: http://www.nasa.gov/iss-science (station science); http://www.nasa.gov/mission_pages/station/research/facilities_category.html (facilities); http://www.nasa.gov/externalflash/ISSRG/index.htm (interactive ISS reference guide). [OVR-12 p.55 · AUTHOR-INTERPRETATION]
+
+## Terms and acronyms
+| Term | Meaning | Citation |
+|---|---|---|
+| ACME | Advanced Combustion via Microgravity Experiments | [OVR-12 p.53 · AUTHOR-INTERPRETATION]
+| BASS | Burning and Suppression of Solids | [OVR-12 p.53 · AUTHOR-INTERPRETATION]
+| BRE | Burning Rate Emulator | [OVR-12 p.53 · AUTHOR-INTERPRETATION]
+| CFD | computational fluid dynamics | [OVR-12 p.53 · AUTHOR-INTERPRETATION]
+| CIR | Combustion Integrated Rack | [OVR-12 p.53 · AUTHOR-INTERPRETATION]
+| CLD | Coflow Laminar Diffusion | [OVR-12 p.53 · AUTHOR-INTERPRETATION]
+| CM | Combustion Module | [OVR-12 p.53 · AUTHOR-INTERPRETATION]
+| CNES | French Space Agency | [OVR-12 p.53 · AUTHOR-INTERPRETATION]
+| DECLIC | DEvice for the study of Critical LIquids and Crystallization | [OVR-12 p.53 · AUTHOR-INTERPRETATION]
+| E-FIELD | Electric-Field Effects on Laminar Diffusion | [OVR-12 p.53 · AUTHOR-INTERPRETATION]
+| ELF | Enclosed Laminar Flames | [OVR-12 p.53 · AUTHOR-INTERPRETATION]
+| EXPRESS | EXpedite the Processing of Experiments to Space Station | [OVR-12 p.53 · AUTHOR-INTERPRETATION]
+| FLEX | Flame Extinguishment Experiment | [OVR-12 p.53 · AUTHOR-INTERPRETATION]
+| GRC | Glenn Research Center | [OVR-12 p.53 · AUTHOR-INTERPRETATION]
+| HTI, HTI-R | High Temperature Insert; High Temperature Insert (refurbished) | [OVR-12 p.53 · AUTHOR-INTERPRETATION]
+| ISS | International Space Station | [OVR-12 p.53 · AUTHOR-INTERPRETATION]
+| LOI | Limiting Oxygen Index (plural LOIs, limiting oxygen indices) | [OVR-12 p.36 · AUTHOR-INTERPRETATION; OVR-12 p.53 · AUTHOR-INTERPRETATION]
+| LSP | Laminar Soot Processes | [OVR-12 p.53 · AUTHOR-INTERPRETATION]
+| MAMS | Microgravity Acceleration Measurement System | [OVR-12 p.53 · AUTHOR-INTERPRETATION]
+| MDCA | Multi-user Droplet Combustion Apparatus | [OVR-12 p.53 · AUTHOR-INTERPRETATION]
+| MSG | Microgravity Science Glovebox | [OVR-12 p.53 · AUTHOR-INTERPRETATION]
+| PIMS | Principal Investigator Microgravity Services | [OVR-12 p.53 · AUTHOR-INTERPRETATION]
+| PMMA | polymethylmethacrylate | [OVR-12 p.53 · AUTHOR-INTERPRETATION]
+| POC | Point of Contact | [OVR-12 p.53 · AUTHOR-INTERPRETATION]
+| SAME | Smoke Aerosol Measurement Experiment | [OVR-12 p.53 · AUTHOR-INTERPRETATION]
+| SAMS | Space Acceleration Measurement System | [OVR-12 p.53 · AUTHOR-INTERPRETATION]
+| SCWM, SCWO | Super-Critical Water Mixture; Super-Critical Water Oxidation | [OVR-12 p.53 · AUTHOR-INTERPRETATION]
+| SEA | Space Exploration Atmospheres | [OVR-12 p.53 · AUTHOR-INTERPRETATION]
+| SLICE | Structure & Liftoff In Combustion Experiment | [OVR-12 p.53 · AUTHOR-INTERPRETATION]
+| SOFBALL | Structure of Flame Balls at Low Lewis-number | [OVR-12 p.53 · AUTHOR-INTERPRETATION]
+| SoFIE | Solid Fuel Ignition and Extinction | [OVR-12 p.53 · AUTHOR-INTERPRETATION]
+| SPICE | Smoke Point In Coflow Experiment | [OVR-12 p.53 · AUTHOR-INTERPRETATION]
+| TGDF | Turbulent Gas-jet Diffusion Flame | [OVR-12 p.53 · AUTHOR-INTERPRETATION]
+| TSC | Telescience Support Center | [OVR-12 p.53 · AUTHOR-INTERPRETATION]
+| ZGF | Zero Gravity Facility | [OVR-12 p.53 · AUTHOR-INTERPRETATION]
+| Inverse flame (coflow burner, planned for Flame Design if inverse spherical flame testing is not allowed) | oxygen/inert mixture injected from a central tube, fuel from a surrounding annulus | [OVR-12 p.17 · AUTHOR-INTERPRETATION]
+| Narrow Channel | a 1-g material flammability test that limits buoyant flow by constraining flame height; restricting the plume controls flame size, so the flames in many ways resemble microgravity flames | [OVR-12 p.25 · AUTHOR-INTERPRETATION]
+| FLX-03 symbols | x_o∞ ambient oxygen mole fraction; d droplet diameter; K_e measured burning-rate constant (mm²/s); K_c classical quasi-steady theoretical burning-rate constant; d_f flame diameter; d_f/d flame stand-off ratio; d_0 initial droplet diameter and d_e extinction diameter (mm) | [FLX-03 p.2 · Fig. 1a · AUTHOR-INTERPRETATION; FLX-03 p.2 · AUTHOR-INTERPRETATION; FLX-03 p.3–4 · Fig. 3 · AUTHOR-INTERPRETATION]
+
+## Supersessions
+<!-- none: the register links no document of this set to another (no supersedes or version_of entry) -->
+
+## Conflicts
+| Quantity | Source A: value · conditions · citation | Source B: value · conditions · citation | Reason for the difference |
+|---|---|---|---|
+| SLICE status | started and completed its operations in 2012; MSG list gives SLICE in 2012 · OVR-12 p.14, p.45 | "will be carried out" with the SPICE hardware in the MSG, as a precursor to CLD Flame · OVR-12 p.15 | not stated in the sources [OVR-12 p.14 · AUTHOR-INTERPRETATION; OVR-12 p.45 · AUTHOR-INTERPRETATION; OVR-12 p.15 · AUTHOR-INTERPRETATION · nominal]
+| CIR combustion chamber volume | about 95 L: free volume of the cylindrical chamber with the MDCA insert installed · FLX-03 p.1 | 100 L: "100-liter chamber" provided by the CIR, no insert stated · OVR-12 p.43–44 | not stated in the sources [FLX-03 p.1 · MEASURED · nominal; OVR-12 p.43–44 · AUTHOR-INTERPRETATION · nominal]
+| Initial diameters of the FLEX methanol droplets in FLX-03 | 2 to 4 mm, as the text states it (abstract, test count, conclusions) · FLX-03 p.1, p.2, p.6 | Fig. 3 (1 atm) plots initial diameters from about 1.71 mm to about 4.42 mm; read below 2 mm: about 1.71†, 1.80†, 1.80† and 1.95 mm; above 4 mm: about 4.01, 4.31 and 4.42 mm (read tolerance ±0.1 mm; † partly hidden marker, centre estimated) · FLX-03 p.4 | not stated in the sources [FLX-03 p.1 · MEASURED · nominal; FLX-03 p.2 · MEASURED; FLX-03 p.6 · MEASURED; FLX-03 p.4 · Fig. 3 · MEASURED · ~fig]
+| Number of shuttle missions that flew premixed-flame (flame-ball) work | "two separate space shuttle missions" · OVR-12 p.25 | SOFBALL on STS-83 and STS-94 (1997) and again on STS-107 (2003) · OVR-12 p.25 | not stated in the sources [OVR-12 p.25 · CITED · nominal]
+
+## Open items / gaps
+- Not found in the 2 curated documents: measured results of SAME or of the Dust Aerosol measurement Feasibility Test (smoke particle sizes, size distributions, background aerosol levels).
+- Not found in the 2 curated documents: per-test data on solid materials (material, oxygen, pressure, flow, nitrogen use and outcome for each BASS or other solid-fuel burn).
+- Not found in the 2 curated documents: what the names HiBMs, GEL, SMμRF, FLEX-ICE-GA and FLEX-2J stand for.
+- Not found in the 2 curated documents: specifications or performance data of the water-mist portable fire extinguishers sent to the ISS.
+- Not found in the 2 curated documents: a numerical limiting oxygen index (LOI) for methanol or heptane droplets in microgravity.
