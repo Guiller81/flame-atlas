@@ -710,7 +710,6 @@ table.tests td { padding: 2px 10px 2px 0; border-top: 1px solid #f0f1f3; }
 }
 .col-grip:hover { border-right-color: #9aa1ab; }
 .col-grip.on { border-right-color: var(--you); }
-table.tests th:last-child .col-grip { display: none; }   /* the last column takes what is left */
 .numcol { font-variant-numeric: tabular-nums; }
 .rec-head { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
 .rec-head .swatch { margin-right: -4px; }

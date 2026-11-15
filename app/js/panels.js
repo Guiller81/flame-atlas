@@ -466,27 +466,36 @@ function summaryView() {
 }
 
 // Column widths you dragged in a Details table, kept while the page stays open (a reload brings the standard widths back).
+// Per kind of table ("fit", "plain", "mats"): the width in px of every column, set the first time you drag one.
 const colWidths = new Map();
-// Puts a grip on the right edge of every heading: drag it to change that column's width, double-click it to reset.
-// kind names the set of columns ("fit", "plain", "mats"), so a width follows its column when the table is drawn again.
+// Puts a grip on the right edge of every heading: drag it to change that column's width, double-click it to bring the
+// standard widths back. On the first drag every column is frozen at the width it has, and the table becomes as wide as
+// its columns together: so only the dragged column changes and the ones to its right move along. (With the standard
+// widths the browser shares any spare room among all the columns, which made a second column move during a drag.)
 function resizableColumns(table, kind) {
   const cols = [...table.querySelectorAll("col")];
-  [...table.querySelectorAll("thead th")].forEach((th, i) => {
-    const col = cols[i];
-    if (!col) return;
-    const key = kind + ":" + i;
-    if (colWidths.has(key)) col.style.width = colWidths.get(key) + "px";
-    const grip = h("span", { class: "col-grip", title: "Drag to change the column width (double-click to reset)" });
+  const ths = [...table.querySelectorAll("thead th")];
+  const apply = (ws) => {
+    cols.forEach((c, i) => { c.style.width = ws ? ws[i] + "px" : ""; });
+    table.style.width = ws ? ws.reduce((x, y) => x + y, 0) + "px" : "";
+    table.style.minWidth = ws ? "0" : "";
+  };
+  const saved = colWidths.get(kind);
+  if (saved && saved.length === cols.length) apply(saved);
+  ths.forEach((th, i) => {
+    if (!cols[i]) return;
+    const grip = h("span", { class: "col-grip", title: "Drag to change the column width (double-click to reset the table)" });
     grip.addEventListener("pointerdown", (e) => {
       e.preventDefault();
       const startX = e.clientX;
-      const startW = th.getBoundingClientRect().width;
+      const ws = ths.map((x) => x.getBoundingClientRect().width);     // every column as it is now
+      const startW = ws[i];
       grip.setPointerCapture(e.pointerId);
       grip.classList.add("on");
       const move = (ev) => {
-        const w = Math.max(36, Math.round(startW + ev.clientX - startX));
-        col.style.width = w + "px";
-        colWidths.set(key, w);
+        ws[i] = Math.max(36, Math.round(startW + ev.clientX - startX));
+        colWidths.set(kind, ws);
+        apply(ws);
       };
       const up = () => {
         grip.classList.remove("on");
@@ -498,7 +507,7 @@ function resizableColumns(table, kind) {
       grip.addEventListener("pointerup", up);
       grip.addEventListener("pointercancel", up);
     });
-    grip.addEventListener("dblclick", () => { colWidths.delete(key); col.style.width = ""; });
+    grip.addEventListener("dblclick", () => { colWidths.delete(kind); apply(null); });
     th.append(grip);
   });
   return table;
