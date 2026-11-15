@@ -98,5 +98,6 @@ Read through the PSI public API on 14 November 2026. Licence: CC0-1.0. "Results 
 | Source | Link | Credit |
 |---|---|---|
 | "SoFIE-GEL - flame appearing to spin itself into extinction", NASA Johnson, 5 May 2023, NASA Image and Video Library (opening clip of the demo video) | [open](https://images.nasa.gov/details/SoFIE-GEL) | Video: NASA |
+| "Bravado" by Rondo Brothers, YouTube Audio Library (music in the demo video) | [open](https://www.youtube.com/audiolibrary) | Attribution not required |
 
 Compiled with AI assistance (Claude) under the team's direction; see the README.
