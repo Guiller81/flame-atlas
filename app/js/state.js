@@ -82,6 +82,10 @@ export async function loadData() {
   const cabin = CABINS.find((c) => c.id === OPENING_CABIN);
   if (cabin) { state.cond.o2 = cabin.o2; state.cond.p = cabin.p; state.cabinUndo = { o2: null, p: null }; }
   derive();
+  // The experiment ranked first for that cabin opens selected, so the page starts on the top result (its tests on the
+  // charts, its card filled in) rather than on every test at once. "Clear all" gives the blank page.
+  const top = data.experiments.find((e) => e.group === "solid" && D.expStats.get(e.id).rank === 1);
+  if (top) { state.exp = top.id; derive(); }
 }
 
 /* ---------- formatting ---------- */
