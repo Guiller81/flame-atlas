@@ -543,12 +543,73 @@ function matchView() {
   return [h("p", { class: "match-head" }, ...lead, " Closest first."), ...tableView([...tests, ...part], fitOf)];
 }
 
+// A class or an experiment selected (no single material): Details lines its materials up side by side, one row each.
+// Counts and lowest values come from the tests in your selection, by the card's rules; the Earth rating or limit is the
+// material's own reference, as on its card. Most-tested first: the order shows how much evidence there is, never which
+// material is better. Nothing here ranks materials.
+function groupMaterials() {
+  if (state.mat || !(state.cls || (state.exp && expTotal(state.exp)))) return [];
+  const ids = [...new Set(D.selected.map((t) => t.mat))];
+  return ids.length < 2 ? [] : ids;
+}
+function materialsView(ids) {
+  const lowest = (list) => list.filter((t) => t.o2 != null).sort((a, b) => a.o2 - b.o2)[0] || null;
+  const rows = ids.map((id) => {
+    const sel = D.selected.filter((t) => t.mat === id);
+    const tests = sel.filter((t) => t.out !== "limit");
+    const limits = sel.filter((t) => t.out === "limit" && t.o2 != null);
+    const space = tests.filter((t) => t.g !== "earth");
+    const spaceLimits = limits.filter((t) => t.g !== "earth");
+    return { id, m: materialFacts(id).m, space, spaceLimits, earthN: tests.length - space.length, earthLimitsN: limits.length - spaceLimits.length,
+      burn: lowest(space.filter((t) => t.out === "burned")), limit: lowest(spaceLimits) };
+  });
+  const spaceN = (r) => r.space.length + r.spaceLimits.length;
+  rows.sort((a, b) => spaceN(b) - spaceN(a) || (b.earthN + b.earthLimitsN) - (a.earthN + a.earthLimitsN) || a.m.name.localeCompare(b.m.name));
+  const inSpace = rows.filter((r) => spaceN(r) > 0).length;
+  const diamond = () => h("span", { class: "swatch out-limit card-swatch" });
+  const none = () => h("span", { class: "not-recorded" }, "—");
+  const open = (t, text) => h("button", { class: "link-btn", type: "button", title: "Open this test's record", onclick: () => tapTests([t.id]) }, text);
+  const gSplit = (list) => GRAVITIES.filter(([g]) => g !== "earth").map(([g, label]) => [label.toLowerCase(), list.filter((t) => t.g === g).length])
+    .filter(([, n]) => n).map(([label, n]) => `${n} ${label}`).join(", ");
+  const cols = [["Material", "c-mname"], ["Space tests", "c-count"], ["Burned in space from", "c-low"], [["Space burn limits ", diamond()], "c-low"],
+    ["Earth tests", "c-count"], [["Earth burn limits ", diamond()], "c-count2"], ["Earth rating or limit", "c-earth"]];
+  const lead = [h("strong", null, `${rows.length} materials in your selection`), selectionWords() ? ` (${selectionWords()})` : "",
+    `: ${inSpace} with space tests, ${rows.length - inSpace} without. Most-tested first; the order shows how much evidence there is, not which material is better.`];
+  return [h("p", { class: "match-head" }, ...lead),
+    h("div", { class: "table-wrap" }, h("table", { class: "tests mats" },
+      h("colgroup", null, cols.map((c) => h("col", { class: c[1] }))),
+      h("thead", null, h("tr", null, cols.map((c) => h("th", null, c[0])))),
+      h("tbody", null, rows.map((r) => {
+        const e = r.m.earth;
+        return h("tr", null,
+          h("td", { title: r.m.name }, h("button", { class: "link-btn test-link", type: "button", title: `Select ${r.m.name}: its card and its tests`,
+            onclick: () => select(state.exp ? { exp: state.exp, mat: r.id } : { mat: r.id }) }, r.m.name)),
+          h("td", { class: "numcol", title: gSplit(r.space) || null }, String(r.space.length)),
+          h("td", { class: "numcol" }, r.burn ? open(r.burn, pct(r.burn.o2)) : r.space.length ? "none burned" : none()),
+          h("td", { class: "numcol", title: gSplit(r.spaceLimits) || null }, r.limit ? [`${r.spaceLimits.length} · lowest `, open(r.limit, pct(r.limit.o2))] : none()),
+          h("td", { class: "numcol" }, String(r.earthN)),
+          h("td", { class: "numcol" }, r.earthLimitsN ? String(r.earthLimitsN) : none()),
+          h("td", { title: e ? `${e.label}${e.basis ? " (" + e.basis + ")" : ""} · ${sourceLabel(e.src, e.page, e.loc)}` : "No Earth rating or limit for this material in the data" },
+            e ? link(`${pct(e.o2)} · ${e.label}`, sourceUrl(e.src, e.page)) : h("span", { class: "not-recorded" }, "not in the data")));
+      }))))];
+}
+
 function renderDetails() {
   const tapped = [...state.tapped].map((id) => testById.get(id)).filter(Boolean);
   const box = $("details");
   const haveList = condKeysSet().length > 0 && (D.matchingSelected.length > 0 || D.partSelected.length > 0);
-  const listing = !tapped.length && haveList;
-  if (listing) box.replaceChildren(...matchView());
+  // A group of materials: its table opens first for a class; for an experiment the tests at your conditions keep the
+  // first place. A link in the heading switches between the two when both exist.
+  const mats = groupMaterials();
+  const tab = state.detailsTab || (state.cls ? "materials" : "tests");
+  const showMats = mats.length > 0 && (!haveList || tab === "materials");
+  const listing = !tapped.length && haveList && !showMats;
+  const sw = $("details-switch");
+  sw.hidden = !!tapped.length || !mats.length || !haveList;
+  sw.textContent = showMats ? `Tests at your conditions (${D.matchingSelected.length + D.partSelected.length})` : `Materials in this selection (${mats.length})`;
+  sw.onclick = () => { state.detailsTab = showMats ? "tests" : "materials"; changed(); };
+  if (!tapped.length && showMats) box.replaceChildren(...materialsView(mats));
+  else if (listing) box.replaceChildren(...matchView());
   else if (!tapped.length) box.replaceChildren(...summaryView());
   else if (tapped.length === 1) box.replaceChildren(...recordView(tapped[0]));
   else box.replaceChildren(...tableView(tapped));
@@ -561,9 +622,9 @@ function renderDetails() {
   }
   const atPoint = tapped.length > 1 && state.tappedPoint.length > 0;      // a tapped mark; otherwise a list opened from a link
   $("details-title").textContent = tapped.length ? (tapped.length === 1 ? "Details · test record" : `Details · ${tapped.length} tests${atPoint ? " at this point" : ""}`)
-    : listing ? "Details · tests at your conditions" : "Details";
+    : showMats ? "Details · materials in your selection" : listing ? "Details · tests at your conditions" : "Details";
   $("details-back").hidden = !tapped.length;
-  $("details-back").textContent = haveList ? "Back to the list" : "Back to the summary";
+  $("details-back").textContent = showMats ? "Back to the materials" : haveList ? "Back to the list" : "Back to the summary";
 }
 
 function downloadCsv() {

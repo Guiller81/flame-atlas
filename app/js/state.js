@@ -60,6 +60,7 @@ export const state = {
   openGroups: new Set(["solid", "earth"]),
   openExps: new Set(),
   closedClasses: new Set(),
+  detailsTab: null,                   // "materials" or "tests" once you pick one in Details; null = the page decides
 };
 
 const listeners = [];
@@ -399,7 +400,7 @@ export function clearHighlight(notify = true) {
   if (notify) changed();
 }
 export function clearAll() {
-  Object.assign(state, { exp: null, mat: null, cls: null, g: null, cabinUndo: null, search: "" });
+  Object.assign(state, { exp: null, mat: null, cls: null, g: null, cabinUndo: null, search: "", detailsTab: null });
   CHIP_GROUPS.forEach((c) => state.chips[c.key].clear());
   state.cond = { o2: null, p: null, flow: null };
   state.tapped.clear();

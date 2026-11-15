@@ -645,6 +645,12 @@ table.tests col.c-mat { width: 14%; }
 table.tests col.c-grav { width: 104px; }
 table.tests col.c-num { width: 54px; }
 table.tests col.c-res { width: 14%; }
+/* the materials of a selected class or experiment, side by side */
+table.tests.mats col.c-mname { width: 27%; }
+table.tests.mats col.c-count { width: 84px; }
+table.tests.mats col.c-count2 { width: 132px; }
+table.tests.mats col.c-low { width: 148px; }
+table.tests.mats .link-btn { font-size: inherit; }
 table.tests .test-link { display: block; max-width: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; text-align: left; }
 table.tests th {
   position: sticky;
