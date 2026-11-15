@@ -405,9 +405,10 @@ export function tapCabin(id) {
     Object.assign(state.cond, state.cabinUndo || { o2: null, p: null });
     state.cabinUndo = null;
   } else {
-    if (!lit) state.cabinUndo = { o2: state.cond.o2, p: state.cond.p };
+    if (!lit) state.cabinUndo = { o2: state.cond.o2, p: state.cond.p, flow: state.cond.flow };
     state.cond.o2 = c.o2;
-    state.cond.p = c.p;             // airflow stays as it is ("any" unless you set it)
+    state.cond.p = c.p;
+    state.cond.flow = null;         // a cabin is its oxygen and pressure: an airflow left from before goes back to "any"
   }
   changed();
 }
