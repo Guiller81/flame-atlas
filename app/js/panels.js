@@ -6,7 +6,7 @@
 */
 import {
   data, state, D, GROUPS, GRAVITIES, GRAVITY_NAME, OUTCOMES, OUTCOME_NAME, CONDS, CHIP_GROUPS, CABINS,
-  matById, expById, testById, expTotal, distance, testName, num, pct, plural, sourceUrl, sourceLabel, hasSelection, condKeysSet,
+  matById, expById, testById, expTotal, distance, testName, testSubject, num, pct, plural, sourceUrl, sourceLabel, hasSelection, condKeysSet,
   materialFacts, setView, select, openMaterial, toggleChip, setCond, setWin, tapCabin, activeCabin, tapTests,
   setHighlight, clearHighlight, clearAll, changed, selectionWords, conditionWords, highlightUseful, missingWords, reportedWords,
 } from "./state.js";
@@ -478,7 +478,7 @@ function recordView(t) {
     : `Why did test ${t.id} (${m.name}, ${pct(t.o2)} O2) ${t.out === "burned" ? "burn" : t.out === "went-out" ? "go out" : "not ignite"}?`;
   // A test without a name from its source: the chat shows the question without the internal key (the key still goes to the AI).
   const named = testName(t) === t.id;
-  const what = `${testName(t).split(" · ")[0]}${t.o2 != null ? ", " + pct(t.o2) + " O2" : ""}`;
+  const what = `${testSubject(t, true)}${t.o2 != null ? ", " + pct(t.o2) + " O2" : ""}`;
   const askShown = named ? null : isLimit
     ? `What does this burn limit mean, and how was it measured? (${what})`
     : `Why did this test ${t.out === "burned" ? "burn" : t.out === "went-out" ? "go out" : "not ignite"}? (${what})`;
