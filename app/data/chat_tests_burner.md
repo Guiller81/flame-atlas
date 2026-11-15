@@ -1,4 +1,4 @@
-# TESTS (data file version 2026-11-15 08:52)
+# TESTS (data file version 2026-11-15 09:14)
 id | exp | mat | printed | inferred | g | g_detail | shape | thick_mm | dia_mm | o2 | o2_approx | o2_start | p | p_disputed | flow | flow_printed | dir | ign | out | kind | spread | burn_len | claim | src | page | loc | note
 BRE:20346L4 | PSI-20 | ethylene-nitrogen-gas-burner | ethylene-nitrogen |  | micro |  | burner |  |  | 36 |  |  | 105.5 |  |  |  | still air |  | went-out |  |  |  | MEASURED | ACM-06 | 110 | Table 6.1 | [S17]; [S4]; [S8]; [S5]; [S12]
 BRE:20358B1 | PSI-20 | ethylene-nitrogen-gas-burner | ethylene-nitrogen |  | micro |  | burner |  |  | 39 |  |  | 106 |  |  |  | still air |  | went-out |  |  |  | MEASURED | ACM-06 | 110 | Table 6.1 | [S17]; [S4]; [S8]; [S5]; [S12]
