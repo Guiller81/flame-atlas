@@ -300,7 +300,9 @@ a.src:hover { color: var(--ink); }
   padding: 8px var(--gutter) 10px;
 }
 .try-label { color: var(--ink-faint); font-size: 12px; }
-.try .chip { padding: 3px 9px; }   /* three questions in two rows */
+/* three whole questions, one a row, under a small "Try:" line */
+.try { flex-direction: column; flex-wrap: nowrap; align-items: flex-start; gap: 5px; }
+.try .chip { max-width: 100%; padding: 3px 9px; text-align: left; }
 .chip {
   padding: 3px 10px;
   border: 1px solid #d3c8f7;

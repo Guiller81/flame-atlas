@@ -267,7 +267,8 @@ function pointItem(p, owner, shownAs) {
 }
 
 /* ---------- the short view: lead, the points picked for it, "Not covered" ---------- */
-const LEAD_LABEL = { documents: "from the documents", ours: "our reading", not_found: "not in the documents" };
+// "ours" = the sentence is the AI's own summary across documents, stated as such in none of them ("our reading" was not clear to a first reader)
+const LEAD_LABEL = { documents: "from the documents", ours: "AI summary of the documents", not_found: "not in the documents" };
 
 // Indexes into answer.data of the points shown first. Positions the answer gives are 1-based;
 // anything out of range is dropped. The point with evidence the other way is always shown.
@@ -687,7 +688,11 @@ input.addEventListener("keydown", (e) => {
   if (e.key === "Enter" && !e.shiftKey && !e.isComposing) { e.preventDefault(); submit(); }
 });
 document.querySelectorAll("[data-try]").forEach((chip) => {
-  chip.addEventListener("click", () => ask(chip.dataset.try, "ask"));
+  // the chat shows the chip's own words, exactly as tapped
+  chip.addEventListener("click", () => {
+    const shown = chip.textContent.trim();
+    ask(chip.dataset.try, "ask", shown !== chip.dataset.try ? { shown } : {});
+  });
 });
 
 newConv.addEventListener("click", () => {
