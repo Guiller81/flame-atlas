@@ -281,17 +281,25 @@ function earthCard(matId) {
       link(sourceLabel(m.lead.earth.src, m.lead.earth.page), sourceUrl(m.lead.earth.src, m.lead.earth.page))));
   }
   const ratingWords = m.earth ? `at or below ${pct(m.earth.o2)}` : "";
-  if (f.earth.length || m.earth) {
+  // A paper often prints only the limit it found, not the single burns behind it: the card counts both kinds of row,
+  // so its numbers add up to the grid's, and never says "tests: 0" for a material that only has reported limits.
+  const NO_SINGLE = " · no single-test records ";
+  if (f.earth.length || (m.earth && !f.earthLimits.length)) {
     lines.push(h("p", null, `Earth tests: ${f.earth.length}` + (m.earth && f.earth.length ? ` · ${f.earthBurnedBelow.length} burned ${ratingWords} ` : " "),
       highlightButton(f.earthBurnedBelow.map((t) => t.id), "card-earth")));
+  }
+  if (f.earthLimits.length) {
+    lines.push(h("p", null, f.earth.length ? `Earth limits reported: ${f.earthLimits.length} ` : `Earth: ${plural(f.earthLimits.length, "limit")} reported` + NO_SINGLE,
+      highlightButton(f.earthLimits.map((t) => t.id), "card-earth-limits")));
   }
   const gNames = f.spaceGravities.map((g) => GRAVITY_NAME[g]);
   let space = `Space tests: ${f.space.length}` + (f.space.length && gNames.length === 1 ? `, all ${gNames[0]}` : "");
   if (f.space.length && m.earth) space += ` · ${f.spaceBurnedBelow.length} burned ${ratingWords}` + (f.lowestSpaceBurn != null ? (f.lead ? ` (a flame lasted down to ${pct(f.lowestSpaceBurn)})` : ` (lowest ${pct(f.lowestSpaceBurn)})`) : "");
   else if (f.space.length && f.lowestSpaceBurn != null) space += ` · lowest burn ${pct(f.lowestSpaceBurn)}`;
-  lines.push(h("p", null, space + " ", highlightButton((m.earth ? f.spaceBurnedBelow : []).map((t) => t.id), "card-space")));
+  if (f.space.length || !f.spaceLimits.length) lines.push(h("p", null, space + " ", highlightButton((m.earth ? f.spaceBurnedBelow : []).map((t) => t.id), "card-space")));
   if (f.spaceLimits.length) {
-    lines.push(h("p", null, `Space limits reported: ${f.spaceLimits.length} (lowest ${pct(f.lowestLimit)}) `,
+    lines.push(h("p", null, f.space.length ? `Space limits reported: ${f.spaceLimits.length} (lowest ${pct(f.lowestLimit)}) `
+      : `Space: ${plural(f.spaceLimits.length, "limit")} reported (lowest ${pct(f.lowestLimit)})` + NO_SINGLE,
       highlightButton(f.spaceLimits.map((t) => t.id), "card-limits")));
   }
   out.push(h("div", { class: "card-lines" }, lines));

@@ -76,7 +76,7 @@ export function screenText() {
     const f = materialFacts(state.mat);
     const card = [];
     if (f.rating != null) card.push(`${f.m.earth.label} ${pct(f.rating)} O2`);
-    card.push(`Earth tests ${f.earth.length}`, `space tests ${f.space.length}`);
+    card.push(`Earth single tests ${f.earth.length}`, `Earth limits reported ${f.earthLimits.length}`, `space single tests ${f.space.length}`, `space limits reported ${f.spaceLimits.length}`);
     if (f.lowestSpaceBurn != null) card.push(`lowest space burn ${pct(f.lowestSpaceBurn)} O2`);
     lines.push("Card on screen (the user already sees these numbers): " + card.join(", "));
   }
