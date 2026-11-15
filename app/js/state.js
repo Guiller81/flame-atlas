@@ -139,19 +139,38 @@ export function distance(t) {
   }
   return { d, complete };
 }
+// A test whose source gives no oxygen has no dot on the charts and is never a match or a possible match:
+// oxygen is the page's main variable, and sharing only your airflow or pressure says too little.
 export function matches(t) {
   const keys = condKeysSet();
-  if (!keys.length) return false;
+  if (!keys.length || t.o2 == null) return false;
   return keys.every((k) => t[k] != null && Math.abs(t[k] - state.cond[k]) <= state.win[k] + 1e-9);
 }
 
 // Fits your window on every condition it reports, but does not print at least one condition you set.
 // Such a test is neither a match nor a miss: it stays bright and is counted separately.
 export function fitsPartly(t) {
+  if (t.o2 == null) return false;
   const keys = condKeysSet();
   const reported = keys.filter((k) => t[k] != null);
   if (!reported.length || reported.length === keys.length) return false;
   return reported.every((k) => Math.abs(t[k] - state.cond[k]) <= state.win[k] + 1e-9);
+}
+// A near miss: inside your shaded window on at least one chart, but outside your window on a condition its source
+// does report. These are the faded dots under the rectangle. Not the same as a possible match, whose source is silent
+// on one of your conditions.
+export function offKeys(t) {
+  return condKeysSet().filter((k) => t[k] != null && Math.abs(t[k] - state.cond[k]) > state.win[k] + 1e-9);
+}
+export function nearMiss(t) {
+  if (t.o2 == null || matches(t) || fitsPartly(t)) return false;
+  const cy = state.cond.o2;
+  const inY = cy == null ? null : Math.abs(t.o2 - cy) <= state.win.o2 + 1e-9;
+  return ["flow", "p"].some((k) => {
+    const cx = state.cond[k];
+    const inX = cx == null ? null : t[k] != null && Math.abs(t[k] - cx) <= state.win[k] + 1e-9;
+    return (inX !== null || inY !== null) && inX !== false && inY !== false;
+  });
 }
 const COND_WORD = { o2: "oxygen", p: "pressure", flow: "airflow" };
 export function missingWords(tests) {
@@ -184,7 +203,7 @@ function passesGrid(t) {
 
 /* ---------- derived values, recomputed on every change ---------- */
 export const D = {
-  selected: [], selectedIds: new Set(), matchIds: new Set(), matchingSelected: [], partIds: new Set(), partSelected: [],
+  selected: [], selectedIds: new Set(), matchIds: new Set(), matchingSelected: [], partIds: new Set(), partSelected: [], nearSelected: [],
   closest: null, chipTests: [], expStats: new Map(), chipCounts: {}, ranges: {},
 };
 
@@ -197,12 +216,14 @@ function derive() {
   D.matchingSelected = D.selected.filter((t) => D.matchIds.has(t.id));
   D.partIds = new Set(T.filter(fitsPartly).map((t) => t.id));
   D.partSelected = D.selected.filter((t) => D.partIds.has(t.id));
+  D.nearSelected = condKeysSet().length ? D.selected.filter(nearMiss) : [];
 
   // closest selected test, for the status line when nothing matches
   D.closest = null;
   if (condKeysSet().length && !D.matchingSelected.length && !D.partSelected.length) {
     let best = Infinity;
     for (const t of D.selected) {
+      if (t.o2 == null) continue;                          // no dot on the charts
       const { d, complete } = distance(t);
       const score = d + (complete ? 0 : 1000);
       if (score < best) { best = score; D.closest = t; }

@@ -468,7 +468,7 @@ function waitingNode() {
   const word = el("span", "wait-word");
   box.append(word);
   const n = (data.tests || []).length;
-  box.append(el("span", "wait-note", (n ? "Reading " + n + " tests and the NASA reports. " : "Reading the NASA reports. ") + "This can take up to half a minute."));
+  box.append(el("span", "wait-note", (n ? "Reading " + n + " tests and the NASA reports. " : "Reading the NASA reports. ") + "This takes about 25 seconds."));
   const order = WAIT_WORDS.slice();
   for (let i = order.length - 1; i > 0; i -= 1) {       // shuffled per question
     const j = Math.floor(Math.random() * (i + 1));

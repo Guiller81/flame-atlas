@@ -609,6 +609,7 @@ a.src:hover { color: var(--ink); }
 .chart .mark.out-went-out.match .dot { stroke: #07506f; }
 .chart .mark.out-no-ignition.match .dot { stroke: #07506f; stroke-width: 2.25; }
 .chart .mark.faded { opacity: 0.2; }
+.chart .mark.dim { opacity: 0.6; }                 /* in your selection, outside your conditions */
 .chart .count { fill: #fff; font-size: 9px; font-weight: 700; pointer-events: none; }
 .chart .out-no-ignition .count { fill: #0a6d97; }
 .chart .ring-highlight { fill: none; stroke: var(--you); stroke-width: 1.75; }
@@ -635,6 +636,8 @@ a.src:hover { color: var(--ink); }
 .fit { display: inline-block; padding: 0 6px; border-radius: 4px; font-size: 11.5px; white-space: nowrap; }
 .fit.all { background: var(--you-soft); color: var(--you); font-weight: 600; }
 .fit.part { background: var(--surface-soft); color: var(--ink-soft); }
+.fit.off { background: #fde8e8; color: #b42318; }   /* a near miss: the source reports a condition outside your window */
+.off-value { color: #b42318; font-weight: 600; }
 .not-recorded { color: var(--ink-faint); }
 /* One line per row: fixed column widths, long text ends in "…" (full text on hover). */
 table.tests { width: 100%; min-width: 860px; border-collapse: collapse; font-size: 12px; table-layout: fixed; }

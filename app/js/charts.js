@@ -210,14 +210,19 @@ function build(chart) {
       // With a selection on, tests outside it are not drawn at all (they used to stay as a faded cloud that
       // hid the selected dots). A tapped or highlighted test outside the selection is still drawn.
       if (selecting && !sel.length && !tapped && !lit) return;
-      // bright: in your selection, and not an "inside the window but off on another condition" case.
-      // A tapped or highlighted mark is always brought back to full colour.
-      const bright = (sel.length > 0 && !(condOn && inside && match.length === 0 && part.length === 0)) || tapped > 0 || lit > 0;
+      // Three levels once you set conditions. Full colour: fits your conditions (a match, or a possible match whose
+      // source is silent on one of them). Lightly faded ("dim"): does not fit, and its real value is outside the shaded
+      // window on this chart. Strongly faded: its real value is inside the window here, but it is off on a condition
+      // this chart does not show. So a full-colour dot under the window always fits, even where marks sitting side by
+      // side are drawn a few pixels off their value. A tapped or highlighted mark is always in full colour.
+      const fits = match.length > 0 || part.length > 0;
+      const level = tapped > 0 || lit > 0 || !condOn || fits ? 2 : inside ? 0 : 1;
+      const bright = level === 2;
       const r = !sel.length && !tapped && !lit ? 3.5 : (shown > 9 ? 8.5 : shown > 1 ? 7 : 4.5) + (match.length ? 1.5 : 0);
       const px = g.xv == null ? bandX : X(g.xv);
       const py = Y(g.o2);
       if (py < y1 - 1 || py > y0 + 1 || (g.xv != null && (px < x0 - 1 || px > x1 + 1))) return;   // outside the zoomed view
-      marks.push({ g, sel, match, part, shown, bright, inside, r, px, py, tapped, lit, sibs });
+      marks.push({ g, sel, match, part, shown, bright, level, inside, r, px, py, tapped, lit, sibs });
     });
     // different outcomes at one point sit side by side, centred on the real value
     const row = marks.filter((m) => m.sibs === sibs);
@@ -225,10 +230,10 @@ function build(chart) {
     let left = -width / 2;
     for (const m of row) { m.px += left + m.r; left += 2 * m.r + 1; }
   }
-  marks.sort((a, b) => (a.bright - b.bright) || (a.match.length - b.match.length));
+  marks.sort((a, b) => (a.level - b.level) || (a.match.length - b.match.length));
   const layer = el("g", { class: "marks" });
   for (const m of marks) {
-    const cls = ["mark", "out-" + m.g.out, m.bright ? "bright" : "faded", m.match.length ? "match" : ""].join(" ");
+    const cls = ["mark", "out-" + m.g.out, ["faded", "dim", "bright"][m.level], m.match.length ? "match" : ""].join(" ");
     const node = el("g", { class: cls, transform: `translate(${m.px.toFixed(1)},${m.py.toFixed(1)})` });
     if (m.g.out === "limit") {                           // a burn limit is a diamond, not a dot
       const d = m.r * 0.92;
@@ -238,7 +243,7 @@ function build(chart) {
       node.append(el("circle", { r: m.r + 1, class: "halo" }));
       node.append(el("circle", { r: m.r, class: "dot" }));
     }
-    if (m.shown > 1 && m.bright) node.append(el("text", { y: 3.2, "text-anchor": "middle", class: "count" }, m.shown));
+    if (m.shown > 1 && m.level > 0) node.append(el("text", { y: 3.2, "text-anchor": "middle", class: "count" }, m.shown));
     if (m.lit) node.append(el("circle", { r: m.r + 3.5, class: "ring-highlight" }));
     if (m.tapped) node.append(el("circle", { r: m.r + (m.lit ? 6 : 3.5), class: "ring-tapped" }));
     layer.append(node);
@@ -302,8 +307,8 @@ function tipText(chart, m) {
   if (m.tapped) parts.push(`includes ${m.tapped} you tapped`);
   const names = [...new Set(m.g.tests.map((t) => (matById.get(t.mat) || {}).name || t.mat))];
   parts.push(names.slice(0, 3).join(", ") + (names.length > 3 ? ` +${names.length - 3} more` : ""));
-  // why a dot inside your window is faded: it is off on a condition this chart does not show
-  if (m.inside && !m.match.length && !m.part.length && m.sel.length) {
+  // why a dot is faded: the first of your conditions it misses, or does not report
+  if (condKeysSet().length && !m.match.length && !m.part.length && m.sel.length) {
     const t = m.sel[0];
     for (const c of CONDS) {
       const want = state.cond[c.key];

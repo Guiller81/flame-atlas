@@ -7,7 +7,7 @@
 import {
   data, state, D, GROUPS, GRAVITIES, GRAVITY_NAME, OUTCOMES, OUTCOME_NAME, CONDS, CHIP_GROUPS, CABINS,
   matById, expById, testById, expTotal, distance, testName, testSubject, num, pct, plural, sourceUrl, sourceLabel, hasSelection, condKeysSet,
-  materialFacts, setView, select, openMaterial, toggleChip, setCond, setWin, tapCabin, activeCabin, tapTests,
+  materialFacts, offKeys, setView, select, openMaterial, toggleChip, setCond, setWin, tapCabin, activeCabin, tapTests,
   setHighlight, clearHighlight, clearAll, changed, selectionWords, conditionWords, highlightUseful, missingWords, reportedWords,
 } from "./state.js";
 
@@ -463,7 +463,12 @@ function summaryView() {
 function tableView(tests, fitOf) {
   const cols = [fitOf ? ["Fit", "c-fit"] : null, ["Test", "c-test"], ["Material", "c-mat"], ["Gravity", "c-grav"], ["O2 %", "c-num"], ["kPa", "c-num"], ["cm/s", "c-num"],
     ["Result", "c-res"], ["Source", "c-src"]].filter(Boolean);
-  const value = (t, k) => (fitOf && t[k] == null && state.cond[k] != null ? h("span", { class: "not-recorded", title: "Not recorded in the source" }, "—") : num(t[k]));
+  const UNIT = { o2: "% O2", p: " kPa", flow: " cm/s" };
+  const value = (t, k) => {
+    if (fitOf && t[k] == null && state.cond[k] != null) return h("span", { class: "not-recorded", title: "Not recorded in the source" }, "—");
+    if (fitOf && fitOf(t).off === k) return h("span", { class: "off-value", title: `Outside your window: yours is ${num(state.cond[k])} ±${num(state.win[k])}${UNIT[k]}` }, num(t[k]));
+    return num(t[k]);
+  };
   const cell = (text, ...kids) => h("td", { title: text }, ...(kids.length ? kids : [text]));
   return [h("div", { class: "table-wrap" }, h("table", { class: "tests" + (fitOf ? " with-fit" : "") },
     h("colgroup", null, cols.map((c) => h("col", { class: c[1] }))),
@@ -473,7 +478,7 @@ function tableView(tests, fitOf) {
       const src = sourceLabel(t.src, t.page, t.loc) + (t.sheet ? ` · PSI sheet "${t.sheet}", row ${t.row}` : "");
       const srcTitle = (data.sources[t.src] || {}).title;
       return h("tr", null,
-        fitOf ? h("td", null, h("span", { class: "fit " + (fitOf(t) ? "part" : "all") }, fitOf(t) || "All your conditions")) : null,
+        fitOf ? h("td", null, h("span", { class: "fit " + fitOf(t).kind }, fitOf(t).label)) : null,
         cell(testName(t) === t.id ? t.id : `${testName(t)} (${t.id})`, h("button", { class: "link-btn test-link", type: "button", onclick: () => tapTests([t.id]) }, testName(t))),
         cell(mat),
         cell(t.g_detail || GRAVITY_NAME[t.g] || t.g),
@@ -513,15 +518,19 @@ function recordView(t) {
       t.also ? item("Also in", ...t.also.map((id) => link(sourceLabel(id), sourceUrl(id), (data.sources[id] || {}).title))) : null))];
 }
 
-// With conditions set and nothing tapped, Details lists the tests at your conditions in one table, closest first:
+// With conditions set and nothing tapped, Details lists the tests under your shaded window in one table, closest first:
 // the tests that match every condition you set (the larger dots), then the possible matches, which fit on what they
-// report but whose source does not give one of your conditions. The Fit column says which is which.
+// report but whose source does not give one of your conditions, then the near misses (the faded dots): inside the
+// window on one chart, but their source reports a condition outside your window. The Fit column says which is which;
+// a near miss is marked in light red, with the value that is off in red.
 function matchView() {
   const byDistance = (a, b) => distance(a).d - distance(b).d;
   const tests = D.matchingSelected.slice().sort(byDistance);
   const part = D.partSelected.slice().sort(byDistance);
+  const near = D.nearSelected.slice().sort(byDistance);
   const n = tests.length;
   const possible = (k) => `${k} ${k === 1 ? "is a possible match" : "are possible matches"}`;
+  const misses = (k, more) => `${k}${more ? " more" : ""} ${k === 1 ? "misses" : "miss"} on one condition (marked in red)`;
   let lead;
   if (n) {
     const mats = new Set(tests.map((t) => t.mat));
@@ -529,18 +538,28 @@ function matchView() {
     const byOut = OUTCOMES.map(([k, label]) => [k === "limit" ? "burn limit" : label.toLowerCase(), tests.filter((t) => t.out === k).length]).filter((x) => x[1]);
     lead = [h("strong", null, `${plural(n, "test")} ${n === 1 ? "matches" : "match"} your conditions`), ` (${conditionWords()}): `,
       byOut.map(([label, k]) => `${k} ${label}${label === "burn limit" && k > 1 ? "s" : ""}`).join(", "),
-      `, from ${plural(mats.size, "material")} in ${plural(exps.size, "experiment")}.`, part.length ? ` ${part.length} more ${part.length === 1 ? "is a possible match" : "are possible matches"}.` : ""];
+      `, from ${plural(mats.size, "material")} in ${plural(exps.size, "experiment")}.`, part.length ? ` ${part.length} more ${part.length === 1 ? "is a possible match" : "are possible matches"}.` : "",
+      near.length ? ` ${misses(near.length, true)}.` : ""];
   } else {
-    lead = [h("strong", null, "No test matches all your conditions"), ` (${conditionWords()}). ${possible(part.length)}.`];
+    lead = [h("strong", null, "No test matches all your conditions"), ` (${conditionWords()}).`, part.length ? ` ${possible(part.length)}.` : "",
+      near.length ? ` ${misses(near.length, part.length > 0)}.` : ""];
   }
   const NAMES = { o2: "oxygen", p: "pressure", flow: "airflow" };
-  const fitOf = (t) => {                                  // "" = matches every condition you set
+  const cap = (words) => words[0].toUpperCase() + words.slice(1);
+  const nearIds = new Set(near.map((t) => t.id));
+  const fits = new Map();
+  const fitOf = (t) => {                                  // kind: all = matches every condition you set, part = possible match, off = near miss
+    if (fits.has(t.id)) return fits.get(t.id);
+    let fit;
+    const off = nearIds.has(t.id) ? offKeys(t) : [];
     const miss = condKeysSet().filter((k) => t[k] == null).map((k) => NAMES[k]);
-    if (!miss.length) return "";
-    const words = miss.join(" and ");
-    return words[0].toUpperCase() + words.slice(1) + " not recorded";
+    if (off.length) fit = { kind: "off", off: off[0], label: cap(off.map((k) => NAMES[k]).join(" and ")) + (off.length === 1 ? " does not match" : " do not match") };
+    else if (miss.length) fit = { kind: "part", label: cap(miss.join(" and ")) + " not recorded" };
+    else fit = { kind: "all", label: "All your conditions" };
+    fits.set(t.id, fit);
+    return fit;
   };
-  return [h("p", { class: "match-head" }, ...lead, " Closest first."), ...tableView([...tests, ...part], fitOf)];
+  return [h("p", { class: "match-head" }, ...lead, " Closest first."), ...tableView([...tests, ...part, ...near], fitOf)];
 }
 
 // A class or an experiment selected (no single material): Details lines its materials up side by side, one row each.
@@ -597,7 +616,8 @@ function materialsView(ids) {
 function renderDetails() {
   const tapped = [...state.tapped].map((id) => testById.get(id)).filter(Boolean);
   const box = $("details");
-  const haveList = condKeysSet().length > 0 && (D.matchingSelected.length > 0 || D.partSelected.length > 0);
+  const atCond = D.matchingSelected.length + D.partSelected.length;
+  const haveList = condKeysSet().length > 0 && (atCond > 0 || D.nearSelected.length > 0);
   // A group of materials: its table opens first for a class; for an experiment the tests at your conditions keep the
   // first place. A link in the heading switches between the two when both exist.
   const mats = groupMaterials();
@@ -606,7 +626,7 @@ function renderDetails() {
   const listing = !tapped.length && haveList && !showMats;
   const sw = $("details-switch");
   sw.hidden = !!tapped.length || !mats.length || !haveList;
-  sw.textContent = showMats ? `Tests at your conditions (${D.matchingSelected.length + D.partSelected.length})` : `Materials in this selection (${mats.length})`;
+  sw.textContent = showMats ? (atCond ? `Tests at your conditions (${atCond})` : `Tests that miss on one condition (${D.nearSelected.length})`) : `Materials in this selection (${mats.length})`;
   sw.onclick = () => { state.detailsTab = showMats ? "tests" : "materials"; changed(); };
   if (!tapped.length && showMats) box.replaceChildren(...materialsView(mats));
   else if (listing) box.replaceChildren(...matchView());
@@ -622,7 +642,7 @@ function renderDetails() {
   }
   const atPoint = tapped.length > 1 && state.tappedPoint.length > 0;      // a tapped mark; otherwise a list opened from a link
   $("details-title").textContent = tapped.length ? (tapped.length === 1 ? "Details · test record" : `Details · ${tapped.length} tests${atPoint ? " at this point" : ""}`)
-    : showMats ? "Details · materials in your selection" : listing ? "Details · tests at your conditions" : "Details";
+    : showMats ? "Details · materials in your selection" : listing ? (atCond ? "Details · tests at your conditions" : "Details · tests close to your conditions") : "Details";
   $("details-back").hidden = !tapped.length;
   $("details-back").textContent = showMats ? "Back to the materials" : haveList ? "Back to the list" : "Back to the summary";
 }
