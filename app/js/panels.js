@@ -68,7 +68,7 @@ function experimentList() {
     const open = state.openGroups.has(group.id) || !!state.search.trim() || exps.some((e) => e.id === state.exp);
     rows.push(h("button", { class: "row group", type: "button", "aria-expanded": String(open),
       onclick: () => { state.openGroups.has(group.id) ? state.openGroups.delete(group.id) : state.openGroups.add(group.id); changed(); } },
-      h("span", { class: "caret" }, open ? "▾" : "▸"), h("span", { class: "name" }, group.name), h("span", { class: "group-n" }, String(exps.length))));
+      h("span", { class: "caret" }, open ? "▾" : "▸"), h("span", { class: "name" }, group.name), h("span", { class: "group-n" }, plural(exps.length, "experiment"))));
     if (!open) continue;
     for (const e of exps) {
       const s = stat(e);
