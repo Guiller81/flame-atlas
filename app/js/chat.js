@@ -192,10 +192,46 @@ function rich(text, shownAs) {
   return out;
 }
 
+// One line per paper: "Olson et al. 2012: p.1 · p.4 · p.6 ↗". Each page number is a link to that page; where on the
+// page (table, figure, section) shows on hover. A source without pages (a PSI record or file) keeps its single link.
+function sourceLines(sources) {
+  const groups = new Map();                            // source id -> { known, pages: page -> locators, plain: [src] }
+  for (const src of sources) {
+    const known = data.sources[src.source_id];
+    if (!known || !known.url) continue;                // unknown IDs are dropped
+    if (!groups.has(src.source_id)) groups.set(src.source_id, { known, pages: new Map(), plain: [] });
+    const g = groups.get(src.source_id);
+    const paged = Number.isInteger(src.page) && known.kind !== "psi-record" && known.kind !== "psi-file";
+    if (!paged) { g.plain.push(src); continue; }
+    if (!g.pages.has(src.page)) g.pages.set(src.page, []);   // the same page cited twice shows once
+    if (src.locator && !g.pages.get(src.page).includes(src.locator)) g.pages.get(src.page).push(src.locator);
+  }
+  const lines = [];
+  for (const [id, g] of groups) {
+    const seen = new Set();
+    for (const src of g.plain) { const a = sourceLink(src); if (a && !seen.has(a.textContent) && seen.add(a.textContent)) lines.push(a); }
+    if (!g.pages.size) continue;
+    const line = el("span", "src-line");
+    line.append(el("span", "src-name", (g.known.short || id) + ": "));
+    [...g.pages.keys()].sort((a, b) => a - b).forEach((page, i) => {
+      if (i) line.append(" · ");
+      const a = el("a", "src", "p." + page);
+      a.href = g.known.url + "#page=" + page;
+      a.target = "_blank";
+      a.rel = "noopener";
+      const where = g.pages.get(page).join("; ");
+      a.title = (where ? where + " — " : "") + (g.known.title || "");
+      line.append(a);
+    });
+    line.append(" ↗");
+    lines.push(line);
+  }
+  return lines;
+}
+
 // The source links and the Highlight button of one piece of text (a point or the lead), or null.
 function citations(p, owner) {
-  const seen = new Set();                              // the same page cited twice shows once
-  const links = (p.sources || []).map(sourceLink).filter((a) => a && !seen.has(a.textContent) && seen.add(a.textContent));
+  const links = sourceLines(p.sources || []);
   const ids = [...new Set((p.test_ids || []).filter((id) => testById.has(id)))];   // unknown test IDs are dropped
   if (links.length || ids.length) {
     const wrap = el("span", "srcs");

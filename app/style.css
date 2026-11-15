@@ -198,6 +198,9 @@ a.src {
   text-underline-offset: 2px;
 }
 a.src:hover { color: var(--ink); }
+/* one line per paper in the chat: "Olson et al. 2012: p.1 · p.4 · p.6 ↗" */
+.src-line { display: block; color: var(--ink-soft); font-size: 12px; }
+.src-line a.src { display: inline; margin-right: 0; }
 
 .history-note { margin-top: 10px; color: var(--ink-faint); font-size: 12px; }
 
