@@ -465,6 +465,45 @@ function summaryView() {
     data.note ? row("Data status", h("span", { class: "muted" }, data.note)) : null)];
 }
 
+// Column widths you dragged in a Details table, kept while the page stays open (a reload brings the standard widths back).
+const colWidths = new Map();
+// Puts a grip on the right edge of every heading: drag it to change that column's width, double-click it to reset.
+// kind names the set of columns ("fit", "plain", "mats"), so a width follows its column when the table is drawn again.
+function resizableColumns(table, kind) {
+  const cols = [...table.querySelectorAll("col")];
+  [...table.querySelectorAll("thead th")].forEach((th, i) => {
+    const col = cols[i];
+    if (!col) return;
+    const key = kind + ":" + i;
+    if (colWidths.has(key)) col.style.width = colWidths.get(key) + "px";
+    const grip = h("span", { class: "col-grip", title: "Drag to change the column width (double-click to reset)" });
+    grip.addEventListener("pointerdown", (e) => {
+      e.preventDefault();
+      const startX = e.clientX;
+      const startW = th.getBoundingClientRect().width;
+      grip.setPointerCapture(e.pointerId);
+      grip.classList.add("on");
+      const move = (ev) => {
+        const w = Math.max(36, Math.round(startW + ev.clientX - startX));
+        col.style.width = w + "px";
+        colWidths.set(key, w);
+      };
+      const up = () => {
+        grip.classList.remove("on");
+        grip.removeEventListener("pointermove", move);
+        grip.removeEventListener("pointerup", up);
+        grip.removeEventListener("pointercancel", up);
+      };
+      grip.addEventListener("pointermove", move);
+      grip.addEventListener("pointerup", up);
+      grip.addEventListener("pointercancel", up);
+    });
+    grip.addEventListener("dblclick", () => { colWidths.delete(key); col.style.width = ""; });
+    th.append(grip);
+  });
+  return table;
+}
+
 // Every row is one line: a cell that is too long ends in "…" and shows its full text on hover.
 // fitOf (optional): adds a first column saying how a test fits your conditions, and puts a dash
 // in the cell of a condition you set that the source does not give.
@@ -478,7 +517,7 @@ function tableView(tests, fitOf) {
     return num(t[k]);
   };
   const cell = (text, ...kids) => h("td", { title: text }, ...(kids.length ? kids : [text]));
-  return [h("div", { class: "table-wrap" }, h("table", { class: "tests" + (fitOf ? " with-fit" : "") },
+  return [h("div", { class: "table-wrap" }, resizableColumns(h("table", { class: "tests" + (fitOf ? " with-fit" : "") },
     h("colgroup", null, cols.map((c) => h("col", { class: c[1] }))),
     h("thead", null, h("tr", null, cols.map((c) => h("th", null, c[0])))),
     h("tbody", null, tests.map((t) => {
@@ -494,7 +533,7 @@ function tableView(tests, fitOf) {
         h("td", { class: "numcol" }, value(t, "o2")), h("td", { class: "numcol" }, value(t, "p")), h("td", { class: "numcol" }, value(t, "flow")),
         cell(outName(t), h("span", { class: "swatch out-" + t.out }), " ", outName(t)),
         h("td", null, link(src, sourceUrl(t.src, t.page), src + (srcTitle ? " · " + srcTitle : ""))));
-    }))))];
+    }))), fitOf ? "fit" : "plain"))];
 }
 
 function recordView(t) {
@@ -604,7 +643,7 @@ function materialsView(ids) {
   const lead = [h("strong", null, `${rows.length} materials in your selection`), selectionWords() ? ` (${selectionWords()})` : "",
     `: ${inSpace} with space tests, ${rows.length - inSpace} without. Most-tested first; the order shows how much evidence there is, not which material is better.`];
   return [h("p", { class: "match-head" }, ...lead),
-    h("div", { class: "table-wrap" }, h("table", { class: "tests mats" },
+    h("div", { class: "table-wrap" }, resizableColumns(h("table", { class: "tests mats" },
       h("colgroup", null, cols.map((c) => h("col", { class: c[1] }))),
       h("thead", null, h("tr", null, cols.map((c) => h("th", null, c[0])))),
       h("tbody", null, rows.map((r) => {
@@ -619,7 +658,7 @@ function materialsView(ids) {
           h("td", { class: "numcol" }, r.earthLimitsN ? String(r.earthLimitsN) : none()),
           h("td", { title: e ? `${e.label}${e.basis ? " (" + e.basis + ")" : ""} · ${sourceLabel(e.src, e.page, e.loc)}` : "No Earth rating or limit for this material in the data" },
             e ? link(`${pct(e.o2)} · ${e.label}`, sourceUrl(e.src, e.page)) : h("span", { class: "not-recorded" }, "not in the data")));
-      }))))];
+      }))), "mats"))];
 }
 
 function renderDetails() {

@@ -13,15 +13,15 @@
   <meta name="description" content="NASA's microgravity fire experiments, ranked for your cabin: real test data and cited SI answers.">
   <meta name="generator" content="Written with AI assistance (Claude Code), directed by Team Flame Atlas">
   <title>Flame Atlas · Flame in Freefall</title>
-  <link rel="stylesheet" href="style.css?v=42cca79cc1">
+  <link rel="stylesheet" href="style.css?v=1597d681d2">
   <!-- Every script and style address carries the same version stamp (set at deploy), so a returning
        visitor's browser never mixes a new page with old cached code. -->
   <script type="importmap">
   { "imports": {
-    "./js/state.js": "./js/state.js?v=42cca79cc1",
-    "./js/charts.js": "./js/charts.js?v=42cca79cc1",
-    "./js/panels.js": "./js/panels.js?v=42cca79cc1",
-    "./js/chat.js": "./js/chat.js?v=42cca79cc1"
+    "./js/state.js": "./js/state.js?v=1597d681d2",
+    "./js/charts.js": "./js/charts.js?v=1597d681d2",
+    "./js/panels.js": "./js/panels.js?v=1597d681d2",
+    "./js/chat.js": "./js/chat.js?v=1597d681d2"
   } }
   </script>
 </head>
@@ -90,9 +90,13 @@
     </main>
 
     <aside class="chat" id="chat" aria-labelledby="chat-h">
+      <p class="print-head" id="print-head"></p>
       <div class="chat-head">
         <h2 id="chat-h">Ask</h2>
-        <button type="button" class="link-btn" id="new-conversation" hidden>New conversation</button>
+        <span class="chat-actions">
+          <button type="button" class="link-btn" id="save-pdf" title="Opens the print window: choose Save as PDF to keep or share this conversation with its source links" hidden>Save as PDF</button>
+          <button type="button" class="link-btn" id="new-conversation" hidden>New conversation</button>
+        </span>
       </div>
       <div class="chat-log" id="chat-log" aria-live="polite">
         <div class="welcome" id="chat-welcome">
@@ -112,15 +116,14 @@
       </form>
       <div class="try">
         <span class="try-label">Try:</span>
-        <!-- Each chip shows the whole question, and that question is what the chat shows and asks. The third is the Saffire
-             IV to VI card's own question with the short form of the name, so its prepared answer shows at once. -->
+        <!-- Each chip shows the whole question, and that question is what the chat shows and asks. All three go to the live chat. -->
+        <button type="button" class="chip" data-try="Does stopping the airflow put out a fire in space?">Does stopping the airflow put out a fire in space?</button>
         <button type="button" class="chip" data-try="What burns at lower oxygen in low gravity than on Earth?">What burns at lower oxygen in low gravity than on Earth?</button>
         <button type="button" class="chip" data-try="What burned near 34% O2 and 56.5 kPa (Moon base)?">What burned near 34% O2 and 56.5 kPa (Moon base)?</button>
-        <button type="button" class="chip" data-try="What did Saffire IV to VI (Cygnus) find, and how far can I trust it?">What did Saffire IV–VI find, and how far can I trust it?</button>
       </div>
       <p class="ai-note">AI-generated from public NASA documents; not reviewed or endorsed by NASA.</p>
     </aside>
   </div>
-  <script type="module" src="js/main.js?v=42cca79cc1"></script>
+  <script type="module" src="js/main.js?v=1597d681d2"></script>
 </body>
 </html>

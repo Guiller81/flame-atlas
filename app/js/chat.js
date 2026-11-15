@@ -101,6 +101,7 @@ const input = $("chat-input");
 const sendBtn = $("chat-send");
 const counter = $("chat-counter");
 const newConv = $("new-conversation");
+const savePdf = $("save-pdf");
 const fileInput = $("datasheet-file");
 const attachedBox = $("attached");
 
@@ -430,6 +431,7 @@ function render() {
   log.querySelectorAll(".msg").forEach((n) => n.remove());
   welcome.hidden = messages.length > 0 || !!pending;
   newConv.hidden = messages.length === 0 && !pending;
+  savePdf.hidden = !messages.some((m) => m.role === "answer");
   for (const m of messages) {
     if (m.role === "user") {
       const bubble = el("div", "msg user", m.shown || m.text);     // a question from a button may show a shorter wording than the one sent
@@ -693,6 +695,14 @@ document.querySelectorAll("[data-try]").forEach((chip) => {
     const shown = chip.textContent.trim();
     ask(chip.dataset.try, "ask", shown !== chip.dataset.try ? { shown } : {});
   });
+});
+
+// "Save as PDF": the browser's own print window, with a print style that keeps only the conversation
+// (questions, answers and their source links). No file is built here and nothing leaves the browser.
+savePdf.addEventListener("click", () => {
+  const when = new Date().toLocaleString("en-GB", { dateStyle: "medium", timeStyle: "short" });
+  $("print-head").textContent = `Flame Atlas · Flame in Freefall · conversation saved ${when} · ${location.origin}${location.pathname}`;
+  window.print();
 });
 
 newConv.addEventListener("click", () => {
