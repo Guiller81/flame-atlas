@@ -1,4 +1,4 @@
-# TESTS (data file version 2026-11-15 09:14)
+# TESTS (data file version 2026-11-15 13:25)
 id | exp | mat | printed | inferred | g | g_detail | shape | thick_mm | dia_mm | o2 | o2_approx | o2_start | p | p_disputed | flow | flow_printed | dir | ign | out | kind | spread | burn_len | claim | src | page | loc | note
 BASS-II:B1 | PSI-25 | pmma | 100-µm PMMA film, 2 cm wide |  | micro |  | sheet |  |  | 22.2 |  |  |  |  | 0 |  | against flame | Integral | went-out |  |  |  | MEASURED | BAS-01 | 111 | Table A.1 | as-run test no.=7; sample no.=147; flame went out after the crew turned the flow off; PI sheet=Bhattacharjee
 BASS-II:B10 | PSI-25 | pmma | 1-cm, 0.2- mm PMMA film |  | micro |  | sheet |  |  | 20.8 |  | 21 |  |  |  | pot 0.35 | against flame | Integral | went-out |  |  |  | MEASURED | BAS-01 | 111 | Table A.1 | as-run test no.=62; sample no.=173m; PI sheet=Bhattacharjee

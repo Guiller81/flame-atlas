@@ -1710,10 +1710,11 @@ SAME and SAME-R share these stated impacts: SAME will provide technology for an 
 # DETECTION_SUPPRESSION — Putting out and detecting fires in spacecraft: ISS droplet-extinction results (FLEX) and NASA's guide to ISS combustion science
 
 ## Scope
-Covers: how fires are suppressed and detected in spacecraft, from two documents only.
+Covers: how fires are suppressed and detected in spacecraft, from three documents only.
 - FLX-03 = Nayagam et al. (2011), a conference results paper with measured values: methanol droplets burned to extinction in oxygen / carbon-dioxide / nitrogen mixtures on the International Space Station (ISS) in the Flame Extinguishment Experiment (FLEX), compared with a quasi-steady droplet-burning theory.
 - OVR-12 = NASA Johnson Space Center (2015), "A Researcher's Guide to: International Space Station Combustion Science" (NP-2015-10-034-JSC), an overview guide that mostly reports findings in words, cites other work, and describes several experiments as planned or in development at its date (2015). Statuses below are as of that guide.
-Not here: per-test data on solid materials (burn-by-burn oxygen, pressure, flow and outcome) and the measured results of the Smoke Aerosol Measurement Experiment (SAME); these are not in the two documents.
+- SMK-01 = Urban et al. (2012), a conference results paper: measured smoke-particle sizes, particle shapes and detector responses from the reflight of the Smoke Aerosol Measurement Experiment (SAME-2) on the ISS in 2010.
+Not here: per-test data on solid materials (burn-by-burn oxygen, pressure, flow and outcome); these are not in the three documents.
 Labels: MEASURED = observed or measured in tests; MODELED = from theory or a model; AUTHOR-INTERPRETATION = the authors' explanation, definition or judgement; CITED = attributed to other work. Flags: ~fig = read from a figure (approximate); nominal = a set point or stated condition; single-test = rests on one test. "Planned" marks intentions stated in the guide, never results.
 
 ## Conditions covered
@@ -1731,6 +1732,7 @@ Labels: MEASURED = observed or measured in tests; MODELED = from theory or a mod
 | OVR-12 | Structure of Flame Balls at Low Lewis-number (SOFBALL) | premixed fuel/oxidizer/diluent mixtures, very fuel-lean, very low Lewis number | microgravity, space shuttle STS-83 and STS-94 (1997), STS-107 (2003), CM | compositions and pressure not stated | not stated | not stated | [OVR-12 p.25 · CITED · nominal; OVR-12 p.30 · CITED]
 | OVR-12 | Gas-jet flames: LSP, TGDF, ELF, SPICE, SLICE | laminar, axisymmetric gas-jet diffusion flames | microgravity, space shuttle (1997, 2003) and ISS MSG (2009, 2012) | sealed chambers (LSP, TGDF) or fan-driven flow ducts (ELF, SPICE) | coflow in SPICE | not stated | [OVR-12 p.13 · MEASURED · nominal; OVR-12 p.14 · MEASURED · nominal]
 | OVR-12 | ACME drop-tower tests (Figs. 6, 7) | ethylene at 1.51 mg/s from a porous sphere; 25% propane, 2% O2, 49% argon, 24% N2 from a porous burner | 2.2-second Drop Tower, NASA Glenn | air at atmospheric pressure (Fig. 6); not stated for Fig. 7 | not stated | one test per image | [OVR-12 p.2 · MEASURED · nominal; OVR-12 p.17 · Fig. 6 · MEASURED · single-test; OVR-12 p.17 · Fig. 7 · MEASURED · single-test]
+| SMK-01 | Smoke Aerosol Measurement Experiment reflight (SAME-2), ISS Expedition 24, July to September 2010 | Teflon, Kapton, Pyrell, silicone rubber, cellulose (lamp wick) and dibutyl phthalate on a porous wick (p.7; the abstract lists five materials, with cotton), each overheated about 60 s below ignition at a material-specific temperature (smoke from pyrolysis, not flaming) | microgravity, ISS, MSG; instrument calibration on the ground before flight | not reported by this source | airflow past the sample 0 to 8 cm/s, baseline 8 cm/s; smoke then aged 11 to 1800 s | over 100 samples; 11 zero-flow tests; 72 TEM grid samples | [SMK-01 p.1 · MEASURED · nominal; SMK-01 p.4–5 · MEASURED · nominal; SMK-01 p.7 · MEASURED; SMK-01 p.10 · MEASURED; SMK-01 p.11 · MEASURED · nominal]
 
 ## Fire suppression
 
@@ -1945,6 +1947,246 @@ Labels: MEASURED = observed or measured in tests; MODELED = from theory or a mod
 - The two facilities are meant to complement each other: SoFIE can test in exploration atmospheres with lower pressure and higher oxygen, the Wind Tunnel takes large samples and easy sample change-out. [OVR-12 p.38 · AUTHOR-INTERPRETATION · nominal]
 
 ## Fire detection
+
+### SAME-2 on the ISS: measured smoke-particle results (SMK-01)
+- SMK-01 (Urban et al., 2012) reports results from the reflight of the Smoke Aerosol Measurement Experiment (SAME-2), run on the International Space Station (ISS) during Expedition 24, July to September 2010; compared with the original flight on Expedition 15, it added diagnostic measurements and a larger test matrix. [SMK-01 p.1 · MEASURED · nominal; SMK-01 p.4 · MEASURED · nominal]
+- SAME flew twice, as SAME-1 in 2007 and SAME-2 in 2010; the paper writes "SAME" for statements that cover both flights and adds the flight number otherwise. [SMK-01 p.2–3 · MEASURED · nominal]
+- Aim: gather enough measurements of smoke from spacecraft fires to allow better design of future detectors. [SMK-01 p.2 · AUTHOR-INTERPRETATION · nominal]
+- Headline result: most of the average smoke-particle sizes lay between 200 nm and 400 nm, while some quiescent (no airflow) cases gave substantially larger particles (materials heated below ignition; airflow past the sample 0 to 8 cm/s; smoke aged 11 to 1800 s; ISS, Expedition 24; not reported by this source: cabin atmosphere). [SMK-01 p.1 · MEASURED; SMK-01 p.4 · MEASURED · nominal]
+
+#### Why spacecraft smoke detection needs its own data (the paper's argument)
+- To design a fire-detection system one needs both the expected signature of the events to be caught and the background levels of the quantities measured. [SMK-01 p.2 · AUTHOR-INTERPRETATION]
+- Detectors on Earth rest on extensive study of terrestrial fires; spacecraft fires have no comparable data set, so today's spacecraft detectors were adapted from terrestrial designs. [SMK-01 p.2 · AUTHOR-INTERPRETATION]
+- With no buoyant flow in low gravity, gases stay longer in a microgravity fire and take longer to travel from the reaction zone to the detector. [SMK-01 p.2 · CITED]
+- Further reasons the authors give for a different smoke size distribution: microgravity fires are structured very differently from normal-gravity (1-g) fires; the few ways to respond to a spacecraft fire make early detection more important; and spacecraft materials differ from the terrestrial ones whose smoke was studied before. [SMK-01 p.2 · AUTHOR-INTERPRETATION]
+- The paper uses "smoke" for aerosols from several processes: unburned, recondensed original polymer or pyrolysis products (liquid or solid), hydrocarbon soot, condensed water vapour and ash. [SMK-01 p.2 · AUTHOR-INTERPRETATION]
+- Soot makes up most of the particulate of an established flaming fire, whereas smouldering and pyrolysis early in fire growth give unburned pyrolysis products and recondensed polymer fragments. [SMK-01 p.2 · AUTHOR-INTERPRETATION]
+- Because a spacecraft has little room, detection has to aim at the early phase rather than an established flaming fire, so the main target is pyrolysis products, not soot. [SMK-01 p.2 · AUTHOR-INTERPRETATION]
+- Earlier spacecraft, as the paper recounts from other work: on Mercury, Gemini and Apollo, small crew quarters and short missions made it reasonable to rely on the astronauts noticing a fire quickly; Skylab carried about 30 UV-sensing fire detectors, limited to line of sight and reported to have false-alarm problems. [SMK-01 p.2 · CITED]
+- Space Shuttle detectors used ionization technology, the most advanced then available, with an inertial separator meant to remove particles above 1–2 micrometres (µm); ISS smoke detectors use near-IR forward light scattering, which makes them most sensitive to particles above about a micrometre, outside the shuttle detector's sensitive range. [SMK-01 p.2 · CITED]
+- Incidents the paper cites: six overheat and failed-component events in the NASA Orbiter fleet plus several similar ones on the ISS, none of which grew into a real fire, with failures becoming likelier as missions lengthen; and the 1997 Mir experience, which showed that an oxygen-generation failure can have serious consequences, so better understanding of spacecraft fire detection is critically needed. [SMK-01 p.2 · CITED]
+- Earlier low-gravity smoke work cited by the paper (Urban et al., ref. 5): low-gravity flames tend to give larger particulate (soot or unburned fuel) than normal-gravity flames; the Comparative Soot Diagnostics (CSD) experiment, on smoke from several spacecraft materials in low gravity, suggested that liquid smoke particles could exceed 1 µm while solid particulate stayed below a micrometre, but CSD yielded too little data on liquid-particle size to guide detector design. [SMK-01 p.2 · CITED]
+- The authors conclude that, given these limited results and theoretical predictions, more confident detector design needs direct knowledge of low-gravity combustion particulate rather than extrapolation from 1-g data. [SMK-01 p.2 · AUTHOR-INTERPRETATION]
+
+#### How SAME measured smoke size: the moment method
+- SAME was built to fill the CSD data gap by obtaining particle-size statistics on orbit, so that results depend less on returning samples to Earth. [SMK-01 p.2 · MEASURED · nominal]
+- The authors call this hard because existing aerosol instruments are usually large, do not fit spacecraft experiment constraints, and some need substantial sample return. [SMK-01 p.2 · AUTHOR-INTERPRETATION]
+- Instead, three separate instruments each measured one moment of the particle-size distribution, and together the moments give aggregate statistics of the distribution. [SMK-01 p.2 · MEASURED · nominal]
+- Smoke came from overheated spacecraft materials, much as in CSD, but SAME controlled sample temperature, flow field and particle ageing time more strictly. [SMK-01 p.2 · MEASURED · nominal]
+- The "moment method" (the paper's name for it; ref. 7): from measured zeroth, first and third moments of the size distribution, log-normal properties yield estimates of the geometric mean diameter and of the geometric standard deviation. [SMK-01 p.3 · AUTHOR-INTERPRETATION]
+
+| Symbol or equation (SMK-01) | Meaning as printed | Citation |
+|---|---|---|
+| f_N(D) = dN/dD (Eq. 1) | number distribution: dN counts the particles per cm³ whose diameter lies between D and D + dD | [SMK-01 p.3 · Eq. 1 · MODELED]
+| M_i = ∫ D^i f_N(D) dD, i = 0, 1, 3 (Eq. 2) | moments: M0 the number concentration, M1 the first moment, M3 the volume or mass concentration moment | [SMK-01 p.3 · Eq. 2 · MODELED]
+| M0 (zeroth moment) | number of particles per unit volume; measured in SAME with a condensation nuclei counter | [SMK-01 p.3 · AUTHOR-INTERPRETATION]
+| M1 (first moment) | "diameter concentration", the integrated diameter per unit volume; roughly proportional to the signal of an ionization detector | [SMK-01 p.3 · AUTHOR-INTERPRETATION]
+| M3 (third moment) | for particles in the Mie scattering regime, 0.3λ to about 3λ (about 0.2 to 2.0 µm for a red laser), the light-scattering signal is roughly proportional to M3 | [SMK-01 p.3 · AUTHOR-INTERPRETATION]
+| D0.5 (also written D̄) and D1.5 (also written D_m̄) | D0.5 = count (arithmetic) mean diameter = M1/M0; D1.5 = diameter of average mass = (M3/M0)^1/3; neither calculation assumes a log-normal distribution | [SMK-01 p.3 · AUTHOR-INTERPRETATION]
+| f_N(D) = N_t / ((2π)^½ D ln σ_g) · exp(−(ln D − ln D_g)² / (2 ln²σ_g)) (Eq. 3) | log-normal number distribution; N_t total number concentration (= M0), D_g geometric mean diameter, σ_g geometric standard deviation | [SMK-01 p.3 · Eq. 3 · MODELED]
+| ln D_g = ∫₀^∞ ln D f_N(D) dD / ∫₀^∞ f_N dD (Eq. 4); ln σ_g = [∫₀^∞ (ln D − ln D_g)² f_N(D) dD / ∫₀^∞ f_N(D) dD]^½ (Eq. 5) | definitions of D_g and σ_g | [SMK-01 p.3 · Eq. 4 · MODELED; SMK-01 p.3 · Eq. 5 · MODELED]
+| D_p = D_g exp(p ln²σ_g) (Eq. 6) | relation for a log-normal distribution; p = 0.5 gives D0.5 and p = 1.5 gives D1.5 | [SMK-01 p.3–4 · Eq. 6 · MODELED]
+| σ_g = exp(ln(D1.5/D0.5))^½ (Eq. 7, exponent placed as printed) | σ_g from the ratio D1.5/D0.5, assuming a log-normal distribution | [SMK-01 p.4 · Eq. 7 · MODELED]
+
+- The log-normal form is widely used for aerosols, non-flaming smoke included, because for most aerosols the bulk of the number concentration sits in the smaller particles (refs. 8, 9). [SMK-01 p.3 · CITED]
+- Worked example (Fig. 1, an illustration, not a test): a log-normal distribution with D_g = 1.0 (unit not printed) and σ_g = 1.6 gives D0.5 = 1.17 µm and D1.5 = 1.39 µm. [SMK-01 p.4 · Fig. 1 · MODELED]
+- The authors state that combining the three moments yields three mean diameters and σ_g, that Cleary, Weinert and Mulholland (ref. 7) discuss how the approach was validated, and that these statistics give a strong basis for designing spacecraft smoke detectors. [SMK-01 p.4 · AUTHOR-INTERPRETATION]
+- SAME-2 diagnostics: a prototype two-moment smoke detector plus three moment measurements, giving number concentration (zeroth moment), diameter concentration (first) and mass concentration (third). [SMK-01 p.1 · MEASURED · nominal]
+- From these the count mean diameter and the diameter of average mass follow directly, and the geometric mean diameter and geometric standard deviation follow once a log-normal distribution is assumed. [SMK-01 p.1 · MODELED · nominal]
+
+#### SAME instruments and hardware
+- The moment measurements used three separate instruments: two industrial-hygiene instruments made by TSI Inc. and one modified residential smoke detector (hardware described more fully in ref. 10). [SMK-01 p.4 · MEASURED · nominal]
+
+| Instrument | Moment it measures | How it works, as the paper describes it | Range and dilution | Citation |
+|---|---|---|---|---|
+| P-Trak™ condensation nuclei counter (TSI Inc.) | zeroth (number concentration) | isopropanol vapour saturates the sample stream; in a cooler zone it condenses on the particles, growing them enough to be counted by light scattering | 0 to 10^5 particles/cm³ and 20 nm to 1 µm diameter; the smoke held about 0.5 × 10^6 to 5 × 10^6 particles/cm³, so the sample was diluted by adding filtered nitrogen at a controlled rate | [SMK-01 p.4 · MEASURED · nominal]
+| Ionization chamber from a residential smoke detector | first | an alpha-particle emitter creates ions inside a DC electric field; the drifting ions carry a current, which falls when ions attach to particles; the charged particles move too slowly to be collected on the electrode | needs concentrations of order 10^5 particles/cm³; no dilution | [SMK-01 p.4 · MEASURED · nominal]
+| DustTrak™ light-scattering monitor (TSI Inc.) | third (mass concentration) | a 90-degree light-scattering signal gives the aerosol mass density; this tracks mass well for terrestrial dust, and extra compensation was applied for the range of materials and particle sizes in SAME; an aerodynamic impactor at the inlet catches particles above a chosen size | 0.001 to 100 mg/m³; diluted in some cases because the smoke was very concentrated | [SMK-01 p.4 · MEASURED · nominal]
+| Multi-Parameter Aerosol Scattering Sensor (MPASS), SAME-2 only, in place of one DustTrak | approximate 3rd and 2nd moments | optical scattering sensor built like the DustTrak but with two detectors at fixed angles; flown as a technology demonstration of a sensor that reads two moments at once (design in ref. 12) | optics optimized for geometric mean diameters of 0.1 to 1.0 µm and geometric standard deviations of 1.6 to 1.9 | [SMK-01 p.6 · MEASURED · nominal; SMK-01 p.6 · MODELED · nominal]
+
+- SAME-1 carried two DustTraks, one with a 1 µm and one with a 10 µm impactor; the difference between their signals gave the fraction of particulate larger than 1 µm. [SMK-01 p.4 · MEASURED · nominal]
+- Because the P-Trak's isopropanol condensate might not flow back to its wick in low gravity (ref. 5), its condensing section was given very small grooves to help the condensate return. [SMK-01 p.4 · MEASURED · nominal]
+- A separate space experiment tested these changes with good results, indicating that the modified counter could be used in low gravity. [SMK-01 p.4 · CITED]
+- The MPASS optics were optimized with a Mie-scattering model for aerosols that scatter light like smoke: geometric mean diameters of 0.1 to 1.0 µm, geometric standard deviations of 1.6 to 1.9, log-normal size distributions, and a fixed real refractive index of 1.6. [SMK-01 p.6 · MODELED · nominal]
+- The authors' premise: reading two moments lets a detector correct its signal for particle size, which earlier single-moment spacecraft detectors cannot (ref. 10), so the alarm can be made less sensitive to the larger particles typical of dust (advantage discussed in ref. 13). [SMK-01 p.6 · AUTHOR-INTERPRETATION]
+- The assembly was installed in the Microgravity Science Glovebox (MSG), an ISS facility that supplies containment, power, data, video and uplink commanding (schematic in Fig. 2). [SMK-01 p.4 · MEASURED · nominal; SMK-01 p.5 · Fig. 2 · MEASURED · nominal]
+- A run: a small material sample was overheated in the smoke generation duct for about 60 s while a moving piston in the ageing chamber (piston volume 6000 cm³) drew the smoke in at a controlled flow; the smoke was held for a preset time so the particles could coagulate, then the piston pushed it into the diagnostics duct holding the moment instruments plus a space shuttle smoke detector and an ISS smoke detector. [SMK-01 p.4–5 · MEASURED · nominal; SMK-01 p.11 · MEASURED · nominal]
+- Fig. 2 labels, as printed: Sample, Smoke generation duct, Video camera and Video FOV, Piston, Aging chamber, Diluter, PTrak, DustTrak, Ion chamber, Diagnostic duct, ISS detector, STS detector, Thermal precipitator. [SMK-01 p.5 · Fig. 2 · MEASURED · nominal]
+- The ageing chamber stands in for the transport time from smoke source to detector; holding times ran from 11 to 1800 s (SAME-2). [SMK-01 p.1 · MEASURED · nominal]
+- While the moment instruments measured, a thermal precipitator laid a sample of the smoke on a Transmission Electron Microscope (TEM) grid by thermophoresis: the aerosol flowed between the grid and a heated wire, which drives the particles onto the grid (Fig. 3 shows the partly disassembled module: inlet manifold on the left, hot-wire leads in a red Vespel block in the middle, outlet valves on the right). [SMK-01 p.5 · Fig. 3 · MEASURED · nominal]
+- After the mission the grids were removed and examined in a TEM for particle morphology and size, an independent check on the size results. [SMK-01 p.1 · MEASURED · nominal; SMK-01 p.5 · MEASURED · nominal]
+
+#### Ground calibration of the moment instruments
+| Set | Aerosol | Gravity, platform | Reference instruments | Not reported by this source | Citation |
+|---|---|---|---|---|---|
+| C8 | monodisperse dioctyl phthalate (DOP) droplets (a spray of DOP diluted in isopropanol, evaporated and recondensed; droplet size set by the dilution; stable for tens of minutes) or polystyrene spheres | ground, before flight | sampled at the same time as the SAME instrument under test: a TSI 3022A particle counter (number), a tapered element oscillating microbalance (mass) and a TSI Electrical Aerosol Detector (first moment) | ambient temperature, pressure, sample flow rate | [SMK-01 p.5 · MEASURED · nominal]
+
+- Calibration was needed to interpret the flight data and was done on the ground before flight; the DOP droplet generator follows the approach of Mulholland and Liu (ref. 11) (conditions C8). [SMK-01 p.5 · MEASURED · nominal]
+- P-Trak (Fig. 4): the effect of particle diameter became more evident as number concentration rose (conditions C8, DOP droplets of 100, 600 and 1200 nm). [SMK-01 p.5–6 · Fig. 4 · MEASURED]
+- For the flight data a separate P-Trak correlation was built for each particle size, and the one closest to the initial estimate of average particle size was applied. [SMK-01 p.5 · MODELED · nominal]
+- Ionization chamber (Fig. 5): particle size had little effect, so one correlation served for all sizes (conditions C8, DOP droplets of 100 to 1200 nm). [SMK-01 p.5–6 · Fig. 5 · MEASURED]
+- Theory predicts that the DustTrak response changes non-monotonically as particle size grows and varies with the particles' refractive index. [SMK-01 p.5 · AUTHOR-INTERPRETATION]
+- So the DustTrak was calibrated for the smoke of each material, on the expectation that refractive properties stay the same while average size changes; for the reported results it was calibrated directly, per smoke source, against mass concentration from a tapered element oscillating microbalance, and estimated material densities gave the diameter of average mass of each sample. [SMK-01 p.5–6 · MEASURED · nominal]
+- Fig. 4 plots P-Trak output (x, count/cc) against the TSI 3022A reference (y, count/cc) for 100 nm, 600 nm and 1200 nm droplets (conditions C8); the table gives values read from the figure (read tolerance ±25,000 count/cc on x and ±50,000 on y; the two right-hand columns are medians of the markers within ±3,000 of that P-Trak output). [SMK-01 p.6 · Fig. 4 · MEASURED · nominal]
+
+| Set | Droplet size | Highest-output point: P-Trak → reference, count/cc | Highest reference value in the series | Reference at P-Trak 100,000 | Reference at P-Trak 200,000 | Citation |
+|---|---|---|---|---|---|---|
+| C8 | 100 nm | ~254,000 → ~497,000 | ~506,000 at P-Trak ~244,000 | ~162,000 | ~349,000 | [SMK-01 p.6 · Fig. 4 · MEASURED · ~fig]
+| C8 | 600 nm | ~280,000 → ~493,000 | ~500,000 at P-Trak ~269,000 | ~153,000 | ~317,000 | [SMK-01 p.6 · Fig. 4 · MEASURED · ~fig]
+| C8 | 1200 nm | ~289,000 → ~466,000 | ~478,000 at P-Trak ~284,000 | ~143,000 | ~300,000 | [SMK-01 p.6 · Fig. 4 · MEASURED · ~fig]
+
+- Fig. 5 plots ionization chamber output (x, volts) against the Electrical Aerosol Detector's first-moment output (y, "EAD Output", no unit printed) for 100, 150, 300, 600, 750 and 1200 nm droplets (conditions C8); every series starts at about 4.62 to 4.65 V with EAD output near 0 (read tolerance ±0.25 V on x and ±25 on y; the two right-hand columns of the table are medians of the markers within ±0.03 V). [SMK-01 p.6 · Fig. 5 · MEASURED · nominal, ~fig]
+
+| Set | Droplet size | Highest-output point: volts → EAD output | Highest EAD output, if elsewhere | EAD output at 5.0 V | EAD output at 5.5 V | Citation |
+|---|---|---|---|---|---|---|
+| C8 | 100 nm | ~5.98 → ~259 | — | ~55 | ~154 | [SMK-01 p.6 · Fig. 5 · MEASURED · ~fig]
+| C8 | 150 nm | ~6.13 → ~280 | ~284 at ~6.10 V | ~55 | ~135 | [SMK-01 p.6 · Fig. 5 · MEASURED · ~fig]
+| C8 | 300 nm | ~6.12 → ~277 | — | ~51 | ~156 | [SMK-01 p.6 · Fig. 5 · MEASURED · ~fig]
+| C8 | 600 nm | ~6.63 → ~423 | ~435 at ~6.56 V | ~53 | ~144 | [SMK-01 p.6 · Fig. 5 · MEASURED · ~fig]
+| C8 | 750 nm | ~6.46 → ~351 | ~353 at ~6.39 V | ~46 | ~145 | [SMK-01 p.6 · Fig. 5 · MEASURED · ~fig]
+| C8 | 1200 nm | ~6.13 → ~266 | ~270 (voltage not read) | ~48 | ~151 | [SMK-01 p.6 · Fig. 5 · MEASURED · ~fig]
+
+#### SAME-2 test matrix
+- Materials (p.7): more than 100 samples were tested (printed as "Over 100 sample materials"), covering 6 materials: Teflon™, Kapton™, Pyrell™, silicone rubber, cellulose (lamp wick) and dibutyl phthalate on a porous wick. [SMK-01 p.7 · MEASURED]
+- The abstract instead names five materials representative of those in spacecraft (Teflon, Kapton, cotton, silicone rubber and Pyrell), heated below their ignition point under conditions controlled for repeatable sample surface temperature and airflow (see Conflicts for the count). [SMK-01 p.1 · MEASURED · nominal]
+- Airflow past the sample while it was heated: baseline 8 cm/s, runs down to 2 cm/s, and a limited set with no airflow; the abstract gives the range as quiescent to 8 cm/s. [SMK-01 p.7 · MEASURED; SMK-01 p.1 · MEASURED · nominal]
+- The zero-flow condition was not in the original SAME hardware design; it was run in 11 tests by changing how the hardware's valves were operated. [SMK-01 p.11 · MEASURED · nominal]
+- Sample temperature was chosen per material from its pyrolysis properties: the baseline gave 1 to 2 mg of weight loss in 60 s with a reasonable signal on every moment instrument, and further, higher temperatures were picked that would not saturate the instruments. [SMK-01 p.7 · MEASURED · nominal]
+- Typical runs gave a few million particles per cm³ (cc) and mass concentrations of 2 to 15 mg/m³, though some runs had fewer particles; the instruments usually sampled billions of particles, and several million in the test with the lowest concentration (SAME-2, ISS MSG). [SMK-01 p.7 · MEASURED]
+- The TEM grids recovered from the SAME-1 thermal precipitators were contaminated with extraneous particles, whose origin was still under investigation at the paper's date. [SMK-01 p.7 · MEASURED]
+- For SAME-2 stricter assembly controls were followed, and many good particle images were obtained. [SMK-01 p.7 · MEASURED · nominal]
+
+#### Measured diameters for baseline runs (Table 1)
+| Set | Material and heating | Airflow past the sample | Gravity, platform | Instruments | Not reported by this source | Citation |
+|---|---|---|---|---|---|---|
+| C9 | the material in the row, overheated about 60 s below ignition in the smoke generation duct at its baseline temperature (set for 1 to 2 mg weight loss in 60 s) | 8 cm/s (baseline) | microgravity, ISS, MSG, SAME-2 (2010) | P-Trak (M0), ionization chamber (M1), DustTrak calibrated per smoke source (M3) | sample temperature values, sample size, cabin atmosphere, number of runs behind each row | [SMK-01 p.1 · MEASURED · nominal; SMK-01 p.4–6 · MEASURED · nominal; SMK-01 p.7 · MEASURED · nominal]
+
+- Table 1 gives diameters in micrometres for the baseline runs of each material, unaged and aged 720 s; its diameter-of-average-mass column is headed "(M3/M0)", while p.3 defines D1.5 as (M3/M0)^1/3. [SMK-01 p.3 · AUTHOR-INTERPRETATION; SMK-01 p.7 · Table 1 · AUTHOR-INTERPRETATION]
+
+| Set | Material | Ageing | Geometric mean diameter D_g, µm | Count mean diameter M1/M0, µm | Diameter of average mass, µm | σ_g | Citation |
+|---|---|---|---|---|---|---|---|
+| C9 | Kapton | unaged | 0.042 | 0.056 | 0.101 | 2.154 | [SMK-01 p.7 · Table 1 · MEASURED]
+| C9 | Kapton | aged 720 s | 0.089 | 0.109 | 0.161 | 1.872 | [SMK-01 p.7 · Table 1 · MEASURED]
+| C9 | Lampwick | unaged | 0.090 | 0.128 | 0.258 | 2.312 | [SMK-01 p.7 · Table 1 · MEASURED]
+| C9 | Lampwick | aged 720 s | 0.229 | 0.276 | 0.398 | 1.834 | [SMK-01 p.7 · Table 1 · MEASURED]
+| C9 | Silicone | unaged | 0.128 | 0.196 | 0.465 | 2.530 | [SMK-01 p.7 · Table 1 · MEASURED]
+| C9 | Silicone | aged 720 s | 0.269 | 0.355 | 0.619 | 2.108 | [SMK-01 p.7 · Table 1 · MEASURED]
+| C9 | Teflon | unaged | 0.081 | 0.101 | 0.170 | 2.198 | [SMK-01 p.7 · Table 1 · MEASURED]
+| C9 | Teflon | aged 720 s | 0.070 | 0.105 | 0.232 | 2.442 | [SMK-01 p.7 · Table 1 · MEASURED]
+| C9 | Pyrell | unaged | 0.149 | 0.204 | 0.384 | 2.211 | [SMK-01 p.7 · Table 1 · MEASURED]
+| C9 | Pyrell | aged 720 s | 0.293 | 0.359 | 0.539 | 1.892 | [SMK-01 p.7 · Table 1 · MEASURED]
+
+- The count mean diameter and the diameter of average mass do not depend on the shape of the distribution, but D_g and σ_g rest on the log-normal assumption, which the data cannot test directly because that would take an instrument that sorts particles into size bins. [SMK-01 p.7 · AUTHOR-INTERPRETATION]
+- Two signs support a log-normal approximation (conditions C9): in the cases listed, the count mean diameter is below the diameter of average mass, a necessary condition for a log-normal distribution (Fig. 1); and every σ_g is physically reasonable, above 1 (Eq. 3) and below about 3.5, the practical ceiling for aerosol geometric standard deviations. [SMK-01 p.7 · AUTHOR-INTERPRETATION; SMK-01 p.7 · Table 1 · MEASURED]
+- The authors summarise the ageing results as a substantial increase in the observed diameters, with the count mean diameter, as they expected, increasing more than the diameter of average mass (conditions C9, unaged against aged 720 s; see Conflicts for the Table 1 values). [SMK-01 p.7 · AUTHOR-INTERPRETATION]
+- Teflon is the exception in Table 1: with ageing its D_g falls from 0.081 to 0.070 µm and its σ_g rises from 2.198 to 2.442, while its count mean (0.101 to 0.105 µm) and diameter of average mass (0.170 to 0.232 µm) rise (conditions C9). [INFERRED from: SMK-01 p.7]
+- The authors' explanation: coagulation joins particles two at a time, and in a polydisperse aerosol a collision usually pairs one of the smallest, most mobile particles with one of the largest, which hardly changes the large particle but removes the small one; that shifts the count mean (linear in diameter) more than the diameter of average mass (cube root). [SMK-01 p.7 · AUTHOR-INTERPRETATION]
+- Theory cited by the paper (ref. 14) predicts that this process yields a near log-normal distribution whose standard deviation tends toward a self-preserving value of 1.32. [SMK-01 p.7 · CITED]
+- Overall, Teflon and Kapton gave very small particles, while lamp wick and silicone gave substantially larger diameters of average mass, especially when aged (conditions C9). [SMK-01 p.8 · MEASURED]
+- Reported earlier (ref. 10): DustTrak results for lamp wick and silicone showed that substantial parts of the particle distribution had aerodynamic diameters above 1 µm. [SMK-01 p.8 · CITED]
+- Detector implication the authors draw: the much smaller Kapton and Teflon particles will be hard for light-scattering devices to detect, whereas the large lamp-wick and silicone particles would give very large light-scattering signals. [SMK-01 p.8 · AUTHOR-INTERPRETATION]
+- As Urban et al. (ref. 13) discuss, without some particle-size discrimination it is hard to give a system enough gain to alarm on the weak signal of small particles such as Teflon and Kapton smoke without excessive nuisance alarms from large dust particles. [SMK-01 p.8 · CITED]
+- Hence, the authors suggest, detecting these particles against the background environment will need a system that measures more than one moment of the size distribution. [SMK-01 p.8 · AUTHOR-INTERPRETATION]
+
+#### Effect of airflow past the sample on particle size (Figs. 6–8)
+- Figures 6, 7 and 8 plot the lampwick, Kapton and Teflon results against duct air velocity; the authors read them as showing a strong rise in particle size at low flow (SAME-2, ISS). [SMK-01 p.8 · AUTHOR-INTERPRETATION; SMK-01 p.8 · Fig. 6 · MEASURED; SMK-01 p.8 · Fig. 7 · MEASURED; SMK-01 p.9 · Fig. 8 · MEASURED; SMK-01 p.1 · MEASURED · nominal; SMK-01 p.4 · MEASURED · nominal]
+- From this the authors expect smoke trapped inside an avionics enclosure to be substantially larger than smoke released into ventilated spaces. [SMK-01 p.8 · AUTHOR-INTERPRETATION]
+
+| Set | Material (figure) | Heating and ageing | Airflow past the sample | Gravity, platform | Plotted measures | Not reported by this source | Citation |
+|---|---|---|---|---|---|---|---|
+| C10 | lampwick (Fig. 6), Kapton (Fig. 7), Teflon (Fig. 8) | not stated for these figures | as plotted, 0 to about 8 cm/s (Kapton: no point at 0) | ISS, SAME-2 | arithmetic mean diameter, diameter of average mass and geometric mean diameter (µm, left axis) and σ_g (right axis), each with a linear least-squares fit; repeatability of the diameters estimated at ±15 % | sample temperature, ageing time, cabin atmosphere, run labels of the points | [SMK-01 p.8 · Fig. 6 · MEASURED · nominal; SMK-01 p.8 · Fig. 7 · MEASURED · nominal; SMK-01 p.9 · Fig. 8 · MEASURED · nominal; SMK-01 p.1 · MEASURED · nominal; SMK-01 p.4 · MEASURED · nominal]
+
+- Values read from Figs. 6–8 are approximate (read tolerance ±0.05 µm in Figs. 6 and 8, ±0.025 µm in Fig. 7, ±0.5 for σ_g); the highest-velocity markers sit at about 8.1 on the axis (Kapton also has one point per series at about 8.0), while the text gives the baseline as 8 cm/s; where one velocity has several points, each series lists them in reading order, not matched across series (conditions C10). [SMK-01 p.8 · Fig. 6 · MEASURED · ~fig; SMK-01 p.8 · Fig. 7 · MEASURED · ~fig; SMK-01 p.9 · Fig. 8 · MEASURED · ~fig; SMK-01 p.7 · MEASURED · nominal]
+
+| Set | Material (figure) | Air velocity, cm/s | Arithmetic mean diameter, µm | Diameter of average mass, µm | Geometric mean diameter, µm | σ_g | Citation |
+|---|---|---|---|---|---|---|---|
+| C10 | lampwick (Fig. 6) | 0 (two points) | ~0.167; ~0.441 | ~0.401; ~0.598 | ~0.107; ~0.379 | ~2.54; ~1.73 | [SMK-01 p.8 · Fig. 6 · MEASURED · ~fig]
+| C10 | lampwick (Fig. 6) | 2 | ~0.293 | ~0.478 | ~0.229 | ~2.00 | [SMK-01 p.8 · Fig. 6 · MEASURED · ~fig]
+| C10 | lampwick (Fig. 6) | ~8 | ~0.123 | ~0.288 | ~0.080 | ~2.50 | [SMK-01 p.8 · Fig. 6 · MEASURED · ~fig]
+| C10 | lampwick, fit lines (Fig. 6) | 0 → ~8.1 | ~0.314 → ~0.129 | ~0.510 → ~0.296 | ~0.251 → ~0.084 | ~2.08 → ~2.46 | [SMK-01 p.8 · Fig. 6 · MODELED · ~fig]
+| C10 | Kapton (Fig. 7) | 2 | ~0.152 | ~0.259 | ~0.116 | ~2.07 | [SMK-01 p.8 · Fig. 7 · MEASURED · ~fig]
+| C10 | Kapton (Fig. 7) | 4 | ~0.114 | ~0.212 | ~0.084 | ~2.19 | [SMK-01 p.8 · Fig. 7 · MEASURED · ~fig]
+| C10 | Kapton (Fig. 7) | ~8.0 | ~0.094 | ~0.181 | ~0.067 | ~2.24 | [SMK-01 p.8 · Fig. 7 · MEASURED · ~fig]
+| C10 | Kapton (Fig. 7) | ~8.1 (four points) | ~0.058; ~0.058; ~0.049; ~0.056 | ~0.105; ~0.088; ~0.110; ~0.097 | ~0.043; ~0.047; ~0.032; ~0.043 | ~2.15; ~1.89; ~2.46; ~2.08 | [SMK-01 p.8 · Fig. 7 · MEASURED · ~fig]
+| C10 | Kapton, fit lines (Fig. 7) | ~2 → ~8.1 | ~0.149 → ~0.063 | ~0.261 → ~0.117 | ~0.112 → ~0.046 | ~2.11 → ~2.19 | [SMK-01 p.8 · Fig. 7 · MODELED · ~fig]
+| C10 | Teflon (Fig. 8) | 0 (two points) | ~0.196; ~0.172 | ~0.280; ~0.305 | ~0.164; ~0.129 | ~1.81; ~2.13 | [SMK-01 p.9 · Fig. 8 · MEASURED · ~fig]
+| C10 | Teflon (Fig. 8) | 2 | ~0.275 | ~0.360 | ~0.240 | ~1.68 | [SMK-01 p.9 · Fig. 8 · MEASURED · ~fig]
+| C10 | Teflon (Fig. 8) | ~8 (two points) | ~0.208; ~0.148 | ~0.251; ~0.252 | ~0.189; ~0.113 | ~1.54; ~2.07 | [SMK-01 p.9 · Fig. 8 · MEASURED · ~fig]
+| C10 | Teflon, fit lines (Fig. 8) | 0 → ~8.1 | ~0.211 → ~0.187 | ~0.315 → ~0.260 | ~0.174 → ~0.160 | ~1.90 → ~1.79 | [SMK-01 p.9 · Fig. 8 · MODELED · ~fig]
+
+#### Smoke mass concentration and the zero-flow case
+- Expected: at a fixed wire temperature, more convective flow should raise the pyrolysis rate and with it the mass concentration of the aerosol. [SMK-01 p.11 · AUTHOR-INTERPRETATION]
+- Found: only some results follow this; mass concentration rose slightly with flow for silicone rubber, lampwick and Pyrell and fell for Teflon and Kapton (fixed wire temperature, SAME-2, ISS; not reported by this source: the wire temperatures, flow values and ageing times behind this statement). [SMK-01 p.11 · MEASURED]
+- A possible reason the authors give: a fixed wire temperature need not give the same sample-surface temperature distribution at different airspeeds; the variations should be small, but because pyrolysis kinetics depend exponentially on temperature, a changed heat-transport environment could shift the surface temperature between the wire coils. [SMK-01 p.11 · AUTHOR-INTERPRETATION]
+- Zero flow is a special case: in microgravity (μ-g) the transport is then governed by molecular diffusion and thermal expansion. [SMK-01 p.11 · AUTHOR-INTERPRETATION]
+- Estimate: over 60 s the gases diffuse about 4 cm, so for a cube the smoke stays in roughly 64 cm³ instead of spreading through the 6000 cm³ piston; with as many particles as in a flow case, the starting concentration is about 50 times higher, which should mean more coagulation and larger particles. [SMK-01 p.11 · MODELED]
+- Found: for all materials the diameter of average mass was 30 % to 40 % larger in the zero-flow tests than in the flow tests (SAME-2, ISS, μ-g; not reported by this source: heating level, ageing time and flow speed of the compared tests). [SMK-01 p.11 · MEASURED]
+- Zero flow gave a very high particulate concentration, in which ageing ran faster than in the dilute ageing chamber. [SMK-01 p.11 · AUTHOR-INTERPRETATION]
+- Side effect: about half the smoke left the system by diffusing out of the inlet into the MSG volume, so total particle counts were lower than normal and the TEM grids held few particles (zero-flow tests). [SMK-01 p.11–12 · MEASURED]
+- The authors stress that this condition exists only in low gravity: in the same experiment at 1 g, buoyancy of the rising gases would greatly widen the mixing zone, so the larger zero-flow particles matter when developing better spacecraft fire detectors. [SMK-01 p.12 · AUTHOR-INTERPRETATION]
+- With zero flow, heat moves mainly by conduction rather than convection, which the authors expect to raise the gas temperature markedly compared with 8 cm/s airflow. [SMK-01 p.12 · AUTHOR-INTERPRETATION]
+- Found: Pyrell smoke changed shape, from fractal-like clusters of up to 30 primary spheres at 8 cm/s airflow to spherical particles at zero flow (TEM images, Fig. 13, Runs 63 and 95). [SMK-01 p.12 · Fig. 13 · MEASURED · single-test]
+
+#### Particle morphology on the TEM grids
+- In all, 72 smoke samples were collected on TEM grids with the thermal precipitator and imaged to see how particle morphology varied with flow, material and heating level (SAME-2). [SMK-01 p.10 · MEASURED]
+- Silicone rubber and DBP showed no particles visible in the TEM. [SMK-01 p.10 · MEASURED]
+- The presumed reason the authors give: the particles were condensed liquid that evaporated before they could be imaged. [SMK-01 p.10 · AUTHOR-INTERPRETATION]
+- The authors state that liquid particles coalesce on collision into larger droplets, which they give as the case for the lampwick, silicone rubber and Kapton smokes, and that solid particles keep their structure when they stick, forming low-density fractal-like agglomerates of many primary particles, which they give as the case for the Teflon and Pyrell smokes; they cite Fig. 11, whose images are of Teflon, Pyrell, lampwick and Kapton (see Conflicts for silicone rubber). [SMK-01 p.11 · AUTHOR-INTERPRETATION; SMK-01 p.10 · Fig. 11 · MEASURED]
+
+| Set | Sampling and imaging | Gravity, platform | Not reported by this source | Citation |
+|---|---|---|---|---|
+| C11 | smoke laid on a TEM grid by the thermal precipitator, imaged in a TEM after the flight; scale bar 2 µm in Figs. 11 and 12, 5 µm in Fig. 13 | ISS, MSG, SAME-2 | heating level and ageing time of each run, cabin atmosphere | [SMK-01 p.4 · MEASURED · nominal; SMK-01 p.5 · MEASURED · nominal; SMK-01 p.7 · MEASURED · nominal; SMK-01 p.10 · Fig. 11 · MEASURED · nominal; SMK-01 p.11 · Fig. 12 · MEASURED · nominal; SMK-01 p.12 · Fig. 13 · MEASURED · nominal]
+
+| Set | Run | Material | Airflow while heated | Figure | What the image shows | Citation |
+|---|---|---|---|---|---|---|
+| C11 | Run 56 | Teflon | not reported by this source | Fig. 11 | solid particles stuck into an agglomerate structure | [SMK-01 p.10 · Fig. 11 · MEASURED · single-test; SMK-01 p.11 · AUTHOR-INTERPRETATION]
+| C11 | Run 54 | Lampwick | not reported by this source | Fig. 11 | liquid particles coalesced into droplets | [SMK-01 p.10 · Fig. 11 · MEASURED · single-test; SMK-01 p.11 · AUTHOR-INTERPRETATION]
+| C11 | Run 62 | Kapton | not reported by this source | Fig. 11; Fig. 12 (unaged and aged) | liquid particles coalesced into droplets; after ageing the smallest particles are gone | [SMK-01 p.10 · Fig. 11 · MEASURED · single-test; SMK-01 p.11 · AUTHOR-INTERPRETATION; SMK-01 p.11 · Fig. 12 · MEASURED · single-test]
+| C11 | Run 63 | Pyrell | 8 cm/s (Fig. 13 label) | Fig. 11; Fig. 12 (unaged and aged); Fig. 13 | agglomerates of fractal-like clusters; after ageing the smallest particles are gone | [SMK-01 p.10 · Fig. 11 · MEASURED · single-test; SMK-01 p.11 · AUTHOR-INTERPRETATION; SMK-01 p.11 · Fig. 12 · MEASURED · single-test; SMK-01 p.12 · Fig. 13 · MEASURED · single-test]
+| C11 | Run 95 | Pyrell | none | Fig. 13 | spherical particles | [SMK-01 p.12 · Fig. 13 · MEASURED · single-test]
+| C11 | Run 80 | Lampwick | 8 cm/s; the lampwick no-airflow panel is also labelled Run 80, as printed | Fig. 13 | images shown; the text gives no separate description of them | [SMK-01 p.12 · Fig. 13 · MEASURED · single-test]
+
+- Ageing raised the average particle size (Table 1), but that change is hard to see in the TEM images; the clearest visible change is that the smallest particles disappear (Fig. 12; ageing time not given in its caption). [SMK-01 p.10 · MEASURED; SMK-01 p.11 · Fig. 12 · MEASURED]
+- The authors' explanation: the smallest particles are the most mobile and are readily absorbed by larger ones; for semi-liquid particles this barely changes the larger particle's size, since diameter goes as the cube root of volume, and non-liquid small particles stuck to larger ones are unlikely to be visible in the TEM anyway. [SMK-01 p.10 · AUTHOR-INTERPRETATION]
+- How the authors picture smoke forming: as the wire heats the sample, chemical bonds break and pyrolysis releases gaseous products, possibly including partly oxidized species from reaction with oxygen. [SMK-01 p.11 · AUTHOR-INTERPRETATION]
+- Moving away from the wire, the gases cool and their species concentrations fall through conduction, diffusion and convection; once the pyrolysis gas passes a critical supersaturation, smoke particles nucleate and grow fast by condensation, within milliseconds or less. [SMK-01 p.11 · AUTHOR-INTERPRETATION]
+- Over longer times, up to about 10^3 s, the growing particles collide through Brownian motion and stick together (coagulation). [SMK-01 p.11 · AUTHOR-INTERPRETATION]
+- Per the authors, what mainly shapes the smoke in these tests is low gravity, the convective flow past the heated wire, the wire's temperature and the ageing time. [SMK-01 p.11 · AUTHOR-INTERPRETATION]
+- A hotter wire pyrolyzes more of the sample, and the extra gas condenses on the nuclei, giving a higher aerosol mass concentration and a larger diameter of average mass. [SMK-01 p.11 · AUTHOR-INTERPRETATION]
+
+#### Two-moment detector (MPASS) results
+- Purpose: show how well a two-moment smoke detector works; a smoke detector is not calibrated for particular materials but carries one calibration for all conditions, so the aim is a flat response, whatever the smoke type or particle size, with the signal proportional only to one chosen moment such as mass or number concentration. [SMK-01 p.9 · MEASURED · nominal]
+
+| Set | Data used | Correlation | Platform | Not reported by this source | Citation |
+|---|---|---|---|---|---|
+| C12 | every SAME-2 test point with a signal-to-noise ratio above 2, whatever the material, heating rate or ageing time | least-squares, third-order correlation predicting number and mass concentration from the MPASS output, with the other SAME measurements (number and mass concentration) as reference | ISS, SAME-2 | number of test points, cabin atmosphere | [SMK-01 p.9 · MODELED · nominal; SMK-01 p.4 · MEASURED · nominal]
+
+- Figs. 9 (mass-normalized) and 10 (number-normalized) plot the normalized single-channel output ("channel 1") and the normalized correlation result ("2 channel parameter fit") against geometric mean diameter; an ideal response is a horizontal line, and the scatter is expressed as Δ, the least-squares variance relative to the mean (conditions C12). [SMK-01 p.9 · AUTHOR-INTERPRETATION; SMK-01 p.10 · Fig. 9 · MEASURED · nominal; SMK-01 p.10 · Fig. 10 · MEASURED · nominal]
+- Axes: Fig. 9 y = volts/(mg/m³), 0 to 0.1; Fig. 10 y = volts/(#/cm³), 0 to 6 × 10^-5; in both, x = geometric mean diameter, 0 to 0.9 µm. [SMK-01 p.10 · Fig. 9 · MEASURED · nominal; SMK-01 p.10 · Fig. 10 · MEASURED · nominal]
+- Printed Δ values (conditions C12): mass-normalized response, Δ = 0.18391 for the two-channel fit against 0.51716 for channel 1; number-normalized response, Δ = 0.83012 for the two-channel fit against 1.7181 for channel 1. [SMK-01 p.10 · Fig. 9 · MEASURED; SMK-01 p.10 · Fig. 10 · MEASURED]
+- Found: in both figures the correlation cuts the relative variance by roughly a factor of at least 2 compared with a conventional single-output sensor (conditions C12). [SMK-01 p.9 · MEASURED; SMK-01 p.10 · Fig. 9 · MEASURED; SMK-01 p.10 · Fig. 10 · MEASURED]
+- Found: the variance of the mass response is substantially lower than that of the number response (conditions C12). [SMK-01 p.9 · MEASURED; SMK-01 p.10 · Fig. 9 · MEASURED; SMK-01 p.10 · Fig. 10 · MEASURED]
+- The authors note this fits the MPASS having been optimized originally for mass concentration, not number concentration. [SMK-01 p.9 · AUTHOR-INTERPRETATION]
+- The plotted geometric mean diameters run from about 0.03 to about 0.43 µm, plus one isolated point at about 0.84 µm; in Fig. 10 many points of both series sit near 0 below about 0.2 µm (conditions C12; values read from raster images, read tolerance ±0.05 µm on x, ±0.01 volts/(mg/m³) in Fig. 9 and ±0.5 × 10^-5 volts/(#/cm³) in Fig. 10). [SMK-01 p.10 · Fig. 9 · MEASURED · ~fig; SMK-01 p.10 · Fig. 10 · MEASURED · ~fig]
+
+| Set | Figure, series | Value at the largest diameter (~0.84 µm) | Spread of the series | Citation |
+|---|---|---|---|---|
+| C12 | Fig. 9 (mass-normalized), channel 1 | ~0.055 volts/(mg/m³) | ~0.005 (lowest, at ~0.11 to ~0.20 µm) to ~0.078 (highest, at ~0.30 µm) | [SMK-01 p.10 · Fig. 9 · MEASURED · ~fig]
+| C12 | Fig. 9 (mass-normalized), 2 channel parameter fit | ~0.036 volts/(mg/m³) | ~0.021 (lowest, at ~0.19 µm) to ~0.052 (highest, at ~0.19 and ~0.28 µm) | [SMK-01 p.10 · Fig. 9 · MEASURED · ~fig]
+| C12 | Fig. 10 (number-normalized), channel 1 | ~5.9 × 10^-5 volts/(#/cm³) | below ~0.43 µm: ~0 to ~2.3 × 10^-5 (highest at ~0.32 µm) | [SMK-01 p.10 · Fig. 10 · MEASURED · ~fig]
+| C12 | Fig. 10 (number-normalized), 2 channel parameter fit | ~1.0 × 10^-5 volts/(#/cm³) | below ~0.43 µm: ~0 to ~1.6 × 10^-5 (highest at ~0.07 µm) | [SMK-01 p.10 · Fig. 10 · MEASURED · ~fig]
+
+- The authors' reading: with suitable processing, the MPASS output can follow either number or mass concentration over a wide range of particle sizes and material compositions; by combining two moments it scales its response to the particle size, giving a truer measure of how much smoke is present than a single-moment detector. [SMK-01 p.9 · AUTHOR-INTERPRETATION]
+- They add that the MPASS can therefore tell a strong signal from dense smoke apart from a strong signal from a thinner cloud of very large dust particles, which can cut false smoke alarms. [SMK-01 p.9 · AUTHOR-INTERPRETATION]
+
+#### Authors' conclusions for smoke-detector design, with their limits
+- Smoke particle size distributions differed substantially between the materials tested (the conclusions say five spacecraft materials). [SMK-01 p.12 · AUTHOR-INTERPRETATION]
+- Under the SAME test conditions, every sample gave large numbers of sub-micrometre particles that an ionization smoke detector picks up readily. [SMK-01 p.12 · AUTHOR-INTERPRETATION]
+- The ageing results suggest that some materials, silicone rubber for one, can make smoke that grows to sizes better suited to light-scattering detection. [SMK-01 p.12 · AUTHOR-INTERPRETATION]
+- Zero flow gave smoke particles 2 to 3 times larger than the nominal 8 cm/s flow (SAME, ISS; the sentence does not name the size measure; compare the 30 % to 40 % figure above and see Conflicts). [SMK-01 p.12 · MEASURED]
+- Limit the authors state: real spacecraft fires involve an even wider array of materials and broader flow and temperature conditions than were tested, so credible pre-fire overheat events can be expected to give broad smoke size distributions. [SMK-01 p.12 · AUTHOR-INTERPRETATION]
+- Detection methods that measure more than one moment of the size distribution may detect better and reject false alarms better than single-moment detectors; the results from the prototype two-moment MPASS were very encouraging, showing real potential to respond across a broad particle range without excessive nuisance alarms. [SMK-01 p.12 · AUTHOR-INTERPRETATION]
+- The TEM results show that fire particulate can be expected to take a broad range of morphologies, shaped by heating rate, material and flow conditions. [SMK-01 p.12 · AUTHOR-INTERPRETATION]
 
 ### Smoke and particles in microgravity
 - Detecting fires in spacecraft is harder than on Earth because buoyancy affects the properties of the smoke a fire gives off, and spacecraft need fast detection with few false alarms. [OVR-12 p.26 · AUTHOR-INTERPRETATION]
@@ -2208,8 +2450,12 @@ Labels: MEASURED = observed or measured in tests; MODELED = from theory or a mod
 | CLD | Coflow Laminar Diffusion | [OVR-12 p.53 · AUTHOR-INTERPRETATION]
 | CM | Combustion Module | [OVR-12 p.53 · AUTHOR-INTERPRETATION]
 | CNES | French Space Agency | [OVR-12 p.53 · AUTHOR-INTERPRETATION]
+| CSD | Comparative Soot Diagnostics, an earlier low-gravity experiment on smoke from several spacecraft materials | [SMK-01 p.2 · CITED]
+| DBP | dibutyl phthalate: the p.7 material list names dibutyl-phthalate deposited on a porous wick, and p.10 reports TEM results for "DBP" | [INFERRED from: SMK-01 p.7; SMK-01 p.10]
 | DECLIC | DEvice for the study of Critical LIquids and Crystallization | [OVR-12 p.53 · AUTHOR-INTERPRETATION]
+| DOP | dioctyl phthalate, used to make monodisperse calibration droplets | [SMK-01 p.5 · MEASURED · nominal]
 | E-FIELD | Electric-Field Effects on Laminar Diffusion | [OVR-12 p.53 · AUTHOR-INTERPRETATION]
+| EAD | the TSI Electrical Aerosol Detector, the first-moment reference in the SAME ground calibration; Fig. 5 labels its axis "EAD Output (first moment)" | [INFERRED from: SMK-01 p.5; SMK-01 p.6]
 | ELF | Enclosed Laminar Flames | [OVR-12 p.53 · AUTHOR-INTERPRETATION]
 | EXPRESS | EXpedite the Processing of Experiments to Space Station | [OVR-12 p.53 · AUTHOR-INTERPRETATION]
 | FLEX | Flame Extinguishment Experiment | [OVR-12 p.53 · AUTHOR-INTERPRETATION]
@@ -2220,11 +2466,13 @@ Labels: MEASURED = observed or measured in tests; MODELED = from theory or a mod
 | LSP | Laminar Soot Processes | [OVR-12 p.53 · AUTHOR-INTERPRETATION]
 | MAMS | Microgravity Acceleration Measurement System | [OVR-12 p.53 · AUTHOR-INTERPRETATION]
 | MDCA | Multi-user Droplet Combustion Apparatus | [OVR-12 p.53 · AUTHOR-INTERPRETATION]
+| MPASS | Multi-Parameter Aerosol Scattering Sensor | [SMK-01 p.6 · MEASURED · nominal]
 | MSG | Microgravity Science Glovebox | [OVR-12 p.53 · AUTHOR-INTERPRETATION]
 | PIMS | Principal Investigator Microgravity Services | [OVR-12 p.53 · AUTHOR-INTERPRETATION]
 | PMMA | polymethylmethacrylate | [OVR-12 p.53 · AUTHOR-INTERPRETATION]
 | POC | Point of Contact | [OVR-12 p.53 · AUTHOR-INTERPRETATION]
 | SAME | Smoke Aerosol Measurement Experiment | [OVR-12 p.53 · AUTHOR-INTERPRETATION]
+| SAME-1, SAME-2 | the first SAME flight (2007, ISS Expedition 15) and its reflight (2010, ISS Expedition 24) | [SMK-01 p.1 · MEASURED · nominal; SMK-01 p.2–3 · MEASURED · nominal; SMK-01 p.4 · MEASURED · nominal]
 | SAMS | Space Acceleration Measurement System | [OVR-12 p.53 · AUTHOR-INTERPRETATION]
 | SCWM, SCWO | Super-Critical Water Mixture; Super-Critical Water Oxidation | [OVR-12 p.53 · AUTHOR-INTERPRETATION]
 | SEA | Space Exploration Atmospheres | [OVR-12 p.53 · AUTHOR-INTERPRETATION]
@@ -2232,12 +2480,14 @@ Labels: MEASURED = observed or measured in tests; MODELED = from theory or a mod
 | SOFBALL | Structure of Flame Balls at Low Lewis-number | [OVR-12 p.53 · AUTHOR-INTERPRETATION]
 | SoFIE | Solid Fuel Ignition and Extinction | [OVR-12 p.53 · AUTHOR-INTERPRETATION]
 | SPICE | Smoke Point In Coflow Experiment | [OVR-12 p.53 · AUTHOR-INTERPRETATION]
+| TEM | Transmission Electron Microscope | [SMK-01 p.1 · MEASURED · nominal]
 | TGDF | Turbulent Gas-jet Diffusion Flame | [OVR-12 p.53 · AUTHOR-INTERPRETATION]
 | TSC | Telescience Support Center | [OVR-12 p.53 · AUTHOR-INTERPRETATION]
 | ZGF | Zero Gravity Facility | [OVR-12 p.53 · AUTHOR-INTERPRETATION]
 | Inverse flame (coflow burner, planned for Flame Design if inverse spherical flame testing is not allowed) | oxygen/inert mixture injected from a central tube, fuel from a surrounding annulus | [OVR-12 p.17 · AUTHOR-INTERPRETATION]
 | Narrow Channel | a 1-g material flammability test that limits buoyant flow by constraining flame height; restricting the plume controls flame size, so the flames in many ways resemble microgravity flames | [OVR-12 p.25 · AUTHOR-INTERPRETATION]
 | FLX-03 symbols | x_o∞ ambient oxygen mole fraction; d droplet diameter; K_e measured burning-rate constant (mm²/s); K_c classical quasi-steady theoretical burning-rate constant; d_f flame diameter; d_f/d flame stand-off ratio; d_0 initial droplet diameter and d_e extinction diameter (mm) | [FLX-03 p.2 · Fig. 1a · AUTHOR-INTERPRETATION; FLX-03 p.2 · AUTHOR-INTERPRETATION; FLX-03 p.3–4 · Fig. 3 · AUTHOR-INTERPRETATION]
+| SMK-01 symbols | M0, M1, M3 zeroth, first and third moments of the particle-size distribution (number concentration, diameter concentration, volume or mass concentration); D0.5 count (arithmetic) mean diameter = M1/M0; D1.5 diameter of average mass = (M3/M0)^1/3; D_g geometric mean diameter; σ_g geometric standard deviation; N_t total number concentration; Δ least-squares variance relative to the mean (scatter of the MPASS response) | [SMK-01 p.3 · AUTHOR-INTERPRETATION; SMK-01 p.3 · Eq. 3 · MODELED; SMK-01 p.9 · AUTHOR-INTERPRETATION]
 
 ## Supersessions
 <!-- none: the register links no document of this set to another (no supersedes or version_of entry) -->
@@ -2249,10 +2499,16 @@ Labels: MEASURED = observed or measured in tests; MODELED = from theory or a mod
 | CIR combustion chamber volume | about 95 L: free volume of the cylindrical chamber with the MDCA insert installed · FLX-03 p.1 | 100 L: "100-liter chamber" provided by the CIR, no insert stated · OVR-12 p.43–44 | not stated in the sources [FLX-03 p.1 · MEASURED · nominal; OVR-12 p.43–44 · AUTHOR-INTERPRETATION · nominal]
 | Initial diameters of the FLEX methanol droplets in FLX-03 | 2 to 4 mm, as the text states it (abstract, test count, conclusions) · FLX-03 p.1, p.2, p.6 | Fig. 3 (1 atm) plots initial diameters from about 1.71 mm to about 4.42 mm; read below 2 mm: about 1.71†, 1.80†, 1.80† and 1.95 mm; above 4 mm: about 4.01, 4.31 and 4.42 mm (read tolerance ±0.1 mm; † partly hidden marker, centre estimated) · FLX-03 p.4 | not stated in the sources [FLX-03 p.1 · MEASURED · nominal; FLX-03 p.2 · MEASURED; FLX-03 p.6 · MEASURED; FLX-03 p.4 · Fig. 3 · MEASURED · ~fig]
 | Number of shuttle missions that flew premixed-flame (flame-ball) work | "two separate space shuttle missions" · OVR-12 p.25 | SOFBALL on STS-83 and STS-94 (1997) and again on STS-107 (2003) · OVR-12 p.25 | not stated in the sources [OVR-12 p.25 · CITED · nominal]
+| Number of materials tested in SAME-2 | five materials representative of those in spacecraft (Teflon, Kapton, cotton, silicone rubber and Pyrell), heated below ignition · abstract, SMK-01 p.1; the conclusions also speak of the five spacecraft materials tested · SMK-01 p.12 | 6 materials over more than 100 samples: Teflon, Kapton, Pyrell, silicone rubber, cellulose (lamp wick) and dibutyl phthalate on a porous wick · SMK-01 p.7 | not stated in the sources [SMK-01 p.1 · MEASURED · nominal; SMK-01 p.12 · AUTHOR-INTERPRETATION; SMK-01 p.7 · MEASURED]
+| How much larger smoke particles are with zero airflow past the heated sample (SAME-2, ISS) | diameter of average mass 30 % to 40 % larger in the zero-flow tests than in the flow tests, for all materials · SMK-01 p.11 | particles 2 to 3 times larger than at the nominal 8 cm/s flow; the size measure is not named · SMK-01 p.12 (Conclusions) | not stated in the sources [SMK-01 p.11 · MEASURED; SMK-01 p.12 · MEASURED; SMK-01 p.1 · MEASURED · nominal]
+| Teflon smoke diameters at about 8 cm/s airflow (SAME-2, ISS) | Table 1 baseline runs at 8 cm/s, unaged / aged 720 s: count mean 0.101 / 0.105 µm, diameter of average mass 0.170 / 0.232 µm, D_g 0.081 / 0.070 µm · SMK-01 p.7 | Fig. 8 points at about 8 cm/s (plotted at ~8.1), two per series: arithmetic (count) mean ~0.208 and ~0.148 µm, diameter of average mass ~0.251 and ~0.252 µm, D_g ~0.189 and ~0.113 µm (read ±0.05 µm; sample temperature and ageing time not stated for the figure) · SMK-01 p.9 | not stated in the sources [SMK-01 p.7 · Table 1 · MEASURED; SMK-01 p.9 · Fig. 8 · MEASURED · ~fig; SMK-01 p.1 · MEASURED · nominal; SMK-01 p.4 · MEASURED · nominal]
+| Change in the diameters with ageing, Table 1 baseline runs (unaged against aged 720 s) | the ageing results show a substantial increase in the observed diameters, and, as expected, the increase in the count mean diameter is greater than the corresponding increase in the diameter of average mass · SMK-01 p.7 (text) | Table 1, unaged → aged 720 s, count mean diameter and diameter of average mass in µm: Kapton 0.056 → 0.109 and 0.101 → 0.161; Lampwick 0.128 → 0.276 and 0.258 → 0.398; Silicone 0.196 → 0.355 and 0.465 → 0.619; Teflon 0.101 → 0.105 and 0.170 → 0.232; Pyrell 0.204 → 0.359 and 0.384 → 0.539; Teflon geometric mean diameter 0.081 → 0.070 · SMK-01 p.7 · Table 1 | not stated in the sources [SMK-01 p.7 · AUTHOR-INTERPRETATION; SMK-01 p.7 · Table 1 · MEASURED]
+| Silicone rubber smoke on the TEM grids | silicone rubber and DBP presented no particles visible in the TEM, presumably because the particles were condensed liquid that evaporated before they could be imaged; Fig. 11 shows images for Teflon (Run 56), Pyrell (Run 63), lampwick (Run 54) and Kapton (Run 62) · SMK-01 p.10 | liquid particles coalescing into larger droplets given as the case for the lampwick, silicone rubber and Kapton smokes, citing Fig. 11 · SMK-01 p.11 | not stated in the sources [SMK-01 p.10 · MEASURED; SMK-01 p.10 · AUTHOR-INTERPRETATION; SMK-01 p.10 · Fig. 11 · MEASURED; SMK-01 p.11 · AUTHOR-INTERPRETATION]
 
 ## Open items / gaps
-- Not found in the 2 curated documents: measured results of SAME or of the Dust Aerosol measurement Feasibility Test (smoke particle sizes, size distributions, background aerosol levels).
-- Not found in the 2 curated documents: per-test data on solid materials (material, oxygen, pressure, flow, nitrogen use and outcome for each BASS or other solid-fuel burn).
-- Not found in the 2 curated documents: what the names HiBMs, GEL, SMμRF, FLEX-ICE-GA and FLEX-2J stand for.
-- Not found in the 2 curated documents: specifications or performance data of the water-mist portable fire extinguishers sent to the ISS.
-- Not found in the 2 curated documents: a numerical limiting oxygen index (LOI) for methanol or heptane droplets in microgravity.
+- Not found in the 3 curated documents: measured background aerosol levels on the ISS from the Dust Aerosol measurement Feasibility Test, and numerical particle-size results from the first SAME flight (SAME-1, 2007).
+- Not found in the 3 curated documents: per-test data on solid materials (material, oxygen, pressure, flow, nitrogen use and outcome for each BASS or other solid-fuel burn).
+- Not found in the 3 curated documents: what the names HiBMs, GEL, SMμRF, FLEX-ICE-GA and FLEX-2J stand for.
+- Not found in the 3 curated documents: specifications or performance data of the water-mist portable fire extinguishers sent to the ISS.
+- Not found in the 3 curated documents: a numerical limiting oxygen index (LOI) for methanol or heptane droplets in microgravity.
+- Not found in the 3 curated documents: smoke-particle sizes measured in normal gravity (1 g) for the SAME materials, for direct comparison with the SAME-2 results.
