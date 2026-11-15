@@ -346,16 +346,17 @@ export function setView(view) {
   state.search = "";
   changed();
 }
-// From a test record: select the test's material and keep the record open.
+// From a test record: select the test's material and keep the record open (record = true).
+// From a list of tests (record = false): select the material; the list then shows its tests.
 // A filter that would hide this test is cleared, so the test and its material always light up.
-export function openMaterial(t) {
+export function openMaterial(t, record = true) {
   const inExp = state.view === "experiment" && state.exp === t.exp;
   const materialChanged = state.mat !== t.mat;
   if (!inExp) { state.view = "material"; state.search = ""; }
   Object.assign(state, { exp: inExp ? t.exp : null, mat: t.mat, cls: null, g: null });
   if (materialChanged) clearHighlight(false);
   for (const c of CHIP_GROUPS) { const set = state.chips[c.key]; if (set.size && !set.has(t[c.key])) set.clear(); }
-  state.tapped = new Set([t.id]);
+  state.tapped = new Set(record ? [t.id] : []);
   state.tappedPoint = [];
   changed();
 }
@@ -382,6 +383,12 @@ export function setCond(key, value, fromCabin = false) {
 }
 export function setConds(values) {
   Object.assign(state.cond, values);
+  state.cabinUndo = null;
+  changed();
+}
+// "Clear" next to Your conditions: the rectangles go, your selection and the ± windows stay.
+export function clearConds() {
+  state.cond = { o2: null, p: null, flow: null };
   state.cabinUndo = null;
   changed();
 }

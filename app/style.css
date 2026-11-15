@@ -458,7 +458,6 @@ a.src:hover { color: var(--ink); }
 
 /* ---------- Filter chips ---------- */
 .chips { overflow-y: auto; }
-.chips-title { margin-bottom: 4px; color: var(--ink-faint); font-size: 11px; }
 .chip-group + .chip-group { margin-top: 6px; }
 .chip-label { display: block; margin-bottom: 2px; color: var(--ink-soft); font-size: 11px; }
 .chip-row { display: flex; flex-wrap: wrap; gap: 4px; }
@@ -476,6 +475,13 @@ a.src:hover { color: var(--ink); }
 .fchip-n { margin-left: 5px; color: var(--ink-faint); font-size: 10.5px; }
 .fchip.on .fchip-n { color: #cfd3d9; }
 .fchip:disabled { opacity: 0.45; cursor: default; }
+/* Laptop layout: the filter column is 176px wide. Slightly tighter chips (same text size) keep the filters within the
+   column's height, so it needs no scroll bar. */
+@media (min-width: 1100px) {
+  .chip-row { gap: 3px; }
+  .fchip { padding: 1px 6px; }
+  .fchip-n { margin-left: 3px; }
+}
 
 /* ---------- Cards ---------- */
 .card {
@@ -495,6 +501,7 @@ a.src:hover { color: var(--ink); }
   background: var(--surface-soft);
 }
 .headline.warn { border-left-color: var(--burned); background: #fff4ec; }
+.headline.over { border-left-color: #b42318; background: #fde8e8; }   /* above the Earth rating or limit */
 .card-lines p + p { margin-top: 3px; }
 .card-lines .lead { font-weight: 600; margin-bottom: 4px; }
 .card-lines .lead a { font-weight: 400; }
@@ -575,6 +582,20 @@ a.src:hover { color: var(--ink); }
 }
 .cabin:hover { background: var(--you-soft); }
 .cabin.on { border-color: var(--you); background: var(--you); color: #fff; }
+.cabin-clear {            /* same shape as a cabin button, in grey: it removes your conditions */
+  margin-left: 6px;
+  padding: 2px 9px;
+  border: 1px solid #c9cdd4;
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--ink-soft);
+  font: inherit;
+  font-size: 12px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.cabin-clear:hover:not(:disabled) { background: var(--surface-soft); color: var(--ink); }
+.cabin-clear:disabled { opacity: 0.45; cursor: default; }
 
 .charts { display: grid; flex: 1; grid-template-columns: 1fr 1fr; gap: 14px; min-height: 0; margin-top: 4px; }
 .chart { position: relative; min-height: 190px; touch-action: none; user-select: none; cursor: crosshair; }
@@ -770,7 +791,8 @@ table.tests td { padding: 2px 10px 2px 0; border-top: 1px solid #f0f1f3; }
   .charts { flex: none; height: clamp(250px, 38vh, 400px); }
   .panel.details { flex: 1 1 156px; height: auto; min-height: 156px; max-height: 300px; }
 }
-.results-row + .results-row { margin-top: 8px; }
+.results-row + .results-row { margin-top: 2px; }   /* the status line and the cabins sit close to the first row... */
+.results-head { margin-bottom: 6px; }              /* ...and a little further from the charts (same total height) */
 
 /* Compact condition boxes: no spinner arrows, just the number */
 .cond input { width: 44px; padding: 1px 4px; -moz-appearance: textfield; appearance: textfield; }
@@ -783,7 +805,15 @@ table.tests td { padding: 2px 10px 2px 0; border-top: 1px solid #f0f1f3; }
 /* ---------- Chart zoom ---------- */
 .chart .zoom-hint { display: none; fill: var(--ink-faint); font-size: 10px; }
 @media (min-width: 1100px) { .chart .zoom-hint { display: inline; } }
-#zoom-reset { font-weight: 600; white-space: nowrap; }
+.chart .zoom-reset {      /* top-right corner of the chart, in place of the zoom hint */
+  position: absolute;
+  top: -3px;
+  right: 14px;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 16px;
+  white-space: nowrap;
+}
 
 /* ---------- Burn limits: a hollow dark diamond ---------- */
 .chart .mark.out-limit .dot { fill: #fff; stroke: #3b4048; stroke-width: 1.5; }

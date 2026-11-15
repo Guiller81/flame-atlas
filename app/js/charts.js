@@ -442,14 +442,35 @@ function attach(chart) {
 
 export function initCharts() {
   setHome();
-  document.getElementById("zoom-reset")?.addEventListener("click", resetZoom);
   document.getElementById("clear-all")?.addEventListener("click", resetZoom);   // Clear all also brings the opening zoom back
+  // A cabin button whose oxygen or pressure falls outside a zoomed view brings the opening zoom back, so the "+" is
+  // never pinned to the edge of the chart. A cabin inside the view leaves your zoom alone. (Runs after the button's
+  // own click, which has already set the conditions.)
+  document.getElementById("cabins")?.addEventListener("click", (e) => {
+    if (!e.target.closest(".cabin")) return;
+    const outside = ["o2", "p"].some((k) => {
+      const v = state.cond[k];
+      const d = domainFor(k);
+      return v != null && (v < d.lo || v > d.hi);
+    });
+    if (outside) resetZoom();
+  });
   for (const chart of CHARTS) {
     const box = document.getElementById(chart.id);
     const tip = document.createElement("div");
     tip.className = "chart-tip";
     tip.hidden = true;
     box.append(tip);
+    // "Reset zoom" sits in the chart's top-right corner, where the "scroll to zoom" hint is while the view is not
+    // zoomed. One on each chart; either brings the opening view back on both.
+    const reset = document.createElement("button");
+    reset.type = "button";
+    reset.className = "link-btn zoom-reset";
+    reset.textContent = "Reset zoom";
+    reset.hidden = true;
+    reset.addEventListener("pointerdown", (e) => e.stopPropagation());   // not a press on the chart
+    reset.addEventListener("click", resetZoom);
+    box.append(reset);
     views.set(chart.id, { box, tip });
     attach(chart);
     new ResizeObserver(() => build(chart)).observe(box);
@@ -457,6 +478,6 @@ export function initCharts() {
 }
 export function renderCharts() {
   for (const chart of CHARTS) build(chart);
-  const reset = document.getElementById("zoom-reset");
-  if (reset) reset.hidden = !zoomed();
+  const on = zoomed();
+  document.querySelectorAll(".chart .zoom-reset").forEach((b) => { b.hidden = !on; });
 }

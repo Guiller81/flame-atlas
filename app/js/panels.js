@@ -8,7 +8,7 @@ import {
   data, state, D, GROUPS, GRAVITIES, GRAVITY_NAME, OUTCOMES, OUTCOME_NAME, CONDS, CHIP_GROUPS, CABINS,
   matById, expById, testById, expTotal, distance, testName, testSubject, num, pct, plural, sourceUrl, sourceLabel, hasSelection, condKeysSet,
   materialFacts, offKeys, setView, select, openMaterial, toggleChip, setCond, setWin, tapCabin, activeCabin, tapTests,
-  setHighlight, clearHighlight, clearAll, changed, selectionWords, conditionWords, highlightUseful, missingWords, reportedWords,
+  setHighlight, clearHighlight, clearAll, clearConds, changed, selectionWords, conditionWords, highlightUseful, missingWords, reportedWords,
 } from "./state.js";
 
 export const hooks = { ask: () => {} };     // set by the chat
@@ -162,7 +162,7 @@ function renderChips() {
   for (const c of CHIP_GROUPS) {
     const counts = D.chipCounts[c.key] || new Map();
     if (counts.size < 2) continue;                       // nothing to filter on
-    groups.push(h("div", { class: "chip-group" }, h("span", { class: "chip-label" }, c.label),
+    groups.push(h("div", { class: "chip-group" }, h("span", { class: "chip-label" }, "Filter by " + c.label.toLowerCase()),
       h("div", { class: "chip-row" }, [...counts].sort((a, b) => String(a[0]).localeCompare(String(b[0]))).map(([value, n]) => {
         const on = state.chips[c.key].has(value);
         return h("button", { class: "fchip" + (on ? " on" : ""), type: "button", "aria-pressed": String(on), disabled: !n && !on,
@@ -170,7 +170,8 @@ function renderChips() {
           String(value), h("span", { class: "fchip-n" }, String(n)));
       }))));
   }
-  box.replaceChildren(h("div", { class: "chips-title" }, "Also filter by"), ...groups);
+  // No heading line: each group's label says "Filter by ...". With the heading and wider chips the column scrolled.
+  box.replaceChildren(...groups);
 }
 
 /* ====================== cards ====================== */
@@ -241,7 +242,10 @@ function earthHeadline(f) {
   const dR = f.rating - your;
   let text;
   let warn = false;
-  if (dR < 0) {
+  // Colour: red above the Earth reference (it burns in the Earth test), orange between it and the lowest space burn,
+  // neutral below both. Never green: "under the lowest space burn so far" is not a verdict that the material is safe.
+  const over = dR < 0;
+  if (over) {
     text = `${pts(dR)} above the ${L}` + (label === "earth rating" ? ", so it would fail the Earth test." : ", so it also burns on Earth.");
   } else {
     const under = dR === 0 ? `at the ${L}` : `${pts(dR)} under the ${L}`;
@@ -253,7 +257,7 @@ function earthHeadline(f) {
       else text = `${under} and ${pts(dS)} under the lowest space burn so far.`;
     }
   }
-  return h("p", { class: "headline" + (warn ? " warn" : "") }, h("strong", null, `Your ${pct(your)} O2: `), text);
+  return h("p", { class: "headline" + (over ? " over" : warn ? " warn" : "") }, h("strong", null, `Your ${pct(your)} O2: `), text);
 }
 
 function earthCard(matId) {
@@ -427,7 +431,11 @@ function renderCabins() {
   const lit = activeCabin();
   $("cabins").replaceChildren(h("span", { class: "cabins-title" }, "Cabin conditions"), ...CABINS.map((c) =>
     h("button", { class: "cabin" + (lit && lit.id === c.id ? " on" : ""), type: "button", title: c.tip, "aria-pressed": String(!!lit && lit.id === c.id),
-      onclick: () => tapCabin(c.id) }, c.name)));
+      onclick: () => tapCabin(c.id) }, c.name)),
+    // The way back from any conditions, typed, dragged or from a cabin: the shaded windows go, your selection and the
+    // ± windows stay. Always in the row (greyed out with nothing to clear), so the cabin buttons never shift.
+    h("button", { class: "cabin-clear", type: "button", id: "conds-clear", disabled: !condKeysSet().length,
+      title: "Clear your conditions (your selection stays)", onclick: clearConds }, "✕ Clear"));
 }
 
 /* ====================== details ====================== */
@@ -480,7 +488,8 @@ function tableView(tests, fitOf) {
       return h("tr", null,
         fitOf ? h("td", null, h("span", { class: "fit " + fitOf(t).kind }, fitOf(t).label)) : null,
         cell(testName(t) === t.id ? t.id : `${testName(t)} (${t.id})`, h("button", { class: "link-btn test-link", type: "button", onclick: () => tapTests([t.id]) }, testName(t))),
-        cell(mat),
+        cell(mat, state.mat === t.mat ? mat : h("button", { class: "link-btn test-link", type: "button", title: `Select ${mat}: its card and its tests`,
+          onclick: () => openMaterial(t, false) }, mat)),
         cell(t.g_detail || GRAVITY_NAME[t.g] || t.g),
         h("td", { class: "numcol" }, value(t, "o2")), h("td", { class: "numcol" }, value(t, "p")), h("td", { class: "numcol" }, value(t, "flow")),
         cell(outName(t), h("span", { class: "swatch out-" + t.out }), " ", outName(t)),
