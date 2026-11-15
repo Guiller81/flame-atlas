@@ -207,6 +207,9 @@ function build(chart) {
       const inside = (inX !== null || inY !== null) && inX !== false && inY !== false;
       const tapped = g.tests.filter((t) => state.tapped.has(t.id)).length;
       const lit = g.tests.filter((t) => state.highlight.has(t.id)).length;
+      // With a selection on, tests outside it are not drawn at all (they used to stay as a faded cloud that
+      // hid the selected dots). A tapped or highlighted test outside the selection is still drawn.
+      if (selecting && !sel.length && !tapped && !lit) return;
       // bright: in your selection, and not an "inside the window but off on another condition" case.
       // A tapped or highlighted mark is always brought back to full colour.
       const bright = (sel.length > 0 && !(condOn && inside && match.length === 0 && part.length === 0)) || tapped > 0 || lit > 0;
