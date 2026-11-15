@@ -282,15 +282,18 @@ function earthCard(matId) {
   }
   const ratingWords = m.earth ? `at or below ${pct(m.earth.o2)}` : "";
   // A paper often prints only the limit it found, not the single burns behind it: the card counts both kinds of row,
-  // so its numbers add up to the grid's, and never says "tests: 0" for a material that only has reported limits.
-  const NO_SINGLE = " · no single-test records ";
+  // so its numbers add up to the grid's. A side with limits only says what is there, in the legend's words and with its
+  // diamond; it never says "tests: 0" or "no tests", which reads as if nothing was tested.
+  const limitsOnly = (side, n, tail = "") => [`${side}: ${plural(n, "burn limit")} `, h("span", { class: "swatch out-limit card-swatch" }),
+    `, ${n === 1 ? "" : "each "}from many tests${tail} `];
+  const limitsButton = (list, owner) => highlightButton(list.map((t) => t.id), owner, list.length === 1 ? "Highlight the limit" : "Highlight the limits");
   if (f.earth.length || (m.earth && !f.earthLimits.length)) {
     lines.push(h("p", null, `Earth tests: ${f.earth.length}` + (m.earth && f.earth.length ? ` · ${f.earthBurnedBelow.length} burned ${ratingWords} ` : " "),
       highlightButton(f.earthBurnedBelow.map((t) => t.id), "card-earth")));
   }
   if (f.earthLimits.length) {
-    lines.push(h("p", null, f.earth.length ? `Earth limits reported: ${f.earthLimits.length} ` : `Earth: ${plural(f.earthLimits.length, "limit")} reported` + NO_SINGLE,
-      highlightButton(f.earthLimits.map((t) => t.id), "card-earth-limits")));
+    lines.push(h("p", null, f.earth.length ? `Earth limits reported: ${f.earthLimits.length} ` : limitsOnly("Earth", f.earthLimits.length),
+      limitsButton(f.earthLimits, "card-earth-limits")));
   }
   const gNames = f.spaceGravities.map((g) => GRAVITY_NAME[g]);
   let space = `Space tests: ${f.space.length}` + (f.space.length && gNames.length === 1 ? `, all ${gNames[0]}` : "");
@@ -299,8 +302,8 @@ function earthCard(matId) {
   if (f.space.length || !f.spaceLimits.length) lines.push(h("p", null, space + " ", highlightButton((m.earth ? f.spaceBurnedBelow : []).map((t) => t.id), "card-space")));
   if (f.spaceLimits.length) {
     lines.push(h("p", null, f.space.length ? `Space limits reported: ${f.spaceLimits.length} (lowest ${pct(f.lowestLimit)}) `
-      : `Space: ${plural(f.spaceLimits.length, "limit")} reported (lowest ${pct(f.lowestLimit)})` + NO_SINGLE,
-      highlightButton(f.spaceLimits.map((t) => t.id), "card-limits")));
+      : limitsOnly("Space", f.spaceLimits.length, ` (lowest ${pct(f.lowestLimit)})`),
+      limitsButton(f.spaceLimits, "card-limits")));
   }
   out.push(h("div", { class: "card-lines" }, lines));
   if (f.sizes.length) {

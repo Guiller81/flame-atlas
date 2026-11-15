@@ -777,4 +777,5 @@ table.tests td { padding: 2px 10px 2px 0; border-top: 1px solid #f0f1f3; }
 .chart .mark.out-limit .dot { fill: #fff; stroke: #3b4048; stroke-width: 1.5; }
 .chart .mark.out-limit.match .dot { stroke: #111; stroke-width: 2.25; }
 .chart .out-limit .count { fill: #3b4048; }
+.swatch.card-swatch { margin: 0 1px 0 2px; vertical-align: baseline; }
 .swatch.out-limit { width: 8px; height: 8px; border: 1.5px solid #3b4048; border-radius: 0; background: var(--surface); transform: rotate(45deg); }
