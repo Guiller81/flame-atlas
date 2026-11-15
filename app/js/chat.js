@@ -515,16 +515,29 @@ async function loadPrepared(url) {
 let preparedReady = Promise.resolve();
 const soon = (promise, ms) => Promise.race([promise, new Promise((done) => setTimeout(done, ms))]);
 
-// A follow-up after a prepared answer goes to the backend, which has not seen that answer: its gist travels
-// with the screen description, so "it" and "that test" still resolve.
+// A prepared answer never reaches the backend, so the backend's stored conversation does not hold it. Every prepared
+// answer still in this conversation therefore travels, in full, with each new question (next to the screen
+// description), so the model knows everything the chat shows. Newest first within the budget; an older answer that
+// no longer fits is left out whole, never cut in the middle.
+const PREPARED_BUDGET = 6000;      // characters, about 1,500 tokens
 function preparedContext() {
-  let last = -1;
-  for (let i = messages.length - 1; i >= 0; i -= 1) if (messages[i].role === "answer") { last = i; break; }
-  if (last < 1 || !messages[last].prepared) return "";
-  const a = messages[last].answer;
-  const asked = messages[last - 1].role === "user" ? messages[last - 1].text : "";
-  const gist = a.lead && a.lead.text ? a.lead.text : (a.data || []).concat(a.inferred || []).map((p) => p.text).join(" ");
-  return ("\nAnswer shown just before this question" + (asked ? ' (to "' + asked + '")' : "") + ": " + gist).slice(0, 1500);
+  const blocks = [];
+  let used = 0;
+  for (let i = messages.length - 1; i >= 1; i -= 1) {
+    const m = messages[i];
+    if (m.role !== "answer" || !m.prepared) continue;
+    const a = m.answer;
+    const asked = messages[i - 1].role === "user" ? messages[i - 1].text : "";
+    const parts = [];
+    if (a.lead && a.lead.text) parts.push(a.lead.text);
+    (a.data || []).forEach((p) => parts.push((p.heading ? p.heading + ". " : "") + p.text));
+    (a.inferred || []).forEach((p) => parts.push("Inferred: " + p.text));
+    const block = "Answer shown earlier in this conversation" + (asked ? ' (to "' + asked + '")' : "") + ": " + parts.join(" ");
+    if (used + block.length > PREPARED_BUDGET && blocks.length) break;
+    blocks.unshift(block.slice(0, PREPARED_BUDGET));
+    used += block.length;
+  }
+  return blocks.length ? "\n" + blocks.join("\n") : "";
 }
 
 // The chat keeps two memories. A question goes to the second one (the burner documents and NASA's PSI catalogue)
@@ -564,7 +577,7 @@ export async function ask(text, kind = "ask", extra = {}) {
   const giveUp = stored ? null : setTimeout(() => { timedOut = true; abort.abort(); }, GIVE_UP_MS);
   if (stored) outcome = { role: "answer", id: newId("a"), kind, answer: stored, prepared: true, ...brief };
   else try {
-    const body = { user_id: userId, conversation_id: conversationId, kind, message: text, screen: (screenText() + preparedContext()).slice(0, 4000), memory: memoryFor(extra) };
+    const body = { user_id: userId, conversation_id: conversationId, kind, message: text, screen: screenText() + preparedContext(), memory: memoryFor(extra) };
     if (extra.test_id) body.test_id = extra.test_id;
     if (extra.datasheet) body.datasheet = { mime: extra.datasheet.mime, data: extra.datasheet.data };
     const res = await fetch(CHAT_URL, { method: "POST", headers: { "Content-Type": "application/json" }, signal: abort.signal, body: JSON.stringify(body) });
